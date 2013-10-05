@@ -1,18 +1,20 @@
-" Bozar's .vimrc file"{{{
-" Last Update: Sat, Oct 05 | 14:00:00 | 2013
+" Bozar's .vimrc file "{{{1
+" Last Update: Sat, Oct 05 | 16:51:45 | 2013
 
 set nocompatible
 filetype off
-""}}}
-" Vundle"{{{
+" }}}1
+"
+" Vundle "{{{1
 " I'll try on some plugins later
 
 filetype plugin on
-""}}}
-" Functions"{{{
+" }}}1
+"
+" Functions "{{{1
 "
 " windows or linux
-function! CheckOS()
+function! CheckOS() "{{{
 	if has('win32')
 		return 'windows'
 	elseif has('win64')
@@ -20,98 +22,98 @@ function! CheckOS()
 	else
 		return 'linux'
 	endif
-endfunction
+endfunction "}}}
 
 " append(1) or insert(0) fold markers
 " apply the fold level of cursor line
-function! FoldMarker(position_fold)
+function! YankFoldMarker(fold_line) "{{{
 	?{{{
 	mark j
 	/}}}
 	mark k
 	'j,'ky "
-	if a:position_fold==0
+	if a:fold_line==0
 		normal 'j
 		pu! "
-	elseif a:position_fold==1
+	elseif a:fold_line==1
 		normal 'k
 		pu "
 	endif
-	?{{{?+1,.-1g/^d		" }}}
+	?{{{?+1,.-1g/^/d	" }}}
 	normal [z
-endfunction
+endfunction "}}}
 
 " insert bullets: special characters at the beginning of a line
 " do not indent title '-'
-function! IndentTitle()
+function! IndentTitle() "{{{
 	'j,'kg/^\(\t\|\s\{4\}\)\-/left 0
 	'j,'ks/^-//e
-endfunction
+endfunction "}}}
 " '==' will be replaced with '+'
 "		indent 2 tabs (8 spaces)
 " '=' will be replaced with '*'
 "	indent 1 tab (4 spaces)
-function! IndentParagraph()
+function! IndentParagraph() "{{{
 	'j,'kg/^\(\|\t\|\s\{4\}\)==/left 8
 	'j,'ks/^\(\t\t\)==/\1+ /e
 
 	'j,'kg/^\(\|\s\{4\}\)=/left 4
 	'j,'ks/^\(\t\)=/\1* /e
-endfunction
+endfunction "}}}
 
-function! InsertBulletPoint()
+function! InsertBulletPoint() "{{{
 	call IndentTitle()
 	call IndentParagraph()
-endfunction
+endfunction "}}}
 
 " add(1) or substract(0) fold level
-function! ChangeFoldLevel(level) 
+function! ChangeFoldLevel(level)  "{{{
 	if a:level==0
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)-1
 	elseif a:level==1
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)+1
 	endif
-endfunction
+endfunction "}}}
 
 " put text to another file
 " 0: overwrite old text
-" 1: put before old text
-" 2: put after old text
-function! PutText(position_buffer)
-	if a:position_buffer==0
+" 1: insert into old text
+" 2: append to old text
+function! PutText(put_line) "{{{
+	if a:put_line==0
 		1mark j|1put! "
 		'j,$g/^/d
-	elseif a:position_buffer==1
+	elseif a:put_line==1
 		1put! "
-	elseif a:position_buffer==2
+	elseif a:put_line==2
 		$put "
 	endif
-endfunction
+endfunction "}}}
 
 " GTD
 "
 " replace bullet point (*) with:
 " finished (~) or unfinished (!)
-function! Finished_GTD()
+function! Finished_GTD() "{{{
 	nnoremap <buffer> <silent> <f1> :s/^\t\(\*\\|!\)/\t\~<cr>
 	nnoremap <buffer> <silent> <s-f1> :s/^\t\(\*\\|\~\)/\t!<cr>
-endfunction
+endfunction "}}}
 
 " insert new lines for another day
-function! AnotherDay_GTD()
+function! AnotherDay_GTD() "{{{
 	nnoremap <buffer> <silent> <f2>
-		\ :call FoldMarker(0)<cr>
+		\ :call YankFoldMarker(0)<cr>
 		\ 'jk[z:s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
 		\ :call ChangeFoldLevel(1)<cr>
 		\ 'jk[z
-endfunction
+endfunction "}}}
 
-function! GetThingsDone()
+function! GetThingsDone() "{{{
 	call Finished_GTD()
 	call AnotherDay_GTD()
-endfunction
+endfunction "}}}
 
-" Localization"{{{
+" Localization "{{{2
 " 
 " need to tweak the Excel table first
 " insert #MARK# before English column
@@ -133,98 +135,100 @@ endfunction
 " let @d='previous search pattern'
 " let @e='current search pattern'
 " :h 10.3
-function! NearbyLines_Loc()
+function! NearbyLines_Loc() "{{{
 	let @d=@/
 	let @e=''
 	?#MARK#?-20,/#MARK#/+20g=#MARK#=y E
-endfunction
+endfunction "}}}
 
 " delete all other columns except English and Chinese
 " example: A1, B1, C1(#MARK#), D1(ENG), E1(CHS), F1, ...
-function! DeleteColumns_Loc()
+function! DeleteColumns_Loc() "{{{
 	%s/^.*#MARK#\t//e
 	%s/\(^.\{-\}\t.\{-\}\)\t.*$/\1/e
-endfunction
+endfunction "}}}
 
-" Function key: <F1>
+" Function key: <F1> "{{{3
 " 
 " put cursor after the first \t
-function! F1_Normal_Loc()
+function! F1_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f1> ^f	
-endfunction
+endfunction "}}}
 
 " search glossary
 " let @c='search pattern'
-function! F1_Visual_Loc()
+function! F1_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f1>
 		\ "cy<c-w>b<c-w>kgg
 		\ :%s/<c-r>c\c//n<cr>
 		\ /<c-r>/<cr>
-endfunction
+endfunction "}}}
 
 " search GUID in English buffer
 " let @d='GUID'
-function! F1_Shift_Normal_Loc()
+function! F1_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f1>
 		\ $2F	lvt	"dy<c-w>b<c-w>2kgg
 		\ :%s/<c-r>d\c//n<cr>
 		\ /<c-r>/<cr>
-endfunction
+endfunction "}}}
 
-function! F1_Loc()
+function! F1_Loc() "{{{
 	call F1_Normal_Loc()
 	call F1_Visual_Loc()
 	call F1_Shift_Normal_Loc()
-endfunction
-
-" Function key: <F2>
+endfunction "}}}
+" }}}3
+"
+" Function key: <F2> "{{{3
 "
 " search current buffer
 " put cursor after the first '\t'
-function! F2_Normal_Loc()
+function! F2_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f2> 
 		\ ^yt	gg
 		\ :%s/^<c-r>"\(\t\)\@=\c//n<cr>
 		\ /<c-r>/<cr>^f	
-endfunction
-function! F2_Visual_Loc()
+endfunction "}}}
+function! F2_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f2> 
 		\ ygg
 		\ :%s/<c-r>"\c//n<cr>
 		\ /<c-r>/<cr>^f	
-endfunction
+endfunction "}}}
 
 " search English buffer
 " in combination with <F5>
-function! F2_Shift_Normal_Loc()
+function! F2_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f2> 
 		\ ^yt	<c-w>b<c-w>2kgg
 		\ :%s/\(\t#MARK#\t.\{-\}\)\@<=<c-r>"\c//n<cr>
 		\ /<c-r>/<cr>
-endfunction
-function! F2_Shift_Visual_Loc()
+endfunction "}}}
+function! F2_Shift_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <s-f2> 
 		\ y<c-w>b<c-w>2kgg
 		\ :%s/\(\t#MARK#\t.\{-\}\)\@<=<c-r>"\c//n<cr>
 		\ /<c-r>/<cr>
-endfunction
+endfunction "}}}
 
-function! F2_Loc()
+function! F2_Loc() "{{{
 	call F2_Normal_Loc()
 	call F2_Visual_Loc()
 	call F2_Shift_Normal_Loc()
 	call F2_Shift_Visual_Loc()
-endfunction
-
-" Function key: <F3>
+endfunction "}}}
+" }}}3
+"
+" Function key: <F3> "{{{3
 "
 " search wrong translation
 " let @c='English'
 " let @b='Chinese correction'
-function! F3_Normal_Loc()
+function! F3_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f3>
 		\ gg:%s/<c-r>c\(.\{-\}\t.\{-\}<c-r>b\)\@!\c//n<cr>
-endfunction
+endfunction "}}}
 
 " put '<c-r>/' text into tmp buffer
 " note: it seems that when a command will delete all characters in one buffer,
@@ -235,51 +239,53 @@ endfunction
 " \ oTEST<esc>
 " nnoremap <f12> ggdGoTEST<esc>
 " let @d='search pattern'
-function! F3_Shift_Normal_Loc()
+function! F3_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f3>
 		\ :let @d=''<cr>
 		\ :g/<c-r>//y D<cr><c-w>b
 		\ :call PutText(0)<cr>
-endfunction
+endfunction "}}}
 
-function! F3_Loc()
+function! F3_Loc() "{{{
 	call F3_Normal_Loc()
 	call F3_Shift_Normal_Loc()
-endfunction
-
-" Function key: <F4>
+endfunction "}}}
+" }}}3
+"
+" Function key: <F4> "{{{3
 " substitute words
 " let @c='English'
 " let @b='Chinese correction'
 " let @a='wrong translation'
-function! F4_Normal_Loc()
+function! F4_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f4>
 		\ gg:%s/\(<c-r>c.\{-\}\t.\{-\}\)\@<=<c-r>a\c//n<cr>
 		\ :%s/<c-r>//<c-r>b/g<cr>
-endfunction
+endfunction "}}}
 
 " substitute the whole line
 " mark s: substituted line
 " mark a: previous line
-function! F4_Shift_Normal_Loc()
+function! F4_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f4>
 		\ ms^"ayt	f	l"byt	
 		\ :%s/^\(<c-r>a\t\).\{-\}\(\t\)/\1<c-r>b\2/g<cr>'a
-endfunction
+endfunction "}}}
 
-function! F4_Loc()
+function! F4_Loc() "{{{
 	call F4_Normal_Loc()
 	call F4_Shift_Normal_Loc()
-endfunction
-
-" Function key: <F5>
+endfunction "}}}
+" }}}3
+"
+" Function key: <F5> "{{{3
 " search and complete missing lines
 " when there are more than one lines in an Excel cell
 " let @d='search pattern'
 " let @e='completion'
 " mark S (shared between buffers): search line
 
-function! F5_Normal_Loc()
+function! F5_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f5>
 		\ mS^"dy$<c-w>h<c-w>wgg
 		\ :%s/<c-r>d//n<cr>
@@ -288,8 +294,8 @@ function! F5_Normal_Loc()
 		\ $?#MARK#<cr>
 		\ ^"ey/#END#<cr>
 		\ <c-w>h'Scc<c-r>e#END#<esc>j
-endfunction
-function! F5_Visual_Loc()
+endfunction "}}}
+function! F5_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f5>
 		\ mS"dy<c-w>h<c-w>wgg
 		\ :%s/<c-r>d//n<cr>
@@ -298,54 +304,56 @@ function! F5_Visual_Loc()
 		\ $?#MARK#<cr>
 		\ ^"ey/#END#<cr>
 		\ <c-w>h'Scc<c-r>e#END#<esc>j
-endfunction
+endfunction "}}}
 
-function! F5_Loc()
+function! F5_Loc() "{{{
 	call F5_Normal_Loc()
 	call F5_Visual_Loc()
-endfunction
-
-" Function key: <F6>
+endfunction "}}}
+" }}}3
+"
+" Function key: <F6> "{{{3
 " 
 " put lines into Scratch buffer
 " the previous search pattern is shown at the center of window
-function! F6_Normal_Loc()
+function! F6_Normal_Loc() "{{{
 	nnoremap <buffer> <f6>
 		\ :call NearbyLines_Loc()<cr>
 		\ <c-w>h:buffer 2\|call PutText(0)<cr>
 		\ /<c-r>d<cr>ma
 		\ :call DeleteColumns_Loc()<cr>
 		\ 'azz
-endfunction
+endfunction "}}}
 
 " ready for completion
 " put broken lines into Scratch (left)
-function! F6_Shift_Normal_Loc()
+function! F6_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <s-f6>
 		\ :let @d=''<cr>
 		\ :g/\(#END#\)\@<!$/d D<cr>
 		\ :let @"=@d<cr>
 		\ <c-w>h:b 2<cr>:call PutText(0)<cr>
-endfunction
+endfunction "}}}
 
-function! F6_Loc()
+function! F6_Loc() "{{{
 	call F6_Normal_Loc()
 	call F6_Shift_Normal_Loc()
-endfunction
+endfunction "}}}
+" }}}3
 
-function! LocKeyMapping()
+function! LocKeyMapping() "{{{
 	call F1_Loc()
 	call F2_Loc()
 	call F3_Loc()
 	call F4_Loc()
 	call F5_Loc()
 	call F6_Loc()
-endfunction
-
-""}}}
+endfunction "}}}
+" }}}2
+"
 " add scratch buffer
 " load LocKeyMapping
-function! ScratchBuffer()
+function! ScratchBuffer() "{{{
 	new
 	setlocal buftype=nofile
 	setlocal bufhidden=hide
@@ -353,10 +361,10 @@ function! ScratchBuffer()
 	setlocal linebreak
 	call LocKeyMapping()
 	close
-endfunction
-
-""}}}
-" Vim settings"{{{
+endfunction "}}}
+" }}}1
+"
+" Vim settings "{{{1
 " Encoding
 
 set encoding=utf-8
@@ -406,7 +414,7 @@ endif
 set laststatus=2
 set ruler
 
-function! s:status_line()
+function! s:status_line() "{{{
 " clear previous settings
 	set statusline=
 " relative path, modified, readonly, help, preview
@@ -464,7 +472,7 @@ set guioptions=aP
 " fold
 set foldmethod=marker
 set foldminlines=3
-set foldlevel=1
+set foldlevel=0
 
 " search
 set ignorecase
@@ -486,9 +494,9 @@ if CheckOS()=='windows'
 elseif CheckOS()=='linux'
 	cd ~/Documents/
 endif
-
-""}}}
-" Key mappings and abbreviations"{{{
+" }}}1
+"
+" Key mappings and abbreviations "{{{1
 "
 " use function keys and commands instead of mapleader
 " see below: '; and :'
@@ -538,9 +546,9 @@ vnoremap - $
 
 onoremap 0 ^
 onoremap - $
-
-""}}}
-" User defined commands"{{{
+" }}}1
+"
+" User defined commands "{{{1
 "
 " insert bullet points
 command! BulletPoint call InsertBulletPoint()
@@ -552,8 +560,8 @@ command! BulletPoint call InsertBulletPoint()
 command! TimeStamp s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')
 
 " append or change fold marker
-command! InsertFoldMarker call FoldMarker(0)
-command! AppendFoldMarker call FoldMarker(1)
+command! InsertFoldMarker call YankFoldMarker(0)
+command! AppendFoldMarker call YankFoldMarker(1)
 command! AddFoldLevel call ChangeFoldLevel(1)
 command! SubFoldLevel call ChangeFoldLevel(0)
 
@@ -582,6 +590,6 @@ command! DarkBackground set background=dark
 autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd VimEnter * call ScratchBuffer()
-
-""}}}
+" }}}1
+"
 " vim: set nolinebreak number foldlevel=9:
