@@ -1,17 +1,20 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sun, Oct 06 | 12:39:08 | 2013
+" Last Update: Sun, Oct 06 | 23:29:24 | 2013
+" scroll screen after PutText
 
 set nocompatible
 filetype off
 " }}}1
+"
 " Vundle "{{{1
 " I'll try on some plugins later
 
 filetype plugin on
 " }}}1
+"
 " Functions "{{{1
 "
-" windows or linux
+" windows or linux "{{{2
 function! CheckOS() "{{{
 	if has('win32')
 		return 'windows'
@@ -21,8 +24,9 @@ function! CheckOS() "{{{
 		return 'linux'
 	endif
 endfunction "}}}
-
-" append(1) or insert(0) fold markers
+" }}}2
+"
+" append(1) or insert(0) fold markers "{{{2
 " apply the fold level of cursor line
 function! YankFoldMarker(fold_line) "{{{
 	?{{{
@@ -31,17 +35,16 @@ function! YankFoldMarker(fold_line) "{{{
 	mark k
 	'j,'ky "
 	if a:fold_line==0
-		normal 'j
-		put! "
+		'j|put! "
 	elseif a:fold_line==1
-		normal 'k
-		put "
+		'k|put "
 	endif
 	?{{{?+1,.-1g/^/d	" }}}
 	normal [z
 endfunction "}}}
-
-" insert bullets: special characters at the beginning of a line
+" }}}2
+"
+" insert bullets: special characters at the beginning of a line "{{{2
 " do not indent title '-'
 function! IndentTitle() "{{{
 	'j,'kg/^\(\t\|\s\{4\}\)\-/left 0
@@ -63,8 +66,9 @@ function! InsertBulletPoint() "{{{
 	call IndentTitle()
 	call IndentParagraph()
 endfunction "}}}
-
-" add(1) or substract(0) fold level
+" }}}2
+"
+" add(1) or substract(0) fold level "{{{2
 function! ChangeFoldLevel(level)  "{{{
 	if a:level==0
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)-1
@@ -72,8 +76,9 @@ function! ChangeFoldLevel(level)  "{{{
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)+1
 	endif
 endfunction "}}}
-
-" put text to another file
+" }}}2
+"
+" put text to another file "{{{2
 " 0: overwrite old text
 " 1: insert into old text
 " 2: append to old text
@@ -81,14 +86,18 @@ function! PutText(put_line) "{{{
 	if a:put_line==0
 		1mark j|1put! "
 		'j,$g/^/d
+		1
 	elseif a:put_line==1
 		1put! "
+		1
 	elseif a:put_line==2
-		$put "
+		$mark j|$put "
+		'j+1
 	endif
 endfunction "}}}
-
-" GTD
+" }}}2
+"
+" GTD "{{{2
 "
 " replace bullet point (*) with:
 " finished (~) or unfinished (!)
@@ -110,7 +119,8 @@ function! GetThingsDone() "{{{
 	call Finished_GTD()
 	call AnotherDay_GTD()
 endfunction "}}}
-
+" }}}2
+"
 " Localization "{{{2
 " 
 " need to tweak the Excel table first
@@ -349,7 +359,7 @@ function! LocKeyMapping() "{{{
 endfunction "}}}
 " }}}2
 "
-" add scratch buffer
+" add scratch buffer "{{{2
 " load LocKeyMapping
 function! ScratchBuffer() "{{{
 	new
@@ -359,16 +369,20 @@ function! ScratchBuffer() "{{{
 	call LocKeyMapping()
 	close
 endfunction "}}}
+" }}}2
 " }}}1
+"
 " Vim settings "{{{1
-" Encoding
+"
+" Encoding "{{{2
 
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf-8,cp936,latin1
 set nobomb
-
-" Display
+" }}}2
+"
+" Display "{{{2
 "
 " text line
 set linespace=0
@@ -448,8 +462,9 @@ if CheckOS()=='windows'
 elseif CheckOS()=='linux'
 	set guifont=DejaVu\ Sans\ \Mono\ 14
 endif
-
-" Editing
+" }}}2
+"
+" Editing "{{{2
 
 set modelines=1
 set backspace=indent,eol,start
@@ -486,7 +501,9 @@ if CheckOS()=='windows'
 elseif CheckOS()=='linux'
 	cd ~/Documents/
 endif
+" }}}2
 " }}}1
+"
 " Key mappings and abbreviations "{{{1
 "
 " use function keys and commands instead of mapleader
@@ -540,7 +557,9 @@ vnoremap - $
 
 onoremap 0 ^
 onoremap - $
+
 " }}}1
+"
 " User defined commands "{{{1
 "
 " insert bullet points
@@ -583,5 +602,7 @@ command! DarkBackground set background=dark
 autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd VimEnter * call ScratchBuffer()
+
 " }}}1
+"
 " vim: set nolinebreak number foldlevel=9:
