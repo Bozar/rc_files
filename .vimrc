@@ -1,16 +1,14 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sat, Oct 05 | 16:51:45 | 2013
+" Last Update: Sun, Oct 06 | 12:39:08 | 2013
 
 set nocompatible
 filetype off
 " }}}1
-"
 " Vundle "{{{1
 " I'll try on some plugins later
 
 filetype plugin on
 " }}}1
-"
 " Functions "{{{1
 "
 " windows or linux
@@ -34,10 +32,10 @@ function! YankFoldMarker(fold_line) "{{{
 	'j,'ky "
 	if a:fold_line==0
 		normal 'j
-		pu! "
+		put! "
 	elseif a:fold_line==1
 		normal 'k
-		pu "
+		put "
 	endif
 	?{{{?+1,.-1g/^/d	" }}}
 	normal [z
@@ -358,12 +356,10 @@ function! ScratchBuffer() "{{{
 	setlocal buftype=nofile
 	setlocal bufhidden=hide
 	setlocal noswapfile
-	setlocal linebreak
 	call LocKeyMapping()
 	close
 endfunction "}}}
 " }}}1
-"
 " Vim settings "{{{1
 " Encoding
 
@@ -414,7 +410,6 @@ endif
 set laststatus=2
 set ruler
 
-function! s:status_line() "{{{
 " clear previous settings
 	set statusline=
 " relative path, modified, readonly, help, preview
@@ -434,10 +429,6 @@ function! s:status_line() "{{{
 " column number and virtual column number
 "	set statusline+=[%1.3(%c%)
 "	set statusline+=%1.4V]
-endfunction
-
-" comment the following line if something goes wrong 
-call s:status_line()
 
 " number
 set number
@@ -463,6 +454,7 @@ endif
 set modelines=1
 set backspace=indent,eol,start
 set sessionoptions=buffers,folds,sesdir,slash,unix,winsize
+set matchpairs+=<:>
 
 " yank behavior
 " use both * and + registers
@@ -495,7 +487,6 @@ elseif CheckOS()=='linux'
 	cd ~/Documents/
 endif
 " }}}1
-"
 " Key mappings and abbreviations "{{{1
 "
 " use function keys and commands instead of mapleader
@@ -514,10 +505,17 @@ vnoremap , ?
 " enter
 nnoremap <silent> <cr> :wa<cr>
 
+" jump between brackets
+nnoremap <space> %
+vnoremap <space> %
+
+" mark motion
+nnoremap ' `
+
 " modified 'Y'
 nnoremap Y y$
 
-" ; and :
+" ';', ',' and ':'
 nnoremap ; :
 nnoremap <c-n> ;
 nnoremap <c-p> ,
@@ -526,16 +524,12 @@ vnoremap ; :
 vnoremap <c-n> ;
 vnoremap <c-p> ,
 
-" j,k and gj, gk
-nnoremap j gj
-nnoremap k gk
-nnoremap <c-j> j
-nnoremap <c-k> k
+" gj and  gk
+nnoremap <c-j> gj
+nnoremap <c-k> gk
 
-vnoremap j gj
-vnoremap k gk
-vnoremap <c-j> j
-vnoremap <c-k> k
+vnoremap <c-j> gj
+vnoremap <c-k> gk
 
 " ^ and $
 nnoremap 0 ^
@@ -547,7 +541,6 @@ vnoremap - $
 onoremap 0 ^
 onoremap - $
 " }}}1
-"
 " User defined commands "{{{1
 "
 " insert bullet points
@@ -591,5 +584,4 @@ autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd VimEnter * call ScratchBuffer()
 " }}}1
-"
 " vim: set nolinebreak number foldlevel=9:
