@@ -1,6 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sun, Oct 06 | 23:29:24 | 2013
-" scroll screen after PutText
+" Last Update: Tue, Oct 08 | 23:19:03 | 2013
 
 set nocompatible
 filetype off
@@ -39,8 +38,10 @@ function! YankFoldMarker(fold_line) "{{{
 	elseif a:fold_line==1
 		'k|put "
 	endif
-	?{{{?+1,.-1g/^/d	" }}}
+	?{{{?+1,.-1g/^/d	"}}}
 	normal [z
+	s/^.*\( {{{\)\@=//	"}}}
+	normal h
 endfunction "}}}
 " }}}2
 "
@@ -84,8 +85,8 @@ endfunction "}}}
 " 2: append to old text
 function! PutText(put_line) "{{{
 	if a:put_line==0
-		1mark j|1put! "
-		'j,$g/^/d
+		$mark j|$put "
+		1,'jg/^/d
 		1
 	elseif a:put_line==1
 		1put! "
