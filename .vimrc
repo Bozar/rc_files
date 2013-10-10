@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Tue, Oct 08 | 23:19:03 | 2013
+" Last Update: Thu, Oct 10 | 21:17:54 | 2013
 
 set nocompatible
 filetype off
@@ -111,9 +111,10 @@ endfunction "}}}
 function! AnotherDay_GTD() "{{{
 	nnoremap <buffer> <silent> <f2>
 		\ :call YankFoldMarker(0)<cr>
-		\ 'jk[z:s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
+		\ 'j^yt k[z0P
+		\ :s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
 		\ :call ChangeFoldLevel(1)<cr>
-		\ 'jk[z
+		\ 'jk[zo<esc>
 endfunction "}}}
 
 function! GetThingsDone() "{{{
@@ -480,7 +481,7 @@ set guioptions=aP
 " fold
 set foldmethod=marker
 set foldminlines=3
-set foldlevel=0
+set foldlevel=1
 
 " search
 set ignorecase
@@ -523,11 +524,14 @@ vnoremap , ?
 " enter
 nnoremap <silent> <cr> :wa<cr>
 
-" jump between brackets
-nnoremap <space> %
-vnoremap <space> %
+" append or insert fold marker
+nnoremap <tab> :call YankFoldMarker(1)<cr>
+nnoremap <s-tab> :call YankFoldMarker(0)<cr>
 
-" mark motion
+" open or close fold
+nnoremap <space> za
+
+" move to mark
 nnoremap ' `
 
 " modified 'Y'
@@ -572,9 +576,7 @@ command! BulletPoint call InsertBulletPoint()
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
 command! TimeStamp s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')
 
-" append or change fold marker
-command! InsertFoldMarker call YankFoldMarker(0)
-command! AppendFoldMarker call YankFoldMarker(1)
+" change fold level
 command! AddFoldLevel call ChangeFoldLevel(1)
 command! SubFoldLevel call ChangeFoldLevel(0)
 
