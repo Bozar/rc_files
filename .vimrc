@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Thu, Oct 10 | 21:17:54 | 2013
+" Last Update: Sun, Oct 13 | 01:34:35 | 2013
 
 set nocompatible
 filetype off
@@ -28,20 +28,20 @@ endfunction "}}}
 " append(1) or insert(0) fold markers "{{{2
 " apply the fold level of cursor line
 function! YankFoldMarker(fold_line) "{{{
-	?{{{
-	mark j
-	/}}}
-	mark k
-	'j,'ky "
+	normal [zmj]zmk
 	if a:fold_line==0
-		'j|put! "
+		'jy "
+		'jpu! "
+		'ky "
+		'jpu! "
+		'j-2s/^.*\({\{3\}\)\@=//
 	elseif a:fold_line==1
-		'k|put "
+		'ky "
+		'kpu "
+		'jy "
+		'kpu "
+		'k+1s/^.*\({\{3\}\)\@=//
 	endif
-	?{{{?+1,.-1g/^/d	"}}}
-	normal [z
-	s/^.*\( {{{\)\@=//	"}}}
-	normal h
 endfunction "}}}
 " }}}2
 "
@@ -111,7 +111,7 @@ endfunction "}}}
 function! AnotherDay_GTD() "{{{
 	nnoremap <buffer> <silent> <f2>
 		\ :call YankFoldMarker(0)<cr>
-		\ 'j^yt k[z0P
+		\ :'j-2<cr>dd:'j<cr>yy:'j-1<cr>P
 		\ :s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
 		\ :call ChangeFoldLevel(1)<cr>
 		\ 'jk[zo<esc>
