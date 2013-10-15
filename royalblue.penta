@@ -1,0 +1,23 @@
+" pentadactyl color: royalblue
+" message
+hi ErrorMsg background: red !important; color: whitesmoke !important;
+hi WarningMsg background: red !important; color: whitesmoke !important;
+hi InfoMsg background: black !important; color: whitesmoke !important;
+" completion
+hi CompTitle /* title: smart completions */ color: whitesmoke; background: black;
+hi CompTitleSep /* the seperation line below the title */ height: 1px; background: royalblue;
+hi CompDesc /* the right column */ color: whitesmoke; width: 500px; max-width: 500px;
+hi CompResult /* the left column */ color: whitesmoke; width: 500px; max-width: 500px; overflow: hidden;
+hi URL /* the CompDesc text */ text-decoration: none; color: whitesmoke; background: inherit;
+hi Indicator /* the # and % in the :buffers list */ color: whitesmoke;
+hi Filter /* the matching text in a completion list */ color: red;
+hi CompItem[selected] /* a selected row of completion list */ background: royalblue; color: whitesmoke;
+" text
+hi Normal /* normal text */ color: whitesmoke; background: black; font-size: 14pt;
+hi Tag /* a bookmark tag for a url */ color:gray;
+hi Question /* a prompt for a decision: follow hint */ color: whitesmoke; background: black;
+" hint
+hi Hint /* a hint indicator: numbers or alphabets */ font-size: 12pt; text-transform: uppercase; color: whitesmoke !important; background-color: royalblue !important;
+hi HintElem /* a hintable element: url */ background: royalblue !important; color: whitesmoke !important; opacity: 0.5
+
+" vim: set ft=pentadactyl:
