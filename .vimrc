@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sun, Oct 13 | 01:34:35 | 2013
+" Last Update: Tue, Oct 15 | 19:36:01 | 2013
 
 set nocompatible
 filetype off
@@ -368,6 +368,7 @@ function! ScratchBuffer() "{{{
 	setlocal buftype=nofile
 	setlocal bufhidden=hide
 	setlocal noswapfile
+	setlocal nobuflisted
 	call LocKeyMapping()
 	close
 endfunction "}}}
