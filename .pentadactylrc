@@ -1,0 +1,60 @@
+loadplugins '\.(js|penta)$'
+group user
+
+" colorscheme
+colo royalblue
+
+" abbreviate
+iab bz bozar
+iab tm tommyfranklin42@gmail.com
+" cab ie js io.run("c:\\program files\\internet explorer\\iexplore.exe", [buffer.URL])
+
+" map
+map , <leader>
+nm -b h <C-p>
+nm -b j <C-f>
+nm -b k <C-b>
+nm -b l <C-n>
+nm -b J j
+nm -b K k
+nm -b -s -e <leader>qa qa
+nm -b -s -e <leader>rs res
+nm -b -s -e <leader>rh reh
+nm -b -s -e <leader>af exto! FoxyProxy Standard
+nm -b -s -e <leader>to tabo
+nm -b <leader>tm :tabm 
+nm -b -s -e <leader>td tabdetach
+nm -b -s -e <leader>te bmark -tags Tmp
+nm -b <s-left> 100h
+nm -b <s-right> 100l
+nm -b <leader>bd :bd! 
+nm -b <leader>ms :bmarks 
+nm -b <leader>mt :bmarks -T 
+nm -b <leader>ma :bmark 
+cm -b <down> <tab>
+cm -b <up> <s-tab>
+
+" set
+se titlestring='Mozilla Firefox'
+se guioptions=Cs
+se hintkeys=asdfgqwert
+se complete=l
+" se editor='d:\\Program\ Files\\Vim\\vim73\\gvim.exe -f'
+se nextpattern='\s*下页|下一页|后页\s*','\bnext\b','^>$','^(>>|»)$','^(>|»)','(>|»)$',
+se previouspattern='\s*上页|上一页|前页\s*','\bprev|previous\b','^<$','^(<<|«)$','^(<|«)','(<|«)$',
+se stal=never
+
+" firefox
+se! browser.tabs.closeWindowWithLastTab=false
+se! middlemouse.paste=true
+se! clipboard.autocopy=true
+" autocopy is *nix only
+se! mousewheel.withshiftkey.action=4
+se! mousewheel.withshiftkey.numlines=450
+se! general.autoScroll=false
+se! browser.newtab.url=about:blank
+se! browser.newtabpage.enabled=false
+se! general.smoothScroll=false
+
+
+" vim: set ft=pentadactyl fdm=marker:
