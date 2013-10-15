@@ -1,4 +1,4 @@
-vimfiles
+RC Files
 ========
 
-my personal .vimrc, .pentadactylrc and other Vim scripts
+my personal .vimrc, .pentadactylrc and other scripts
