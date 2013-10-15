@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Tue, Oct 15 | 19:36:01 | 2013
+" Last Update: Wed, Oct 16 | 00:00:06 | 2013
 
 set nocompatible
 filetype off
@@ -95,6 +95,13 @@ function! PutText(put_line) "{{{
 		$mark j|$put "
 		'j+1
 	endif
+endfunction "}}}
+" }}}2
+
+" add time-stamp {{{2
+function! CurrentTime() "{{{
+	1,5s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
+	$-4,$s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
 endfunction "}}}
 " }}}2
 "
@@ -575,7 +582,7 @@ command! BulletPoint call InsertBulletPoint()
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
-command! TimeStamp s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')
+command! TimeStamp call CurrentTime()
 
 " change fold level
 command! AddFoldLevel call ChangeFoldLevel(1)
