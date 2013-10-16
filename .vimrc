@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Oct 16 | 00:00:06 | 2013
+" Last Update: Wed, Oct 16 | 19:32:23 | 2013
 
 set nocompatible
 filetype off
@@ -86,8 +86,7 @@ endfunction "}}}
 function! PutText(put_line) "{{{
 	if a:put_line==0
 		$mark j|$put "
-		1,'jg/^/d
-		1
+		1,'jdelete
 	elseif a:put_line==1
 		1put! "
 		1
@@ -181,11 +180,9 @@ function! F1_Visual_Loc() "{{{
 		\ /<c-r>/<cr>
 endfunction "}}}
 
-" search GUID in English buffer
-" let @d='GUID'
 function! F1_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f1>
-		\ $2F	lvt	"dy<c-w>b<c-w>2kgg
+		\ ^"cyt	<c-w>b<c-w>kgg
 		\ :%s/<c-r>d\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}}
@@ -258,8 +255,7 @@ endfunction "}}}
 " let @d='search pattern'
 function! F3_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f3>
-		\ :let @d=''<cr>
-		\ :g/<c-r>//y D<cr><c-w>b
+		\ :let @d=''\|:g/<c-r>//y D<cr><c-w>b
 		\ :call PutText(0)<cr>
 endfunction "}}}
 
