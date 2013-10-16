@@ -578,7 +578,7 @@ command! BulletPoint call InsertBulletPoint()
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
-command! TimeStamp call CurrentTime()
+command! TimeStamp call CurrentTime()|normal ''
 
 " change fold level
 command! AddFoldLevel call ChangeFoldLevel(1)
