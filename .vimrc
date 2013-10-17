@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Oct 16 | 19:32:23 | 2013
+" Last Update: Thu, Oct 17 | 19:46:39 | 2013
 
 set nocompatible
 filetype off
@@ -180,12 +180,14 @@ function! F1_Visual_Loc() "{{{
 		\ /<c-r>/<cr>
 endfunction "}}}
 
+" search GUID in English buffer
+" let @d='GUID'
 function! F1_Shift_Normal_Loc() "{{{
-	nnoremap <buffer> <silent> <s-f1>
-		\ ^"cyt	<c-w>b<c-w>kgg
+  nnoremap <buffer> <silent> <s-f1>
+		\ $2F	l"dyt	<c-w>b<c-w>2kgg
 		\ :%s/<c-r>d\c//n<cr>
 		\ /<c-r>/<cr>
-endfunction "}}}
+endfunction "}}} 
 
 function! F1_Loc() "{{{
 	call F1_Normal_Loc()
