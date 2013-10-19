@@ -1,5 +1,6 @@
 loadplugins '\.(js|penta)$'
 group user
+Last Update: Sat, Oct 19 | 14:26:36 | 2013
 
 " colorscheme
 colo royalblue
@@ -17,6 +18,7 @@ nm -b k <C-b>
 nm -b l <C-n>
 nm -b J j
 nm -b K k
+nm -b <leader>, :
 nm -b -s -e <leader>qa qa
 nm -b -s -e <leader>rs res
 nm -b -s -e <leader>rh reh
