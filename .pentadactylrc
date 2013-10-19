@@ -1,6 +1,6 @@
 loadplugins '\.(js|penta)$'
 group user
-Last Update: Sat, Oct 19 | 14:26:36 | 2013
+" Last Update: Sat, Oct 19 | 14:26:36 | 2013
 
 " colorscheme
 colo royalblue
