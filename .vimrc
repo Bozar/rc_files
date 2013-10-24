@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Oct 23 | 20:42:16 | 2013
+" Last Update: Thu, Oct 24 | 20:39:10 | 2013
 
 set nocompatible
 filetype off
@@ -243,7 +243,7 @@ endfunction "}}}
 " let @b='Chinese correction'
 function! F3_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f3>
-		\ gg:%s/<c-r>c\(.\{-\}\t.\{-\}<c-r>b\)\@!\c//n<cr>
+		\ :%s/<c-r>c\(.\{-\}\t.\{-\}<c-r>b\)\@!\c//n<cr>
 endfunction "}}}
 
 " put '<c-r>/' text into tmp buffer
@@ -275,7 +275,7 @@ endfunction "}}}
 function! F4_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f4>
 		\ :%s/\(<c-r>c.\{-\}\t.\{-\}\)\@<=<c-r>a\c//n<cr>
-		\ :%s/<c-r>//<c-r>b/g<cr>
+		\ :%s/<c-r>//<c-r>b/gc<cr>
 endfunction "}}}
 
 " substitute the whole line
@@ -284,7 +284,7 @@ endfunction "}}}
 function! F4_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f4>
 		\ ms^"ayt	f	l"byt	
-		\ :%s/^\(<c-r>a\t\).\{-\}\(\t\)/\1<c-r>b\2/g<cr>'a
+		\ :%s/^\(<c-r>a\t\).\{-\}\(\t\)/\1<c-r>b\2/gc<cr>
 endfunction "}}}
 
 function! F4_Loc() "{{{
