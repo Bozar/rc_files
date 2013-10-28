@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Tue, Oct 29 | 00:37:42 | 2013
+" Last Update: Tue, Oct 29 | 01:31:56 | 2013
 
 set nocompatible
 filetype off
@@ -127,32 +127,39 @@ endfunction "}}}
 " }}}2
 
 " English vocabulary "{{{2
-" insert brackets
+" search word
 function! F1_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f1> ves[<c-r>"]<esc>
+	nnoremap <buffer> <silent> <f1> yi[/\[<c-r>"\]<cr>
 endfunction "}}}
-function! F1_Visual_Vocabulary() "{{{
-	vnoremap <buffer> <silent> <f1> s[<c-r>"]<esc>
+" insert brackets
+function! F2_Normal_Vocabulary() "{{{
+	nnoremap <buffer> <silent> <f2> ves[<c-r>"]<esc>
+endfunction "}}}
+function! F2_Visual_Vocabulary() "{{{
+	vnoremap <buffer> <silent> <f2> s[<c-r>"]<esc>
 endfunction "}}}
 " make word list
+" Word List {{{
+" [word 1]
+" [word 2]
+" }}}
 function! MakeWordList() "{{{
-	mark h|'j,'ky|$mark l|'lput
+	mark h
+	/^Word List {{{$/+1;/^ }}}$/-1delete
+	'j,'ky|$mark l|'lput
 	'l+1,$s/\[/\r[/g|'l+1,$s/\]/]\r/g|'l+1,$g!/\[/d
 	'l+1,$delete
-	buffer 2|call PutText(2)|buffer #|normal 'h
+	/^Word List {{{$/put
+	normal 'h
 endfunction "}}}
-function! F2_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f2> :call MakeWordList()<cr>
-endfunction "}}}
-" search word
 function! F3_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f3> yi[/\[<c-r>"\]<cr>
+	nnoremap <buffer> <silent> <f3> :call MakeWordList()<cr>
 endfunction "}}}
 
 function! EnglishVocabulary() "{{{
 	call F1_Normal_Vocabulary()
-	call F1_Visual_Vocabulary()
 	call F2_Normal_Vocabulary()
+	call F2_Visual_Vocabulary()
 	call F3_Normal_Vocabulary()
 endfunction "}}}
 " }}}2
