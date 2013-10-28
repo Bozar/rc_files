@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mon, Oct 28 | 19:50:12 | 2013
+" Last Update: Tue, Oct 29 | 00:37:42 | 2013
 
 set nocompatible
 filetype off
@@ -144,11 +144,16 @@ endfunction "}}}
 function! F2_Normal_Vocabulary() "{{{
 	nnoremap <buffer> <silent> <f2> :call MakeWordList()<cr>
 endfunction "}}}
+" search word
+function! F3_Normal_Vocabulary() "{{{
+	nnoremap <buffer> <silent> <f3> yi[/\[<c-r>"\]<cr>
+endfunction "}}}
 
 function! EnglishVocabulary() "{{{
 	call F1_Normal_Vocabulary()
 	call F1_Visual_Vocabulary()
 	call F2_Normal_Vocabulary()
+	call F3_Normal_Vocabulary()
 endfunction "}}}
 " }}}2
 
