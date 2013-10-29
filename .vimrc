@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Tue, Oct 29 | 01:31:56 | 2013
+" Last Update: Wed, Oct 30 | 01:05:14 | 2013
 
 set nocompatible
 filetype off
@@ -98,6 +98,7 @@ endfunction "}}}
 " }}}2
 
 " add time-stamp {{{2
+" there should be at least 5 lines in a file
 function! CurrentTime() "{{{
 	1,5s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
 	$-4,$s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
@@ -142,18 +143,20 @@ endfunction "}}}
 " Word List {{{
 " [word 1]
 " [word 2]
-" }}}
-function! MakeWordList() "{{{
-	mark h
-	/^Word List {{{$/+1;/^ }}}$/-1delete
+function! MakeWordList_Vocabulary() "{{{
+	mark h|? {{{\d$?mark j|normal ]zmk
+	"}}}
+	?^Word List {{{$?+1;/^ }}}$/-1delete
 	'j,'ky|$mark l|'lput
 	'l+1,$s/\[/\r[/g|'l+1,$s/\]/]\r/g|'l+1,$g!/\[/d
 	'l+1,$delete
+	normal 'j
 	/^Word List {{{$/put
+	"}}}
 	normal 'h
 endfunction "}}}
 function! F3_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f3> :call MakeWordList()<cr>
+	nnoremap <buffer> <silent> <f3> :call MakeWordList_Vocabulary()<cr>
 endfunction "}}}
 
 function! EnglishVocabulary() "{{{
@@ -487,7 +490,6 @@ set matchpairs+=<:>
 set guioptions=aP
 " fold
 set foldmethod=marker
-set foldminlines=3
 set foldlevel=1
 " search
 set ignorecase
