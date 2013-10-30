@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Oct 30 | 01:05:14 | 2013
+" Last Update: Wed, Oct 30 | 23:59:50 | 2013
 
 set nocompatible
 filetype off
@@ -175,7 +175,7 @@ endfunction "}}}
 " Chinese | English = glossary = tmp
 " left | up-right = middle-right = down-right
 " modeline: from left to right
-" vim: set linebreak:
+" vim: set linebreak foldlevel=9:
 " vim: set linebreak nonumber nomodifiable cursorline:
 " vim: set nonumber nomodifiable:
 " vim: set linebreak:
@@ -197,6 +197,14 @@ function! DeleteColumns_Loc() "{{{
 	%s/^.*#MARK#\t//e
 	%s/\(^.\{-\}\t.\{-\}\)\t.*$/\1/e
 endfunction "}}}
+function! FileFormat_Loc() "{{{
+	set fileencoding=utf-8
+	set fileformat=unix
+	%s/
+//ge
+	%s/ \+\t/\t/ge
+	%s/\t \+/\t/ge
+endfunction "}}}
 
 " Function key: <F1> "{{{3
 " put cursor after the first \t
@@ -215,7 +223,7 @@ endfunction "}}}
 " let @d='GUID'
 function! F1_Shift_Normal_Loc() "{{{
   nnoremap <buffer> <silent> <s-f1>
-		\ $2F	l"dyt	<c-w>b<c-w>2kgg
+		\ $2F	l"dyt	<c-w>t<c-w>wgg
 		\ :%s/<c-r>d\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}} 
@@ -228,8 +236,7 @@ endfunction "}}}
 " }}}3
 
 " Function key: <F2> "{{{3
-" search current buffer
-" put cursor after the first '\t'
+" search current buffer and put cursor after the first '\t'
 function! F2_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f2> 
 		\ ^yt	gg
@@ -243,16 +250,15 @@ function! F2_Visual_Loc() "{{{
 		\ /<c-r>/<cr>^f	
 endfunction "}}}
 " search English buffer
-" in combination with <F5>
 function! F2_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f2> 
-		\ ^yt	<c-w>b<c-w>2kgg
+		\ ^yt	<c-w>t<c-w>wgg
 		\ :%s/\(\t#MARK#\t.\{-\}\)\@<=<c-r>"\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}}
 function! F2_Shift_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <s-f2> 
-		\ y<c-w>b<c-w>2kgg
+		\ y<c-w>t<c-w>wgg
 		\ :%s/\(\t#MARK#\t.\{-\}\)\@<=<c-r>"\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}}
@@ -274,6 +280,7 @@ function! F3_Normal_Loc() "{{{
 		\ :%s/<c-r>c\(.\{-\}\t.\{-\}<c-r>b\)\@!\c//n<cr>
 endfunction "}}}
 " put '<c-r>/' text into tmp buffer
+" let @d='search pattern'
 " note: it seems that when a command will delete all characters in one buffer,
 " and it is at the end of a script line,
 " it will break the key mapping
@@ -281,7 +288,6 @@ endfunction "}}}
 " nnoremap <f12> ggdG
 " \ oTEST<esc>
 " nnoremap <f12> ggdGoTEST<esc>
-" let @d='search pattern'
 function! F3_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f3>
 		\ :let @d=''\|:g/<c-r>//y D<cr><c-w>b
@@ -327,23 +333,19 @@ endfunction "}}}
 " mark S (shared between buffers): search line
 function! F5_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f5>
-		\ mS^"dy$<c-w>h<c-w>wgg
-		\ :%s/<c-r>d//n<cr>
-		\ /<c-r>/<cr>
+		\ mS^"dy$<c-w>t<c-w>wgg
+		\ /<c-r>d<cr>j
 		\ :let @e=''<cr>
-		\ $?#MARK#<cr>
-		\ ^"ey/#END#<cr>
-		\ <c-w>h'Scc<c-r>e#END#<esc>j
+		\ :?#MARK#?;/#END#/y E<cr>
+		\ <c-w>t'Scc<c-r>e<c-h><esc>
 endfunction "}}}
 function! F5_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f5>
-		\ mS"dy<c-w>h<c-w>wgg
-		\ :%s/<c-r>d//n<cr>
-		\ /<c-r>/<cr>
+		\ mS"dy<c-w>t<c-w>wgg
+		\ /<c-r>d<cr>j
 		\ :let @e=''<cr>
-		\ $?#MARK#<cr>
-		\ ^"ey/#END#<cr>
-		\ <c-w>h'Scc<c-r>e#END#<esc>j
+		\ :?#MARK#?;/#END#/y E<cr>
+		\ <c-w>t'Scc<c-r>e<c-h><esc>
 endfunction "}}}
 
 function! F5_Loc() "{{{
@@ -358,7 +360,7 @@ endfunction "}}}
 function! F6_Normal_Loc() "{{{
 	nnoremap <buffer> <f6>
 		\ :call NearbyLines_Loc()<cr>
-		\ <c-w>h:buffer 2\|call PutText(0)<cr>
+		\ <c-w>t:buffer 2\|call PutText(0)<cr>
 		\ /<c-r>d<cr>ma
 		\ :call DeleteColumns_Loc()<cr>
 		\ 'azz
@@ -370,7 +372,7 @@ function! F6_Shift_Normal_Loc() "{{{
 		\ :let @d=''<cr>
 		\ :g/\(#END#\)\@<!$/d D<cr>
 		\ :let @"=@d<cr>
-		\ <c-w>h:b 2<cr>:call PutText(0)<cr>
+		\ <c-w>t:b 2<cr>:call PutText(0)<cr>
 endfunction "}}}
 
 function! F6_Loc() "{{{
@@ -576,15 +578,17 @@ command! OverwriteScratch buffer 2|call PutText(0)
 " word count
 command! WordCountCN %s/[^\x00-\xff]//gn
 command! WordCountEN %s/\a\+//gn
+" localization
+command! FormatLocFile call FileFormat_Loc()
 " edit .vimrc
 command! EditVimrc e $MYVIMRC
 " switch settings
-command! HighlightSwitch set hlsearch!
+command! HlSearch set hlsearch!
 command! LightBackground set background=light
 command! DarkBackground set background=dark
 " autocommands
 autocmd BufRead *.loc call LocKeyMapping()
-autocmd BufRead daily_life.note call GetThingsDone()
+autocmd BufRead achievement_daily.note call GetThingsDone()
 autocmd BufRead english_learning.note call EnglishVocabulary()
 autocmd VimEnter * call ScratchBuffer()
 " }}}1
