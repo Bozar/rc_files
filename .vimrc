@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Oct 30 | 23:59:50 | 2013
+" Last Update: Thu, Oct 31 | 22:13:27 | 2013
 
 set nocompatible
 filetype off
@@ -200,8 +200,7 @@ endfunction "}}}
 function! FileFormat_Loc() "{{{
 	set fileencoding=utf-8
 	set fileformat=unix
-	%s/
-//ge
+	%s/\r//ge
 	%s/ \+\t/\t/ge
 	%s/\t \+/\t/ge
 endfunction "}}}
@@ -333,19 +332,21 @@ endfunction "}}}
 " mark S (shared between buffers): search line
 function! F5_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f5>
-		\ mS^"dy$<c-w>t<c-w>wgg
-		\ /<c-r>d<cr>j
+		\ mS^"dy$
+		\ <c-w>t<c-w>wgg/<c-r>d/+1<cr>
 		\ :let @e=''<cr>
 		\ :?#MARK#?;/#END#/y E<cr>
-		\ <c-w>t'Scc<c-r>e<c-h><esc>
+		\ <c-w>t'Scc<c-r>e<esc>gg
+		\ :g/^$/d<cr>/<c-r>d<cr>/#END#/+1<cr>
 endfunction "}}}
 function! F5_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f5>
-		\ mS"dy<c-w>t<c-w>wgg
-		\ /<c-r>d<cr>j
+		\ mS"dy
+		\ <c-w>t<c-w>wgg/<c-r>d/+1<cr>
 		\ :let @e=''<cr>
 		\ :?#MARK#?;/#END#/y E<cr>
-		\ <c-w>t'Scc<c-r>e<c-h><esc>
+		\ <c-w>t'Scc<c-r>e<esc>gg
+		\ :g/^$/d<cr>/<c-r>d<cr>/#END#/+1<cr>
 endfunction "}}}
 
 function! F5_Loc() "{{{
