@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Thu, Oct 31 | 22:13:27 | 2013
+" Last Update: Fri, Nov 01 | 20:50:59 | 2013
 
 set nocompatible
 filetype off
@@ -175,10 +175,9 @@ endfunction "}}}
 " Chinese | English = glossary = tmp
 " left | up-right = middle-right = down-right
 " modeline: from left to right
-" vim: set linebreak foldlevel=9:
+" vim: set linebreak:
 " vim: set linebreak nonumber nomodifiable cursorline:
 " vim: set nonumber nomodifiable:
-" vim: set linebreak:
 
 " split window equally between all buffers except for glossary
 " :resize 3
@@ -348,32 +347,39 @@ function! F5_Visual_Loc() "{{{
 		\ <c-w>t'Scc<c-r>e<esc>gg
 		\ :g/^$/d<cr>/<c-r>d<cr>/#END#/+1<cr>
 endfunction "}}}
+" put broken lines into Scratch (left)
+function! F5_Shift_Normal_Loc() "{{{
+	nnoremap <buffer> <silent> <s-f5>
+		\ :let @d=''<cr>
+		\ :g/\(#END#\)\@<!$/d D<cr>
+		\ :let @"=@d<cr>
+		\ <c-w>t:b 2<cr>:call PutText(0)<cr>
+endfunction "}}}
 
 function! F5_Loc() "{{{
 	call F5_Normal_Loc()
 	call F5_Visual_Loc()
+	call F5_Shift_Normal_Loc()
 endfunction "}}}
 " }}}3
 
 " Function key: <F6> "{{{3
+" add text to bug fix
+function! F6_Normal_Loc() "{{{
+	nnoremap <buffer> <silent> <f6>
+		\ :1,$yank<cr><c-w>t
+		\ :b chinese.loc<cr>
+		\ :$put! "<cr>'a
+endfunction "}}}
 " put lines into Scratch buffer
 " the previous search pattern is shown at the center of window
-function! F6_Normal_Loc() "{{{
-	nnoremap <buffer> <f6>
+function! F6_Shift_Normal_Loc() "{{{
+	nnoremap <buffer> <silent> <s-f6>
 		\ :call NearbyLines_Loc()<cr>
 		\ <c-w>t:buffer 2\|call PutText(0)<cr>
 		\ /<c-r>d<cr>ma
 		\ :call DeleteColumns_Loc()<cr>
 		\ 'azz
-endfunction "}}}
-" ready for completion
-" put broken lines into Scratch (left)
-function! F6_Shift_Normal_Loc() "{{{
-	nnoremap <buffer> <s-f6>
-		\ :let @d=''<cr>
-		\ :g/\(#END#\)\@<!$/d D<cr>
-		\ :let @"=@d<cr>
-		\ <c-w>t:b 2<cr>:call PutText(0)<cr>
 endfunction "}}}
 
 function! F6_Loc() "{{{
@@ -493,7 +499,7 @@ set matchpairs+=<:>
 set guioptions=aP
 " fold
 set foldmethod=marker
-set foldlevel=1
+set foldlevel=20
 " search
 set ignorecase
 set incsearch
@@ -585,6 +591,7 @@ command! FormatLocFile call FileFormat_Loc()
 command! EditVimrc e $MYVIMRC
 " switch settings
 command! HlSearch set hlsearch!
+command! LineBreak set linebreak!
 command! LightBackground set background=light
 command! DarkBackground set background=dark
 " autocommands
@@ -594,4 +601,4 @@ autocmd BufRead english_learning.note call EnglishVocabulary()
 autocmd VimEnter * call ScratchBuffer()
 " }}}1
 
-" vim: set nolinebreak number foldlevel=9:
+" vim: set nolinebreak number foldlevel=20:
