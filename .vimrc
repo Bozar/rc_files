@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Fri, Nov 01 | 20:50:59 | 2013
+" Last Update: Tue, Nov 05 | 23:40:13 | 2013
 
 set nocompatible
 filetype off
@@ -134,7 +134,7 @@ function! F1_Normal_Vocabulary() "{{{
 endfunction "}}}
 " insert brackets
 function! F2_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f2> ves[<c-r>"]<esc>
+	nnoremap <buffer> <silent> <f2> ciw[<c-r>"]<esc>
 endfunction "}}}
 function! F2_Visual_Vocabulary() "{{{
 	vnoremap <buffer> <silent> <f2> s[<c-r>"]<esc>
@@ -144,14 +144,13 @@ endfunction "}}}
 " [word 1]
 " [word 2]
 function! MakeWordList_Vocabulary() "{{{
-	mark h|? {{{\d$?mark j|normal ]zmk
-	"}}}
+	mark h
 	?^Word List {{{$?+1;/^ }}}$/-1delete
 	'j,'ky|$mark l|'lput
 	'l+1,$s/\[/\r[/g|'l+1,$s/\]/]\r/g|'l+1,$g!/\[/d
 	'l+1,$delete
 	normal 'j
-	/^Word List {{{$/put
+	?^Word List {{{$?put
 	"}}}
 	normal 'h
 endfunction "}}}
