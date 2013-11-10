@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Tue, Nov 05 | 23:40:13 | 2013
+" Last Update: Sun, Nov 10 | 22:41:40 | 2013
 
 set nocompatible
 filetype off
@@ -143,14 +143,16 @@ endfunction "}}}
 " Word List {{{
 " [word 1]
 " [word 2]
+" }}}
 function! MakeWordList_Vocabulary() "{{{
-	mark h
+	mark h|? {{{\d$?mark j|normal ]zmk
+	"}}}
 	?^Word List {{{$?+1;/^ }}}$/-1delete
 	'j,'ky|$mark l|'lput
 	'l+1,$s/\[/\r[/g|'l+1,$s/\]/]\r/g|'l+1,$g!/\[/d
 	'l+1,$delete
 	normal 'j
-	?^Word List {{{$?put
+	/^Word List {{{$/put
 	"}}}
 	normal 'h
 endfunction "}}}
