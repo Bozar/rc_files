@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Fri, Nov 15 | 21:52:37 | 2013
+" Last Update: Sat, Nov 16 | 00:14:59 | 2013
 
 set nocompatible
 filetype off
@@ -586,17 +586,19 @@ command! BulletPoint call InsertBulletPoint()
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
 command! TimeStamp call CurrentTime()|normal ''
 " change fold level
-command! AddFoldLevel call ChangeFoldLevel(1)
-command! SubFoldLevel call ChangeFoldLevel(0)
+command! FoldLevelAdd call ChangeFoldLevel(1)
+command! FoldLevelSub call ChangeFoldLevel(0)
 " replace '\t' with '\s\s\s\s' | '\t\t' with '\t'
 command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
 " put text to Scratch buffer
-command! AppendToScratch buffer 2|call PutText(2)
-command! InsertIntoScratch buffer 2|call PutText(1)
-command! OverwriteScratch buffer 2|call PutText(0)
+command! ScratchAppend buffer 2|call PutText(2)
+command! ScratchInsert buffer 2|call PutText(1)
+command! ScratchOverwrite buffer 2|call PutText(0)
 " word count
 command! WordCountCN %s/[^\x00-\xff]//gn
 command! WordCountEN %s/\a\+//gn
+" load key mappings
+command! KeyMappingEN call EnglishVocabulary()
 " localization
 command! FormatLocFile call FileFormat_Loc()
 " edit .vimrc
@@ -608,7 +610,6 @@ command! Background call SetBackground()
 " autocommands
 autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead achievement_daily.note call GetThingsDone()
-autocmd BufRead english_learning.note call EnglishVocabulary()
 autocmd VimEnter * call ScratchBuffer()
 " }}}1
 
