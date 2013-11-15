@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sun, Nov 10 | 22:41:40 | 2013
+" Last Update: Fri, Nov 15 | 21:52:37 | 2013
 
 set nocompatible
 filetype off
@@ -21,6 +21,17 @@ function! CheckOS() "{{{
 		return 'windows'
 	else
 		return 'linux'
+	endif
+endfunction "}}}
+" }}}2
+
+" change background color "{{{2
+" :h expr-option
+function! SetBackground() "{{{
+	if &background=='dark'
+		set background=light
+	else
+		set background=dark
 	endif
 endfunction "}}}
 " }}}2
@@ -102,6 +113,19 @@ endfunction "}}}
 function! CurrentTime() "{{{
 	1,5s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
 	$-4,$s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
+endfunction "}}}
+" }}}2
+
+" add scratch buffer "{{{2
+" load LocKeyMapping
+function! ScratchBuffer() "{{{
+	new
+	setlocal buftype=nofile
+	setlocal bufhidden=hide
+	setlocal noswapfile
+	setlocal nobuflisted
+	call LocKeyMapping()
+	close
 endfunction "}}}
 " }}}2
 
@@ -398,19 +422,6 @@ function! LocKeyMapping() "{{{
 	call F6_Loc()
 endfunction "}}}
 " }}}2
-
-" add scratch buffer "{{{2
-" load LocKeyMapping
-function! ScratchBuffer() "{{{
-	new
-	setlocal buftype=nofile
-	setlocal bufhidden=hide
-	setlocal noswapfile
-	setlocal nobuflisted
-	call LocKeyMapping()
-	close
-endfunction "}}}
-" }}}2
 " }}}1
 
 " Vim settings "{{{1
@@ -593,8 +604,7 @@ command! EditVimrc e $MYVIMRC
 " switch settings
 command! HlSearch set hlsearch!
 command! LineBreak set linebreak!
-command! LightBackground set background=light
-command! DarkBackground set background=dark
+command! Background call SetBackground()
 " autocommands
 autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead achievement_daily.note call GetThingsDone()
