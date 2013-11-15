@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sat, Nov 16 | 00:14:59 | 2013
+" Last Update: Sat, Nov 16 | 00:58:18 | 2013
 
 set nocompatible
 filetype off
@@ -117,14 +117,12 @@ endfunction "}}}
 " }}}2
 
 " add scratch buffer "{{{2
-" load LocKeyMapping
 function! ScratchBuffer() "{{{
 	new
 	setlocal buftype=nofile
 	setlocal bufhidden=hide
 	setlocal noswapfile
 	setlocal nobuflisted
-	call LocKeyMapping()
 	close
 endfunction "}}}
 " }}}2
@@ -599,6 +597,7 @@ command! WordCountCN %s/[^\x00-\xff]//gn
 command! WordCountEN %s/\a\+//gn
 " load key mappings
 command! KeyMappingEN call EnglishVocabulary()
+command! KeyMappingLoc call LocKeyMapping()
 " localization
 command! FormatLocFile call FileFormat_Loc()
 " edit .vimrc
