@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sat, Nov 16 | 00:58:18 | 2013
+" Last Update: Sat, Nov 16 | 23:34:08 | 2013
 
 set nocompatible
 filetype off
@@ -161,6 +161,10 @@ endfunction "}}}
 function! F2_Visual_Vocabulary() "{{{
 	vnoremap <buffer> <silent> <f2> s[<c-r>"]<esc>
 endfunction "}}}
+" delete brackets
+function! F3_Normal_Vocabulary() "{{{
+	nnoremap <buffer> <silent> <f3> di[pF[2x
+endfunction "}}}
 " make word list
 " Word List {{{
 " [word 1]
@@ -178,8 +182,8 @@ function! MakeWordList_Vocabulary() "{{{
 	"}}}
 	normal 'h
 endfunction "}}}
-function! F3_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f3> :call MakeWordList_Vocabulary()<cr>
+function! F4_Normal_Vocabulary() "{{{
+	nnoremap <buffer> <silent> <f4> :call MakeWordList_Vocabulary()<cr>
 endfunction "}}}
 
 function! EnglishVocabulary() "{{{
@@ -187,6 +191,7 @@ function! EnglishVocabulary() "{{{
 	call F2_Normal_Vocabulary()
 	call F2_Visual_Vocabulary()
 	call F3_Normal_Vocabulary()
+	call F4_Normal_Vocabulary()
 endfunction "}}}
 " }}}2
 
@@ -592,6 +597,8 @@ command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
 command! ScratchAppend buffer 2|call PutText(2)
 command! ScratchInsert buffer 2|call PutText(1)
 command! ScratchOverwrite buffer 2|call PutText(0)
+" creat new Scratch buffer
+command! ScratchCreat call ScratchBuffer()|ls!
 " word count
 command! WordCountCN %s/[^\x00-\xff]//gn
 command! WordCountEN %s/\a\+//gn
@@ -608,7 +615,7 @@ command! LineBreak set linebreak!
 command! Background call SetBackground()
 " autocommands
 autocmd BufRead *.loc call LocKeyMapping()
-autocmd BufRead achievement_daily.note call GetThingsDone()
+autocmd BufRead Achievement.note call GetThingsDone()
 autocmd VimEnter * call ScratchBuffer()
 " }}}1
 
