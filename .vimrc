@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sat, Nov 16 | 23:34:08 | 2013
+" Last Update: Sat, Dec 14 | 15:04:25 | 2013
 
 set nocompatible
 filetype off
@@ -130,8 +130,8 @@ endfunction "}}}
 " GTD "{{{2
 " replace bullet point (*) with finished (~) or unfinished (!)
 function! Finished_GTD() "{{{
-	nnoremap <buffer> <silent> <f1> :s/^\t\(\*\\|!\)/\t\~<cr>
-	nnoremap <buffer> <silent> <s-f1> :s/^\t\(\*\\|\~\)/\t!<cr>
+	nnoremap <buffer> <silent> <f1> :s/^\t\*/\t\~<cr>
+	nnoremap <buffer> <silent> <s-f1> :s/^\t\~/\t\*<cr>
 endfunction "}}}
 " insert new lines for another day
 function! AnotherDay_GTD() "{{{
@@ -152,7 +152,7 @@ endfunction "}}}
 " English vocabulary "{{{2
 " search word
 function! F1_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f1> yi[/\[<c-r>"\]<cr>
+	nnoremap <buffer> <silent> <f1> vi[y/\[<c-r>"\]<cr>
 endfunction "}}}
 " insert brackets
 function! F2_Normal_Vocabulary() "{{{
@@ -615,7 +615,7 @@ command! LineBreak set linebreak!
 command! Background call SetBackground()
 " autocommands
 autocmd BufRead *.loc call LocKeyMapping()
-autocmd BufRead Achievement.note call GetThingsDone()
+autocmd BufRead achievement.note call GetThingsDone()
 autocmd VimEnter * call ScratchBuffer()
 " }}}1
 
