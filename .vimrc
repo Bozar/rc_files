@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sat, Dec 14 | 15:04:25 | 2013
+" Last Update: Sun, Dec 15 | 23:17:44 | 2013
 
 set nocompatible
 filetype off
@@ -134,11 +134,17 @@ function! Finished_GTD() "{{{
 	nnoremap <buffer> <silent> <s-f1> :s/^\t\~/\t\*<cr>
 endfunction "}}}
 " insert new lines for another day
+" insert new fold
+" change date
+" yank the first line of previous recording (usually the time of coming home)
+" change foldlevel
 function! AnotherDay_GTD() "{{{
 	nnoremap <buffer> <silent> <f2>
 		\ :call YankFoldMarker(0)<cr>
 		\ :'j-2<cr>dd:'j<cr>yy:'j-1<cr>P
 		\ :s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
+		\ :'j+2y<cr>
+		\ :'j-2put "<cr>
 		\ :call ChangeFoldLevel(1)<cr>
 		\ 'jk[zo<esc>
 endfunction "}}}
