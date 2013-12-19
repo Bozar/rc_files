@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Fri, Dec 20 | 01:28:45 | 2013
+" Last Update: Fri, Dec 20 | 01:39:14 | 2013
 
 set nocompatible
 filetype off
@@ -162,7 +162,7 @@ function! F1_Normal_Vocabulary() "{{{
 endfunction "}}}
 " insert brackets
 function! F2_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f2> ciw[<c-r>"]<esc>
+	nnoremap <buffer> <silent> <f2> "+ciw[<c-r>"]<esc>
 endfunction "}}}
 function! F2_Visual_Vocabulary() "{{{
 	vnoremap <buffer> <silent> <f2> s[<c-r>"]<esc>
