@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sun, Dec 15 | 23:17:44 | 2013
+" Last Update: Fri, Dec 20 | 01:28:45 | 2013
 
 set nocompatible
 filetype off
@@ -168,10 +168,10 @@ function! F2_Visual_Vocabulary() "{{{
 	vnoremap <buffer> <silent> <f2> s[<c-r>"]<esc>
 endfunction "}}}
 " delete brackets
-function! F3_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f3> di[pF[2x
+function! F2_Shift_Normal_Vocabulary() "{{{
+	nnoremap <buffer> <silent> <s-f2> di[pF[2x
 endfunction "}}}
-" make word list
+" update word list
 " Word List {{{
 " [word 1]
 " [word 2]
@@ -188,14 +188,19 @@ function! MakeWordList_Vocabulary() "{{{
 	"}}}
 	normal 'h
 endfunction "}}}
+function! F3_Normal_Vocabulary() "{{{
+	nnoremap <buffer> <silent> <f3> :call MakeWordList_Vocabulary()<cr>
+endfunction "}}}
+" creat blank word list
 function! F4_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f4> :call MakeWordList_Vocabulary()<cr>
+	nnoremap <buffer> <silent> <f4> :?{{{?+1s/^/\rWord List {{{\r\r }}}\r<cr>
 endfunction "}}}
 
 function! EnglishVocabulary() "{{{
 	call F1_Normal_Vocabulary()
 	call F2_Normal_Vocabulary()
 	call F2_Visual_Vocabulary()
+	call F2_Shift_Normal_Vocabulary()
 	call F3_Normal_Vocabulary()
 	call F4_Normal_Vocabulary()
 endfunction "}}}
