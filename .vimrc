@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Fri, Dec 20 | 01:39:14 | 2013
+" Last Update: Sun, Dec 29 | 01:07:11 | 2013
 
 set nocompatible
 filetype off
@@ -77,7 +77,7 @@ endfunction "}}}
 " insert bullets: special characters at the beginning of a line "{{{2
 " do not indent title '-'
 function! IndentTitle() "{{{
-	'j,'kg/^\(\t\|\s\{4\}\)\-/left 0
+	'j,'kg/^\(\t\{1,2\}\|\s\{4,8\}\)\-/left 0
 	'j,'ks/^-//e
 endfunction "}}}
 " '==' will be replaced with '+'
@@ -176,6 +176,7 @@ endfunction "}}}
 " [word 1]
 " [word 2]
 " }}}
+" h: cursor line | l: last line | j: folder begins | k: folder ends
 function! MakeWordList_Vocabulary() "{{{
 	mark h|? {{{\d$?mark j|normal ]zmk
 	"}}}
@@ -185,6 +186,7 @@ function! MakeWordList_Vocabulary() "{{{
 	'l+1,$delete
 	normal 'j
 	/^Word List {{{$/put
+	?^Word List {{{?s/$/\r
 	"}}}
 	normal 'h
 endfunction "}}}
@@ -500,7 +502,6 @@ set statusline+=\ %P
 " set statusline+=%1.4V] "}}}
 " number
 set number
-set numberwidth=3
 " command line
 set showcmd
 set cmdheight=2
@@ -542,7 +543,7 @@ set smartindent
 if CheckOS()=='windows' "{{{
 	cd d:\Documents\
 elseif CheckOS()=='linux'
-	cd ~/Documents/
+	cd ~/documents/
 endif "}}}
 " }}}2
 " }}}1
