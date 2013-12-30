@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sun, Dec 29 | 01:07:11 | 2013
+" Last Update: Mon, Dec 30 | 23:21:00 | 2013
 
 set nocompatible
 filetype off
@@ -197,6 +197,19 @@ endfunction "}}}
 function! F4_Normal_Vocabulary() "{{{
 	nnoremap <buffer> <silent> <f4> :?{{{?+1s/^/\rWord List {{{\r\r }}}\r<cr>
 endfunction "}}}
+" collect word lists
+function! ColletWordList_Vocabulary() "{{{
+	let @a=''
+	'j,'kg/^Word List {{{$/.+1;/ }}}$/-1y A
+	let @"=@a
+	ScratchOverwrite
+	g/^$/d
+	1s/^/Word List {{{1\r\r
+	$s/$/\r }}}1
+endfunction "}}}
+function! F5_Normal_Vocabulary() "{{{
+	nnoremap <buffer> <silent> <f5> :call ColletWordList_Vocabulary()<cr>
+endfunction "}}}
 
 function! EnglishVocabulary() "{{{
 	call F1_Normal_Vocabulary()
@@ -205,6 +218,7 @@ function! EnglishVocabulary() "{{{
 	call F2_Shift_Normal_Vocabulary()
 	call F3_Normal_Vocabulary()
 	call F4_Normal_Vocabulary()
+	call F5_Normal_Vocabulary()
 endfunction "}}}
 " }}}2
 
@@ -586,10 +600,13 @@ vnoremap <c-k> gk
 " ^ and $
 nnoremap 0 ^
 nnoremap - $
+nnoremap ^ 0
 vnoremap 0 ^
 vnoremap - $
+vnoremap ^ 0
 onoremap 0 ^
 onoremap - $
+onoremap ^ 0
 " }}}1
 
 " User defined commands "{{{1
