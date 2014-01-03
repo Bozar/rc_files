@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mon, Dec 30 | 23:21:00 | 2013
+" Last Update: Fri, Jan 03 | 22:17:18 | 2014
 
 set nocompatible
 filetype off
@@ -158,7 +158,7 @@ endfunction "}}}
 " English vocabulary "{{{2
 " search word
 function! F1_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f1> vi[y/\[<c-r>"\]<cr>
+	nnoremap <buffer> <silent> <f1> vi[y/\[<c-r>"\]<cr>zz
 endfunction "}}}
 " insert brackets
 function! F2_Normal_Vocabulary() "{{{
@@ -425,6 +425,7 @@ function! F6_Normal_Loc() "{{{
 		\ :1,$yank<cr><c-w>t
 		\ :b chinese.loc<cr>
 		\ :$put! "<cr>'a
+		\ <c-w>b
 endfunction "}}}
 " put lines into Scratch buffer
 " the previous search pattern is shown at the center of window
@@ -443,6 +444,55 @@ function! F6_Loc() "{{{
 endfunction "}}}
 " }}}3
 
+" Function key: <F7> "{{{3
+" put text into the lower-right buffer
+" overwrite buffer
+function! F7_Normal_Loc() "{{{
+	nnoremap <buffer> <silent> <f7>
+		\ :y<cr><c-w>b
+		\ :call PutText(0)<cr>
+endfunction "}}}
+function! F7_Visual_Loc() "{{{
+	vnoremap <buffer> <silent> <f7>
+		\ :y<cr><c-w>b
+		\ :call PutText(0)<cr>
+endfunction "}}}
+" append to buffer
+function! F7_Shift_Normal_Loc() "{{{
+	nnoremap <buffer> <silent> <s-f7>
+		\ :y<cr><c-w>b
+		\ :call PutText(2)<cr>
+endfunction "}}}
+function! F7_Shift_Visual_Loc() "{{{
+	vnoremap <buffer> <silent> <s-f7>
+		\ :y<cr><c-w>b
+		\ :call PutText(2)<cr>
+endfunction "}}}
+function! F7_Loc() "{{{
+	call F7_Normal_Loc()
+	call F7_Visual_Loc()
+	call F7_Shift_Normal_Loc()
+	call F7_Shift_Visual_Loc()
+endfunction "}}}
+" }}}3
+
+" Function key: <F8> "{{{3
+" move cursor to Chinese in an Excel line
+function! F8_Normal_Loc() "{{{
+	nnoremap <buffer> <silent> <f8>
+		\ ^5/\t<cr>l
+endfunction "}}}
+" move cursor into the top-right buffer
+function! F8_Shift_Normal_Loc() "{{{
+	nnoremap <buffer> <silent> <s-f8>
+		\ <c-w>h<c-w>w
+endfunction "}}}
+function! F8_Loc() "{{{
+	call F8_Normal_Loc()
+	call F8_Shift_Normal_Loc()
+endfunction "}}}
+" }}}3
+
 function! LocKeyMapping() "{{{
 	call F1_Loc()
 	call F2_Loc()
@@ -450,6 +500,8 @@ function! LocKeyMapping() "{{{
 	call F4_Loc()
 	call F5_Loc()
 	call F6_Loc()
+	call F7_Loc()
+	call F8_Loc()
 endfunction "}}}
 " }}}2
 " }}}1
