@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Fri, Jan 03 | 22:17:18 | 2014
+" Last Update: Sat, Jan 04 | 10:16:16 | 2014
 
 set nocompatible
 filetype off
@@ -63,13 +63,13 @@ function! YankFoldMarker(fold_line) "{{{
 		'jpu! "
 		'ky "
 		'jpu! "
-		'j-2s/^.*\({\{3\}\)\@=//
+		'j-2s/^.*\( {\{3\}\)\@=//
 	elseif a:fold_line==1
 		'ky "
 		'kpu "
 		'jy "
 		'kpu "
-		'k+1s/^.*\({\{3\}\)\@=//
+		'k+1s/^.*\( {\{3\}\)\@=//
 	endif
 endfunction "}}}
 " }}}2
