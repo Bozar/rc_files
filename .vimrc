@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sat, Jan 04 | 10:19:20 | 2014
+" Last Update: Mon, Jan 06 | 21:43:36 | 2014
 
 set nocompatible
 filetype off
@@ -63,13 +63,13 @@ function! YankFoldMarker(fold_line) "{{{
 		'jpu! "
 		'ky "
 		'jpu! "
-		'j-2s/^.*\( {\{3\}\)\@=//
+		'j-2s/^.*\( \(\|"\){\{3\}\)\@=//
 	elseif a:fold_line==1
 		'ky "
 		'kpu "
 		'jy "
 		'kpu "
-		'k+1s/^.*\( {\{3\}\)\@=//
+		'k+1s/^.*\( \(\|"\){\{3\}\)\@=//
 	endif
 	normal ^
 endfunction "}}}
@@ -157,49 +157,89 @@ endfunction "}}}
 " }}}2
 
 " English vocabulary "{{{2
+
+" Function key: <F1> "{{{3
+" search bracket '['
+function! F1_Normal_EnVoc() "{{{
+	nnoremap <buffer> <silent> <f1> /\[<cr>"+yi[
+endfunction "}}}
+function! F1_Shift_Normal_EnVoc() "{{{
+	nnoremap <buffer> <silent> <s-f1> ?\[<cr>"+yi[
+endfunction "}}}
+
+function! F1_EnVoc() "{{{
+	call F1_Normal_EnVoc()
+	call F1_Shift_Normal_EnVoc()
+endfunction "}}}
+" }}}3
+
+" Function key: <F2> "{{{3
 " search word
-function! F1_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f1> vi[y/\[<c-r>"\]<cr>zz
+function! F2_Normal_EnVoc() "{{{
+	nnoremap <buffer> <silent> <f2> "+yi[/\[<c-r>+\]<cr>zz
 endfunction "}}}
+
+function! F2_EnVoc() "{{{
+	call F2_Normal_EnVoc()
+endfunction "}}}
+" }}}3
+
+" Function key: <F3> "{{{3
 " insert brackets
-function! F2_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f2> "+ciw[<c-r>"]<esc>
+function! F3_Normal_EnVoc() "{{{
+	nnoremap <buffer> <silent> <f3> "+ciw[<c-r>"]<esc>
 endfunction "}}}
-function! F2_Visual_Vocabulary() "{{{
-	vnoremap <buffer> <silent> <f2> s[<c-r>"]<esc>
+function! F3_Visual_EnVoc() "{{{
+	vnoremap <buffer> <silent> <f3> s[<c-r>"]<esc>
 endfunction "}}}
 " delete brackets
-function! F2_Shift_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <s-f2> di[pF[2x
+function! F3_Shift_Normal_EnVoc() "{{{
+	nnoremap <buffer> <silent> <s-f3> di[pF[2x
 endfunction "}}}
+
+function! F3_EnVoc() "{{{
+	call F3_Normal_EnVoc()
+	call F3_Shift_Normal_EnVoc()
+	call F3_Visual_EnVoc()
+endfunction "}}}
+" }}}3
+
+" Function key: <F4> "{{{3
 " update word list
 " Word List {{{
 " [word 1]
 " [word 2]
 " }}}
 " h: cursor line | l: last line | j: folder begins | k: folder ends
-function! MakeWordList_Vocabulary() "{{{
-	mark h|? {{{\d$?mark j|normal ]zmk
-	"}}}
+function! UpdateWordList_EnVoc() "{{{
+	mark h|? {\{3\}\d$?mark j|/ }\{3\}\d$/mark k
 	?^Word List {{{$?+1;/^ }}}$/-1delete
 	'j,'ky|$mark l|'lput
 	'l+1,$s/\[/\r[/g|'l+1,$s/\]/]\r/g|'l+1,$g!/\[/d
 	'l+1,$delete
 	normal 'j
-	/^Word List {{{$/put
-	?^Word List {{{?s/$/\r
+	/^Word List {\{3\}$/put
+	?^Word List {\{3\}?s/$/\r
 	"}}}
 	normal 'h
 endfunction "}}}
-function! F3_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f3> :call MakeWordList_Vocabulary()<cr>
+function! F4_Normal_EnVoc() "{{{
+	nnoremap <buffer> <silent> <f4> :call UpdateWordList_EnVoc()<cr>
 endfunction "}}}
 " creat blank word list
-function! F4_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f4> :?{{{?+1s/^/\rWord List {{{\r\r }}}\r<cr>
+function! F4_Shift_Normal_EnVoc() "{{{
+	nnoremap <buffer> <silent> <s-f4> :?{{{?+1s/^/\rWord List {{{\r\r }}}\r<cr>
 endfunction "}}}
+
+function! F4_EnVoc() "{{{
+	call F4_Normal_EnVoc()
+	call F4_Shift_Normal_EnVoc()
+endfunction "}}}
+" }}}3
+
+" Function key: <F5> "{{{3
 " collect word lists
-function! ColletWordList_Vocabulary() "{{{
+function! ColletWordList_EnVoc() "{{{
 	let @a=''
 	'j,'kg/^Word List {{{$/.+1;/ }}}$/-1y A
 	let @"=@a
@@ -207,19 +247,23 @@ function! ColletWordList_Vocabulary() "{{{
 	g/^$/d
 	1s/^/Word List {{{1\r\r
 	$s/$/\r }}}1
+	%s/\[//n
 endfunction "}}}
-function! F5_Normal_Vocabulary() "{{{
-	nnoremap <buffer> <silent> <f5> :call ColletWordList_Vocabulary()<cr>
+function! F5_Normal_EnVoc() "{{{
+	nnoremap <buffer> <silent> <f5> :call ColletWordList_EnVoc()<cr>
 endfunction "}}}
 
+function! F5_EnVoc() "{{{
+	call F5_Normal_EnVoc()
+endfunction "}}}
+" }}}3
+
 function! EnglishVocabulary() "{{{
-	call F1_Normal_Vocabulary()
-	call F2_Normal_Vocabulary()
-	call F2_Visual_Vocabulary()
-	call F2_Shift_Normal_Vocabulary()
-	call F3_Normal_Vocabulary()
-	call F4_Normal_Vocabulary()
-	call F5_Normal_Vocabulary()
+	call F1_EnVoc()
+	call F2_EnVoc()
+	call F3_EnVoc()
+	call F4_EnVoc()
+	call F5_EnVoc()
 endfunction "}}}
 " }}}2
 
