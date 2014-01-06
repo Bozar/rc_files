@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Tue, Jan 07 | 00:51:36 | 2014
+" Last Update: Tue, Jan 07 | 00:57:36 | 2014
 
 set nocompatible
 filetype off
@@ -60,12 +60,13 @@ endfunction "}}}
 function! MoveScratchText(move_position) "{{{
 	if a:move_position==0
 		'j-1mark J
-		'j,'kdelete
+		'j,'kyank
 		ScratchOverwrite
 	elseif a:move_position==1
 		1,$y
 		'J
 		put "
+		'j,'kdelete
 	endif
 endfunction "}}}
 " }}}2
