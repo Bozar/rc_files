@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mon, Jan 06 | 21:50:07 | 2014
+" Last Update: Tue, Jan 07 | 00:51:36 | 2014
 
 set nocompatible
 filetype off
@@ -50,6 +50,22 @@ function! PutText(put_line) "{{{
 	elseif a:put_line==2
 		$mark j|$put "
 		'j+1
+	endif
+endfunction "}}}
+" }}}2
+
+" move text from/to scratch "{{{2
+" put text between mark j and mark k to Scratch buffer
+" and take them back when necessary
+function! MoveScratchText(move_position) "{{{
+	if a:move_position==0
+		'j-1mark J
+		'j,'kdelete
+		ScratchOverwrite
+	elseif a:move_position==1
+		1,$y
+		'J
+		put "
 	endif
 endfunction "}}}
 " }}}2
@@ -106,6 +122,16 @@ function! ChangeFoldLevel(level)  "{{{
 	elseif a:level==1
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)+1
 	endif
+endfunction "}}}
+" }}}2
+
+" delete lines "{{{2
+function! EmptyLines(line) "{{{
+	g/^$/.+1s/^$/###DELETE_EMPTY_LINES###
+	g/^###DELETE_EMPTY_LINES###$/d
+	if a:line==1
+		g/^$/d
+	endif	
 endfunction "}}}
 " }}}2
 
@@ -719,12 +745,18 @@ command! FoldLevelAdd call ChangeFoldLevel(1)
 command! FoldLevelSub call ChangeFoldLevel(0)
 " replace '\t' with '\s\s\s\s' | '\t\t' with '\t'
 command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
+" delete empty lines
+command! DeleteEmpty call EmptyLines(1)
+command! DeleteAdditional call EmptyLines(0)
 " put text to Scratch buffer
 command! ScratchAppend buffer 2|call PutText(2)
 command! ScratchInsert buffer 2|call PutText(1)
 command! ScratchOverwrite buffer 2|call PutText(0)
 " creat new Scratch buffer
 command! ScratchCreat call ScratchBuffer()|ls!
+" move text between Scratch and other buffers
+command! ScratchPut call MoveScratchText(0)
+command! ScratchTake call MoveScratchText(1)
 " word count
 command! WordCountCN %s/[^\x00-\xff]//gn
 command! WordCountEN %s/\a\+//gn
