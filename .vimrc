@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mon, Jan 06 | 21:43:36 | 2014
+" Last Update: Mon, Jan 06 | 21:50:07 | 2014
 
 set nocompatible
 filetype off
@@ -164,7 +164,7 @@ function! F1_Normal_EnVoc() "{{{
 	nnoremap <buffer> <silent> <f1> /\[<cr>"+yi[
 endfunction "}}}
 function! F1_Shift_Normal_EnVoc() "{{{
-	nnoremap <buffer> <silent> <s-f1> ?\[<cr>"+yi[
+	nnoremap <buffer> <silent> <s-f1> b?\[<cr>"+yi[
 endfunction "}}}
 
 function! F1_EnVoc() "{{{
