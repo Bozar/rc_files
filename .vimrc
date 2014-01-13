@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Tue, Jan 07 | 00:57:36 | 2014
+" Last Update: Tue, Jan 14 | 01:57:16 | 2014
 
 set nocompatible
 filetype off
@@ -63,7 +63,7 @@ function! MoveScratchText(move_position) "{{{
 		'j,'kyank
 		ScratchOverwrite
 	elseif a:move_position==1
-		1,$y
+		1,$yank
 		'J
 		put "
 		'j,'kdelete
@@ -76,16 +76,16 @@ endfunction "}}}
 function! YankFoldMarker(fold_line) "{{{
 	normal [zmj]zmk
 	if a:fold_line==0
-		'jy "
-		'jpu! "
-		'ky "
-		'jpu! "
+		'jyank "
+		'jput! "
+		'kyank "
+		'jput! "
 		'j-2s/^.*\( \(\|"\){\{3\}\)\@=//
 	elseif a:fold_line==1
-		'ky "
-		'kpu "
-		'jy "
-		'kpu "
+		'kyank "
+		'kput "
+		'jyank "
+		'kput "
 		'k+1s/^.*\( \(\|"\){\{3\}\)\@=//
 	endif
 	normal ^
@@ -128,9 +128,10 @@ endfunction "}}}
 
 " delete lines "{{{2
 function! EmptyLines(line) "{{{
+	if a:line==0
 	g/^$/.+1s/^$/###DELETE_EMPTY_LINES###
 	g/^###DELETE_EMPTY_LINES###$/d
-	if a:line==1
+	elseif a:line==1
 		g/^$/d
 	endif	
 endfunction "}}}
@@ -156,7 +157,7 @@ endfunction "}}}
 " }}}2
 
 " GTD "{{{2
-" replace bullet point (*) with finished (~) or unfinished (!)
+" substitute bullet point (*) with finished mark (~)
 function! Finished_GTD() "{{{
 	nnoremap <buffer> <silent> <f1> :s/^\t\*/\t\~<cr>
 	nnoremap <buffer> <silent> <s-f1> :s/^\t\~/\t\*<cr>
@@ -166,15 +167,18 @@ endfunction "}}}
 " change date
 " yank the first line of previous recording (usually the time of coming home)
 " change foldlevel
+" prevent the outer foldmarker to be changed
 function! AnotherDay_GTD() "{{{
 	nnoremap <buffer> <silent> <f2>
 		\ :call YankFoldMarker(0)<cr>
 		\ :'j-2<cr>dd:'j<cr>yy:'j-1<cr>P
 		\ :s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
 		\ :'j+2y<cr>
-		\ :'j-2put "<cr>
+		\ :'j-2s/$/\r\r<c-r>"<cr>
+		\ :'j-2d<cr>
 		\ :call ChangeFoldLevel(1)<cr>
-		\ 'jk[zo<esc>
+		\ :g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12<cr>
+		\ 'j?\*<cr>wma
 endfunction "}}}
 
 function! GetThingsDone() "{{{
