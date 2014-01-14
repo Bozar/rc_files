@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Tue, Jan 14 | 01:57:16 | 2014
+" Last Update: Tue, Jan 14 | 22:36:00 | 2014
 
 set nocompatible
 filetype off
@@ -75,18 +75,19 @@ endfunction "}}}
 " apply the fold level of cursor line
 function! YankFoldMarker(fold_line) "{{{
 	normal [zmj]zmk
+	'jyank "
 	if a:fold_line==0
-		'jyank "
 		'jput! "
-		'kyank "
 		'jput! "
-		'j-2s/^.*\( \(\|"\){\{3\}\)\@=//
+		'j-2,'j-1s/^.*\( \(\|"\){\{3\}\)\@=//
+		'j-1s/{{{/}}}
+		'j-2
 	elseif a:fold_line==1
-		'kyank "
 		'kput "
-		'jyank "
 		'kput "
-		'k+1s/^.*\( \(\|"\){\{3\}\)\@=//
+		'k+1,'k+2s/^.*\( \(\|"\){\{3\}\)\@=//
+		'k+2s/{{{/}}}
+		'k+1
 	endif
 	normal ^
 endfunction "}}}
