@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Tue, Jan 14 | 22:36:00 | 2014
+" Last Update: Sun, Jan 19 | 02:53:44 | 2014
 
 set nocompatible
 filetype off
@@ -164,22 +164,21 @@ function! Finished_GTD() "{{{
 	nnoremap <buffer> <silent> <s-f1> :s/^\t\~/\t\*<cr>
 endfunction "}}}
 " insert new lines for another day
-" insert new fold
+"	mark j and k: yesterday
+"	mark h and l: another day
 " change date
-" yank the first line of previous recording (usually the time of coming home)
+" fix substitution errors on rare occasions:
+"	the second day in a month (in which case both two }2 will be changed)
 " change foldlevel
-" prevent the outer foldmarker to be changed
 function! AnotherDay_GTD() "{{{
 	nnoremap <buffer> <silent> <f2>
 		\ :call YankFoldMarker(0)<cr>
-		\ :'j-2<cr>dd:'j<cr>yy:'j-1<cr>P
-		\ :s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
-		\ :'j+2y<cr>
-		\ :'j-2s/$/\r\r<c-r>"<cr>
-		\ :'j-2d<cr>
-		\ :call ChangeFoldLevel(1)<cr>
+		\ :'j-2mark h<cr>:'j-1mark l<cr>
+		\ :'j,'j+2y<cr>:'hput<cr>
+		\ :'h+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
 		\ :g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12<cr>
-		\ 'j?\*<cr>wma
+		\ :call ChangeFoldLevel(1)<cr>
+		\ :'hd<cr>/\*\\|\~<cr>wma
 endfunction "}}}
 
 function! GetThingsDone() "{{{
