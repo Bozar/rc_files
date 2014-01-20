@@ -1,4 +1,4 @@
-" Last Update: Tue, Jan 21 | 00:26:17 | 2014
+" Last Update: Tue, Jan 21 | 00:30:35 | 2014
 " trpg product category "{{{1
 function! BlockedText() "{{{
 	" product name
@@ -35,8 +35,8 @@ function! MarkDown() "{{{
 	" translator's note
 	g/^\[\d\{1,2\}\]\s/s/^/__________\r
 	g/^\[\d\{1,2\}\]\s/s/$/\r__________
-	g/^_\{10\}$/.+1s//###DELETE_EMPTY_LINES###
-	call EmptyLines(0)
+	g/^_\{10\}$/.+1s//######
+	g/^#\{6\}/d
 endfunction "}}}
 
 function! HyperLink() "{{{
