@@ -36,7 +36,7 @@ function! MarkDown() "{{{
 	g/^\[\d\{1,2\}\]\s/s/^/__________\r
 	g/^\[\d\{1,2\}\]\s/s/$/\r__________
 	g/^_\{10\}$/.+1s//######
-	g/^#\{6\}/d
+	g/^#\{6\}$/d
 endfunction "}}}
 
 function! HyperLink() "{{{
