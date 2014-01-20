@@ -1,5 +1,5 @@
 " Last Update: Mon, Jan 20 | 22:43:50 | 2014
-trpg product category "{{{1
+" trpg product category "{{{1
 function! BlockedText() "{{{
 	" product name
 	g/^http/s/^\(.*\)$/\1\r\r\1
