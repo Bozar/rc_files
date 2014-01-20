@@ -1,4 +1,4 @@
-" Last Update: Mon, Jan 20 | 23:18:49 | 2014
+" Last Update: Tue, Jan 21 | 00:26:17 | 2014
 " trpg product category "{{{1
 function! BlockedText() "{{{
 	" product name
@@ -21,13 +21,13 @@ function! MarkDown() "{{{
 	1,$left 0
 	g/^英文名：/.;/^点击标题阅读原文$/left 4
 	" title
-	g/{{{2$/s/^/[
-	g/{{{2$/s/$/]
+	g/{\{3\}2$/s/^/[
+	g/{\{3\}2$/s/$/]
 	g/^http/s/$/)
 	g/^http/s/^/(
 	g/^(http/.-1,.join!
-	g/{{{2/s/^/### 
-	" foldmark
+	g/{\{3\}2/s/^/### 
+	" foldmarker
 	%s/ {\{3\}2//
 	%s/}\{3\}2//
 	g/{\{3\}1/s/^.*$/[markdown]\r## 《TRPG产品目录》第一辑，第期
@@ -35,11 +35,22 @@ function! MarkDown() "{{{
 	" translator's note
 	g/^\[\d\{1,2\}\]\s/s/^/__________\r
 	g/^\[\d\{1,2\}\]\s/s/$/\r__________
+	g/^_\{10\}$/.+1s//###DELETE_EMPTY_LINES###
+	call EmptyLines(0)
 endfunction "}}}
 
-nnoremap <buffer> <silent> <f8> :s/^/#### <cr>
-vnoremap <buffer> <silent> <f9> s**<c-r>"**<esc>
-vnoremap <buffer> <silent> <f10> s*<c-r>"*<esc>
+function! HyperLink() "{{{
+	mark j
+	'js/^\(.*\)$/[\1]
+	'j+1s/^\(.*\)$/(\1)
+	'j-1,'j+1join!
+endfunction "}}}
+
+vnoremap <buffer> <silent> <f1> s**<c-r>"**<esc>
+vnoremap <buffer> <silent> <f2> s*<c-r>"*<esc>
+nnoremap <buffer> <silent> <f3> :call HyperLink()<cr>
+nnoremap <buffer> <silent> <f4> :s/^/#### <cr>
+
 nnoremap <buffer> <silent> <f11> :call BlockedText()<cr>
 nnoremap <buffer> <silent> <f12> :call MarkDown()<cr>
  "}}}1
