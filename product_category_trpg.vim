@@ -1,4 +1,4 @@
-" Last Update: Mon, Jan 20 | 22:43:50 | 2014
+" Last Update: Mon, Jan 20 | 23:18:49 | 2014
 " trpg product category "{{{1
 function! BlockedText() "{{{
 	" product name
@@ -32,9 +32,14 @@ function! MarkDown() "{{{
 	%s/}\{3\}2//
 	g/{\{3\}1/s/^.*$/[markdown]\r## 《TRPG产品目录》第一辑，第期
 	%s/}\{3\}1/[\/markdown]
+	" translator's note
+	g/^\[\d\{1,2\}\]\s/s/^/__________\r
+	g/^\[\d\{1,2\}\]\s/s/$/\r__________
 endfunction "}}}
 
-nnoremap <buffer> <silent> <f10> :s/^/#### <cr>
+nnoremap <buffer> <silent> <f8> :s/^/#### <cr>
+vnoremap <buffer> <silent> <f9> s**<c-r>"**<esc>
+vnoremap <buffer> <silent> <f10> s*<c-r>"*<esc>
 nnoremap <buffer> <silent> <f11> :call BlockedText()<cr>
 nnoremap <buffer> <silent> <f12> :call MarkDown()<cr>
  "}}}1
