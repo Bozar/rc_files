@@ -1,11 +1,11 @@
-" Last Update: Tue, Jan 21 | 00:30:35 | 2014
+" Last Update: Wed, Jan 22 | 00:11:20 | 2014
 " trpg product category "{{{1
 function! BlockedText() "{{{
 	" product name
 	g/^http/s/^\(.*\)$/\1\r\r\1
 	g/^http/.+2s/^http.*\//英文名：/
 	g/^英文名：/s/-/ /g
-	g/^英文名：/s/?.*$//
+	g/^英文名：/s/\(?\|-%\).*$//
 	g/^英文名：/.+1d
 	" other information
 	%s/^\(\$\d\)/售价：\1
