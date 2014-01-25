@@ -1,4 +1,4 @@
-" Last Update: Wed, Jan 22 | 00:11:20 | 2014
+" Last Update: Sun, Jan 26 | 01:49:48 | 2014
 " trpg product category "{{{1
 function! BlockedText() "{{{
 	" product name
@@ -33,8 +33,8 @@ function! MarkDown() "{{{
 	g/{\{3\}1/s/^.*$/[markdown]\r## 《TRPG产品目录》第一辑，第期
 	%s/}\{3\}1/[\/markdown]
 	" translator's note
-	g/^\[\d\{1,2\}\]\s/s/^/__________\r
-	g/^\[\d\{1,2\}\]\s/s/$/\r__________
+	g/^$/.-1s/^\(\[\d\{1,2\}\]\s.*\)$/\1\r__________
+	g/^$/.+1s/^\(\[\d\{1,2\}\]\s.*\)$/__________\r\1
 	g/^_\{10\}$/.+1s//######
 	g/^#\{6\}$/d
 endfunction "}}}
@@ -43,7 +43,7 @@ function! HyperLink() "{{{
 	mark j
 	'js/^\(.*\)$/[\1]
 	'j+1s/^\(.*\)$/(\1)
-	'j-1,'j+1join!
+	'j-1,'j+2join!
 endfunction "}}}
 
 vnoremap <buffer> <silent> <f1> s**<c-r>"**<esc>
