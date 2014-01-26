@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sun, Jan 19 | 02:53:44 | 2014
+" Last Update: Sun, Jan 26 | 20:32:25 | 2014
 
 set nocompatible
 filetype off
@@ -153,6 +153,7 @@ function! ScratchBuffer() "{{{
 	setlocal bufhidden=hide
 	setlocal noswapfile
 	setlocal nobuflisted
+	s/^/SCRATCH_BUFFER
 	close
 endfunction "}}}
 " }}}2
@@ -178,7 +179,7 @@ function! AnotherDay_GTD() "{{{
 		\ :'h+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
 		\ :g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12<cr>
 		\ :call ChangeFoldLevel(1)<cr>
-		\ :'hd<cr>/\*\\|\~<cr>wma
+		\ :'hd<cr>:'l-1<cr>wma
 endfunction "}}}
 
 function! GetThingsDone() "{{{
@@ -735,6 +736,10 @@ vnoremap ^ 0
 onoremap 0 ^
 onoremap - $
 onoremap ^ 0
+" %
+nnoremap q %
+vnoremap q %
+onoremap q %
 " }}}1
 
 " User defined commands "{{{1
