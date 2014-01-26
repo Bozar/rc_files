@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sun, Jan 26 | 20:32:25 | 2014
+" Last Update: Sun, Jan 26 | 23:45:50 | 2014
 
 set nocompatible
 filetype off
@@ -177,8 +177,8 @@ function! AnotherDay_GTD() "{{{
 		\ :'j-2mark h<cr>:'j-1mark l<cr>
 		\ :'j,'j+2y<cr>:'hput<cr>
 		\ :'h+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
-		\ :g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12<cr>
 		\ :call ChangeFoldLevel(1)<cr>
+		\ :g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12<cr>
 		\ :'hd<cr>:'l-1<cr>wma
 endfunction "}}}
 
