@@ -1,4 +1,4 @@
-" Last Update: Sun, Jan 26 | 01:49:48 | 2014
+" Last Update: Sun, Jan 26 | 20:36:01 | 2014
 " trpg product category "{{{1
 function! BlockedText() "{{{
 	" product name
@@ -39,16 +39,24 @@ function! MarkDown() "{{{
 	g/^#\{6\}$/d
 endfunction "}}}
 
-function! HyperLink() "{{{
-	mark j
-	'js/^\(.*\)$/[\1]
-	'j+1s/^\(.*\)$/(\1)
-	'j-1,'j+2join!
+function! HyperLinkJoin() "{{{
+mark j
+'j,'j+2s/^\t//e
+'js/^\(.*\)$/[\1]
+'j+1s/^\(.*\)$/(\1)
+'j-1,'j+2join!
+endfunction "}}}
+
+function! HyperLinkSeperate() "{{{
+put!
+s/$/\r
+.-1mark a
 endfunction "}}}
 
 vnoremap <buffer> <silent> <f1> s**<c-r>"**<esc>
 vnoremap <buffer> <silent> <f2> s*<c-r>"*<esc>
-nnoremap <buffer> <silent> <f3> :call HyperLink()<cr>
+nnoremap <buffer> <silent> <f3> :call HyperLinkJoin()<cr>
+vnoremap <buffer> <silent> <f3> s<cr><esc>:call HyperLinkSeperate()<cr>
 nnoremap <buffer> <silent> <f4> :s/^/#### <cr>
 
 nnoremap <buffer> <silent> <f11> :call BlockedText()<cr>
