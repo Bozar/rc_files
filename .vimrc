@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sun, Jan 26 | 23:45:50 | 2014
+" Last Update: Wed, Jan 29 | 01:01:33 | 2014
 
 set nocompatible
 filetype off
@@ -71,25 +71,32 @@ function! MoveScratchText(move_position) "{{{
 endfunction "}}}
 " }}}2
 
-" append(1) or insert(0) fold markers "{{{2
+" append(1), insert(0) and creat(2) fold markers "{{{2
 " apply the fold level of cursor line
 function! YankFoldMarker(fold_line) "{{{
-	normal [zmj]zmk
-	'jyank "
 	if a:fold_line==0
+		normal [zmj]zmk
+		'jyank "
 		'jput! "
 		'jput! "
 		'j-2,'j-1s/^.*\( \(\|"\){\{3\}\)\@=//
 		'j-1s/{{{/}}}
 		'j-2
+		normal ^
 	elseif a:fold_line==1
+		normal [zmj]zmk
+		'jyank "
 		'kput "
 		'kput "
 		'k+1,'k+2s/^.*\( \(\|"\){\{3\}\)\@=//
 		'k+2s/{{{/}}}
 		'k+1
+		normal ^
+	elseif a:fold_line==2
+		s/$/\rFOLDMARKER {{{\r }}}
+		.-1,.s/$/1
+		-1
 	endif
-	normal ^
 endfunction "}}}
 " }}}2
 
@@ -153,7 +160,7 @@ function! ScratchBuffer() "{{{
 	setlocal bufhidden=hide
 	setlocal noswapfile
 	setlocal nobuflisted
-	s/^/SCRATCH_BUFFER
+	s/^/SCRATCH_BUFFER\r
 	close
 endfunction "}}}
 " }}}2
@@ -448,10 +455,23 @@ function! F4_Shift_Normal_Loc() "{{{
 		\ ms^"ayt	f	l"byt	
 		\ :%s/^\(<c-r>a\t\).\{-\}\(\t\)/\1<c-r>b\2/gc<cr>
 endfunction "}}}
+" a-b substitution
+function! F4_Visual_Loc() "{{{
+	vnoremap <buffer> <silent> <f4>
+		\ "by
+		\ :%s/<c-r>a/<c-r>b/gc<cr>
+endfunction "}}}
+function! F4_Shift_Visual_Loc() "{{{
+	vnoremap <buffer> <silent> <s-f4>
+		\ "ay
+		\ :%s/<c-r>a//gc<cr>
+endfunction "}}}
 
 function! F4_Loc() "{{{
 	call F4_Normal_Loc()
 	call F4_Shift_Normal_Loc()
+	call F4_Visual_Loc()
+	call F4_Shift_Visual_Loc()
 endfunction "}}}
 " }}}3
 
@@ -693,40 +713,51 @@ endif "}}}
 
 " Key mappings and abbreviations "{{{1
 
-" use function keys and commands instead of mapleader
+" use function keys and commands instead of mapleader "{{{
 " see below: '; and :'
 set timeoutlen=0
 let mapleader='\'
-" switch case
+" }}}
+" switch case "{{{
 nnoremap ` ~
 vnoremap ` ~
-" search backward
+" }}}
+" search backward "{{{
 nnoremap , ?
 vnoremap , ?
-" enter
+" }}}
+" save "{{{
 nnoremap <silent> <cr> :wa<cr>
-" append or insert fold marker
+" }}}
+" append, insert and creat fold marker "{{{
 nnoremap <tab> :call YankFoldMarker(1)<cr>
 nnoremap <s-tab> :call YankFoldMarker(0)<cr>
-" open or close fold
+nnoremap <c-tab> :call YankFoldMarker(2)<cr>
+" }}}
+" open or close fold "{{{
 nnoremap <space> za
-" move to mark
+" }}}
+" move to mark "{{{
 nnoremap ' `
-" modified 'Y'
+" }}}
+" modified 'Y' "{{{
 nnoremap Y y$
-" ';', ',' and ':'
+" }}}
+" ';', ',' and ':' "{{{
 nnoremap ; :
 nnoremap <c-n> ;
-nnoremap <c-p> ,
+nnoremap <a-n> ,
 vnoremap ; :
 vnoremap <c-n> ;
-vnoremap <c-p> ,
-" gj and  gk
+vnoremap <a-n> ,
+" }}}
+" gj and  gk "{{{
 nnoremap <c-j> gj
 nnoremap <c-k> gk
 vnoremap <c-j> gj
 vnoremap <c-k> gk
-" ^ and $
+" }}}
+" ^ and $ "{{{
 nnoremap 0 ^
 nnoremap - $
 nnoremap ^ 0
@@ -736,10 +767,34 @@ vnoremap ^ 0
 onoremap 0 ^
 onoremap - $
 onoremap ^ 0
-" %
+" }}}
+" jump between brackets "{{{
 nnoremap q %
 vnoremap q %
 onoremap q %
+" }}}
+" switch settings "{{{
+nnoremap <silent> <c-\> :set hlsearch!<cr>
+nnoremap <silent> <a-\> :set linebreak!<cr>
+nnoremap <silent> \ :call SetBackground()<cr>
+" }}}
+" change fold level "{{{
+nnoremap <silent> <a-=> :call ChangeFoldLevel(1)<cr>
+nnoremap <silent> <a--> :call ChangeFoldLevel(0)<cr>
+" }}}
+" switch to Scratch buffer "{{{
+nnoremap <silent> <c-q> :buffer 2<cr>
+" }}}
+" search visual selection "{{{
+vnoremap <silent> <tab> y:%s/<c-r>"\c//gn<cr>/<c-r>/<cr>''
+vnoremap <silent> <s-tab> y:%s/<c-r>"\c//gn<cr>?<c-r>/<cr>''
+" }}}
+" Scratch buffer "{{{
+nnoremap <silent> <backspace> :ScratchOverwrite<cr>
+nnoremap <silent> <c-backspace> :ScratchAppend<cr>
+nnoremap <silent> <s-backspace> :ScratchInsert<cr>
+nnoremap <silent> <a-backspace> :ScratchCreat<cr>
+" }}}
 " }}}1
 
 " User defined commands "{{{1
@@ -750,9 +805,6 @@ command! BulletPoint call InsertBulletPoint()
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
 command! TimeStamp call CurrentTime()|normal ''
-" change fold level
-command! FoldLevelAdd call ChangeFoldLevel(1)
-command! FoldLevelSub call ChangeFoldLevel(0)
 " replace '\t' with '\s\s\s\s' | '\t\t' with '\t'
 command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
 " delete empty lines
@@ -764,9 +816,6 @@ command! ScratchInsert buffer 2|call PutText(1)
 command! ScratchOverwrite buffer 2|call PutText(0)
 " creat new Scratch buffer
 command! ScratchCreat call ScratchBuffer()|ls!
-" move text between Scratch and other buffers
-command! ScratchPut call MoveScratchText(0)
-command! ScratchTake call MoveScratchText(1)
 " word count
 command! WordCountCN %s/[^\x00-\xff]//gn
 command! WordCountEN %s/\a\+//gn
@@ -777,10 +826,6 @@ command! KeyMappingLoc call LocKeyMapping()
 command! FormatLocFile call FileFormat_Loc()
 " edit .vimrc
 command! EditVimrc e $MYVIMRC
-" switch settings
-command! HlSearch set hlsearch!
-command! LineBreak set linebreak!
-command! Background call SetBackground()
 " autocommands
 autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead achievement.note call GetThingsDone()
