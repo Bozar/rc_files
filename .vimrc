@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Jan 29 | 01:01:33 | 2014
+" Last Update: Wed, Jan 29 | 01:14:58 | 2014
 
 set nocompatible
 filetype off
@@ -774,8 +774,8 @@ vnoremap q %
 onoremap q %
 " }}}
 " switch settings "{{{
-nnoremap <silent> <c-\> :set hlsearch!<cr>
-nnoremap <silent> <a-\> :set linebreak!<cr>
+nnoremap <silent> <c-\> :set hlsearch!<cr>:set hlsearch?<cr>
+nnoremap <silent> <a-\> :set linebreak!<cr>:set linebreak?<cr>
 nnoremap <silent> \ :call SetBackground()<cr>
 " }}}
 " change fold level "{{{
