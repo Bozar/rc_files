@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Jan 29 | 01:14:58 | 2014
+" Last Update: Wed, Jan 29 | 11:51:24 | 2014
 
 set nocompatible
 filetype off
@@ -54,27 +54,11 @@ function! PutText(put_line) "{{{
 endfunction "}}}
 " }}}2
 
-" move text from/to scratch "{{{2
-" put text between mark j and mark k to Scratch buffer
-" and take them back when necessary
-function! MoveScratchText(move_position) "{{{
-	if a:move_position==0
-		'j-1mark J
-		'j,'kyank
-		ScratchOverwrite
-	elseif a:move_position==1
-		1,$yank
-		'J
-		put "
-		'j,'kdelete
-	endif
-endfunction "}}}
-" }}}2
-
-" append(1), insert(0) and creat(2) fold markers "{{{2
+" append(2), insert(1) and creat(0) fold markers "{{{2
 " apply the fold level of cursor line
-function! YankFoldMarker(fold_line) "{{{
-	if a:fold_line==0
+function! YankFoldMarker(fold_marker) "{{{
+	" insert "{{{
+	if a:fold_marker==1
 		normal [zmj]zmk
 		'jyank "
 		'jput! "
@@ -83,7 +67,9 @@ function! YankFoldMarker(fold_line) "{{{
 		'j-1s/{{{/}}}
 		'j-2
 		normal ^
-	elseif a:fold_line==1
+	" }}}
+	" append "{{{
+	elseif a:fold_marker==2
 		normal [zmj]zmk
 		'jyank "
 		'kput "
@@ -92,41 +78,40 @@ function! YankFoldMarker(fold_line) "{{{
 		'k+2s/{{{/}}}
 		'k+1
 		normal ^
-	elseif a:fold_line==2
+	" }}}
+	" creat "{{{
+	elseif a:fold_marker==0
 		s/$/\rFOLDMARKER {{{\r }}}
 		.-1,.s/$/1
 		-1
+	" }}}
 	endif
 endfunction "}}}
 " }}}2
 
 " insert bullets: special characters at the beginning of a line "{{{2
-" do not indent title '-'
-function! IndentTitle() "{{{
+function! InsertBulletPoint() "{{{
+	" title "{{{
+	" do not indent title '-'
 	'j,'kg/^\(\t\{1,2\}\|\s\{4,8\}\)\-/left 0
 	'j,'ks/^-//e
-endfunction "}}}
-" '==' will be replaced with '+'
-"		indent 2 tabs (8 spaces)
-" '=' will be replaced with '*'
-"	indent 1 tab (4 spaces)
-function! IndentParagraph() "{{{
+	" }}}
+	" paragraph "{{{
+	" '==' will be replaced with '+'
+	"		indent 2 tabs (8 spaces)
 	'j,'kg/^\(\|\t\|\s\{4\}\)==/left 8
 	'j,'ks/^\(\t\t\)==/\1+ /e
-
+	" '=' will be replaced with '*'
+	"	indent 1 tab (4 spaces)
 	'j,'kg/^\(\|\s\{4\}\)=/left 4
 	'j,'ks/^\(\t\)=/\1* /e
-endfunction "}}}
-
-function! InsertBulletPoint() "{{{
-	call IndentTitle()
-	call IndentParagraph()
+	" }}}
 endfunction "}}}
 " }}}2
 
 " add(1) or substract(0) fold level "{{{2
-function! ChangeFoldLevel(level)  "{{{
-	if a:level==0
+function! ChangeFoldLevel(fold_level)  "{{{
+	if a:fold_level==0
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)-1
 	elseif a:level==1
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)+1
@@ -135,11 +120,11 @@ endfunction "}}}
 " }}}2
 
 " delete lines "{{{2
-function! EmptyLines(line) "{{{
-	if a:line==0
+function! EmptyLines(empty_line) "{{{
+	if a:empty_line==0
 	g/^$/.+1s/^$/###DELETE_EMPTY_LINES###
 	g/^###DELETE_EMPTY_LINES###$/d
-	elseif a:line==1
+	elseif a:empty_line==1
 		g/^$/d
 	endif	
 endfunction "}}}
@@ -153,15 +138,47 @@ function! CurrentTime() "{{{
 endfunction "}}}
 " }}}2
 
-" add scratch buffer "{{{2
-function! ScratchBuffer() "{{{
-	new
-	setlocal buftype=nofile
-	setlocal bufhidden=hide
-	setlocal noswapfile
-	setlocal nobuflisted
-	s/^/SCRATCH_BUFFER\r
-	close
+" scratch buffer "{{{2
+function! Scratch_Detect() "{{{
+	if bufwinnr(2)==-1
+		buffer 2
+	else
+		execute bufwinnr(2) . 'wincmd w'
+	endif
+endfunction "}}}
+" creat (3) and edit (4)
+" overwrite (0), insert (1) and append (2)
+function! ScratchBuffer(scratch) "{{{
+	" creat scratch buffer "{{{
+	if a:scratch==3
+		new
+		setlocal buftype=nofile
+		setlocal bufhidden=hide
+		setlocal noswapfile
+		setlocal nobuflisted
+		s/^/SCRATCH_BUFFER\r
+		close
+	" }}}
+	" edit scratch buffer "{{{
+	elseif a:scratch==4
+		call Scratch_Detect()
+	" }}}
+	" append text "{{{
+	elseif a:scratch==2
+		call Scratch_Detect()
+		call PutText(2)
+	" }}}
+	" insert text "{{{
+	elseif a:scratch==1
+		call Scratch_Detect()
+		call PutText(1)
+	" }}}
+	" overwrite Scratch "{{{
+	elseif a:scratch==0
+		call Scratch_Detect()
+		call PutText(0)
+	" }}}
+	endif
 endfunction "}}}
 " }}}2
 
@@ -180,7 +197,7 @@ endfunction "}}}
 " change foldlevel
 function! AnotherDay_GTD() "{{{
 	nnoremap <buffer> <silent> <f2>
-		\ :call YankFoldMarker(0)<cr>
+		\ :call YankFoldMarker(1)<cr>
 		\ :'j-2mark h<cr>:'j-1mark l<cr>
 		\ :'j,'j+2y<cr>:'hput<cr>
 		\ :'h+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
@@ -730,9 +747,9 @@ vnoremap , ?
 nnoremap <silent> <cr> :wa<cr>
 " }}}
 " append, insert and creat fold marker "{{{
-nnoremap <tab> :call YankFoldMarker(1)<cr>
-nnoremap <s-tab> :call YankFoldMarker(0)<cr>
-nnoremap <c-tab> :call YankFoldMarker(2)<cr>
+nnoremap <tab> :call YankFoldMarker(2)<cr>
+nnoremap <s-tab> :call YankFoldMarker(1)<cr>
+nnoremap <c-tab> :call YankFoldMarker(0)<cr>
 " }}}
 " open or close fold "{{{
 nnoremap <space> za
@@ -782,8 +799,8 @@ nnoremap <silent> \ :call SetBackground()<cr>
 nnoremap <silent> <a-=> :call ChangeFoldLevel(1)<cr>
 nnoremap <silent> <a--> :call ChangeFoldLevel(0)<cr>
 " }}}
-" switch to Scratch buffer "{{{
-nnoremap <silent> <c-q> :buffer 2<cr>
+" edit Scratch buffer "{{{
+nnoremap <silent> <c-q> :call ScratchBuffer(4)<cr>
 " }}}
 " search visual selection "{{{
 vnoremap <silent> <tab> y:%s/<c-r>"\c//gn<cr>/<c-r>/<cr>''
@@ -791,9 +808,12 @@ vnoremap <silent> <s-tab> y:%s/<c-r>"\c//gn<cr>?<c-r>/<cr>''
 " }}}
 " Scratch buffer "{{{
 nnoremap <silent> <backspace> :ScratchOverwrite<cr>
-nnoremap <silent> <c-backspace> :ScratchAppend<cr>
-nnoremap <silent> <s-backspace> :ScratchInsert<cr>
+nnoremap <silent> <s-backspace> :ScratchAppend<cr>
+nnoremap <silent> <c-backspace> :ScratchInsert<cr>
 nnoremap <silent> <a-backspace> :ScratchCreat<cr>
+vnoremap <silent> <backspace> y:ScratchOverwrite<cr>
+vnoremap <silent> <s-backspace> y:ScratchAppend<cr>
+vnoremap <silent> <c-backspace> y:ScratchInsert<cr>
 " }}}
 " }}}1
 
@@ -811,11 +831,11 @@ command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
 command! DeleteEmpty call EmptyLines(1)
 command! DeleteAdditional call EmptyLines(0)
 " put text to Scratch buffer
-command! ScratchAppend buffer 2|call PutText(2)
-command! ScratchInsert buffer 2|call PutText(1)
-command! ScratchOverwrite buffer 2|call PutText(0)
+command! ScratchAppend call ScratchBuffer(2)
+command! ScratchInsert call ScratchBuffer(1)
+command! ScratchOverwrite call ScratchBuffer(0)
 " creat new Scratch buffer
-command! ScratchCreat call ScratchBuffer()|ls!
+command! ScratchCreat call ScratchBuffer(3)|ls!
 " word count
 command! WordCountCN %s/[^\x00-\xff]//gn
 command! WordCountEN %s/\a\+//gn
@@ -829,7 +849,7 @@ command! EditVimrc e $MYVIMRC
 " autocommands
 autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead achievement.note call GetThingsDone()
-autocmd VimEnter * call ScratchBuffer()
+autocmd VimEnter * call ScratchBuffer(3)
 " }}}1
 
 " vim: set nolinebreak number foldlevel=20:
