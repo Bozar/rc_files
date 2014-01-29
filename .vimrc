@@ -122,8 +122,8 @@ endfunction "}}}
 " delete lines "{{{2
 function! EmptyLines(empty_line) "{{{
 	if a:empty_line==0
-	g/^$/.+1s/^$/###DELETE_EMPTY_LINES###
-	g/^###DELETE_EMPTY_LINES###$/d
+		g/^$/.+1s/^$/###DELETE_EMPTY_LINES###
+		g/^###DELETE_EMPTY_LINES###$/d
 	elseif a:empty_line==1
 		g/^$/d
 	endif	
