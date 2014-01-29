@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Thu, Jan 30 | 01:09:55 | 2014
+" Last Update: Thu, Jan 30 | 02:10:41 | 2014
 
 set nocompatible
 filetype off
@@ -820,8 +820,10 @@ nnoremap <c-tab> :FmCreat<cr>
 nnoremap <silent> <c-q> :ScEdit<cr>
 " }}}
 " search visual selection "{{{
+" forward, backward and yank match pattern
 vnoremap <silent> <tab> y:%s/<c-r>"\c//gn<cr>/<c-r>/<cr>''
 vnoremap <silent> <s-tab> y:%s/<c-r>"\c//gn<cr>?<c-r>/<cr>''
+vnoremap <silent> <c-tab> y:%s/<c-r>"\c//gn\|let @a=''\|g/<c-r>"\c/y A\|let @"=@a<cr>
 " }}}
 " Scratch buffer "{{{
 nnoremap <silent> <backspace> :ScSubs<cr>
