@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Jan 29 | 16:59:02 | 2014
+" Last Update: Wed, Jan 29 | 17:17:22 | 2014
 
 set nocompatible
 filetype off
@@ -845,8 +845,8 @@ command! FoldSub call ChangeFoldLevel(0)
 command! WordCh %s/[^\x00-\xff]//gn
 command! WordEn %s/\a\+//gn
 " load key mappings
-command! KMapEn call EnglishVocabulary()
-command! KMapLoc call LocKeyMapping()
+command! KeyMapEn call EnglishVocabulary()
+command! KeyMapLoc call LocKeyMapping()
 " localization
 command! FormatLoc call FileFormat_Loc()
 " edit .vimrc
