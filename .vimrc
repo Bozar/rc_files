@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Jan 29 | 16:52:07 | 2014
+" Last Update: Wed, Jan 29 | 16:59:02 | 2014
 
 set nocompatible
 filetype off
@@ -113,7 +113,7 @@ endfunction "}}}
 function! ChangeFoldLevel(fold_level)  "{{{
 	if a:fold_level==0
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)-1
-	elseif a:level==1
+	elseif a:fold_level==1
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)+1
 	endif
 endfunction "}}}
@@ -839,13 +839,13 @@ command! ScCreat call ScratchBuffer(3)|ls!
 " edit Scratch buffer
 command! ScEdit call ScratchBuffer(4)
 " change fold level
-command! FoldAdd call ScratchBuffer(1)
-command! FoldSub call ScratchBuffer(0)
+command! FoldAdd call ChangeFoldLevel(1)
+command! FoldSub call ChangeFoldLevel(0)
 " word count
-command! WordCN %s/[^\x00-\xff]//gn
-command! WordEN %s/\a\+//gn
+command! WordCh %s/[^\x00-\xff]//gn
+command! WordEn %s/\a\+//gn
 " load key mappings
-command! KMapEN call EnglishVocabulary()
+command! KMapEn call EnglishVocabulary()
 command! KMapLoc call LocKeyMapping()
 " localization
 command! FormatLoc call FileFormat_Loc()
