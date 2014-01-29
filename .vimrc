@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Jan 29 | 20:19:10 | 2014
+" Last Update: Thu, Jan 30 | 01:09:55 | 2014
 
 set nocompatible
 filetype off
@@ -763,11 +763,6 @@ vnoremap , ?
 " save "{{{
 nnoremap <silent> <cr> :wa<cr>
 " }}}
-" append, insert and creat fold marker "{{{
-nnoremap <tab> :call YankFoldMarker(2)<cr>
-nnoremap <s-tab> :call YankFoldMarker(1)<cr>
-nnoremap <c-tab> :call YankFoldMarker(0)<cr>
-" }}}
 " open or close fold "{{{
 nnoremap <space> za
 " }}}
@@ -813,8 +808,13 @@ nnoremap <silent> <a-\> :SwLinebreak<cr>
 nnoremap <silent> \ :SwBackground<cr>
 " }}}
 " change fold level "{{{
-nnoremap <silent> <a-=> :FoldAdd<cr>
-nnoremap <silent> <a--> :FoldSub<cr>
+nnoremap <silent> <a-=> :FlAdd<cr>
+nnoremap <silent> <a--> :FlSub<cr>
+" }}}
+" append, insert and creat fold marker "{{{
+nnoremap <tab> :FmAppend<cr>
+nnoremap <s-tab> :FmInsert<cr>
+nnoremap <c-tab> :FmCreat<cr>
 " }}}
 " edit Scratch buffer "{{{
 nnoremap <silent> <c-q> :ScEdit<cr>
@@ -850,8 +850,8 @@ command! Date call CurrentTime(1)
 command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
 " }}}
 " delete empty lines "{{{
-command! DelEmpty call EmptyLines(1)
-command! DelAdd call EmptyLines(0)
+command! DeEmpty call EmptyLines(1)
+command! DeAdd call EmptyLines(0)
 " }}}
 " put text to Scratch buffer "{{{
 command! ScAppend call ScratchBuffer(2)
@@ -865,21 +865,26 @@ command! ScCreat call ScratchBuffer(3)|ls!
 command! ScEdit call ScratchBuffer(4)
 " }}}
 " change fold level "{{{
-command! FoldAdd call ChangeFoldLevel(1)
-command! FoldSub call ChangeFoldLevel(0)
+command! FlAdd call ChangeFoldLevel(1)
+command! FlSub call ChangeFoldLevel(0)
 " }}}
+" append, insert and creat fold marker "{{{
+command! FmAppend call YankFoldMarker(2)
+command! FmInsert call YankFoldMarker(1)
+command! FmCreat call YankFoldMarker(0)
+ "}}}
 " switch settings "{{{
 command! SwHlsearch call SwitchSettings('hlsearch')
 command! SwLinebreak call SwitchSettings('linebreak')
 command! SwBackground call SwitchSettings('background')
  "}}}
-" word count "{{{
-command! WordCh %s/[^\x00-\xff]//gn
-command! WordEn %s/\a\+//gn
+" Chines word count "{{{
+command! Word %s/[^\x00-\xff]//gn
 " }}}
 " load key mappings "{{{
-command! KeyMapEn call EnglishVocabulary()
-command! KeyMapLoc call LocKeyMapping()
+command! KeEnVoc call EnglishVocabulary()
+command! KeLocal call LocKeyMapping()
+command! KeGTD call GetThingsDone()
 " }}}
 " localization "{{{
 command! FormatLoc call FileFormat_Loc()
