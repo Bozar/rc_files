@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Jan 29 | 17:17:22 | 2014
+" Last Update: Wed, Jan 29 | 17:44:45 | 2014
 
 set nocompatible
 filetype off
@@ -90,7 +90,7 @@ endfunction "}}}
 " }}}2
 
 " insert bullets: special characters at the beginning of a line "{{{2
-function! InsertBulletPoint() "{{{
+function! BulletPoint() "{{{
 	" title "{{{
 	" do not indent title '-'
 	'j,'kg/^\(\t\{1,2\}\|\s\{4,8\}\)\-/left 0
@@ -130,11 +130,20 @@ function! EmptyLines(empty_line) "{{{
 endfunction "}}}
 " }}}2
 
-" add time-stamp {{{2
+" current time {{{2
 " there should be at least 5 lines in a file
-function! CurrentTime() "{{{
-	1,5s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
-	$-4,$s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
+" year (%Y) | month (%b) | day (%d) | weekday (%a)
+" hour (%H) | miniute (%M) | second (%S)
+function! CurrentTime(time_stamp) "{{{
+	" update time-stamp
+	if a:time_stamp==0
+		1,5s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
+		$-4,$s/\(Last Update: \|Date: \|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
+	" append time
+	elseif a:time_stamp==1
+		s/$/\r
+		s/^/\=strftime('%b %d | %a | %Y')
+	endif
 endfunction "}}}
 " }}}2
 
@@ -820,11 +829,13 @@ vnoremap <silent> <c-backspace> y:ScInsert<cr>
 " User defined commands "{{{1
 
 " insert bullet points
-command! Bullet call InsertBulletPoint()
+command! Bullet call BulletPoint()
+" update current time
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
-command! TimeStamp call CurrentTime()|normal ''
+command! TimeStamp call CurrentTime(0)|normal ''
+command! Date call CurrentTime(1)
 " replace '\t' with '\s\s\s\s' | '\t\t' with '\t'
 command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
 " delete empty lines
