@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Jan 29 | 18:18:54 | 2014
+" Last Update: Wed, Jan 29 | 20:19:10 | 2014
 
 set nocompatible
 filetype off
@@ -386,7 +386,7 @@ endfunction "}}}
 " let @c='search pattern'
 function! F1_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f1>
-		\ "cy<c-w>b<c-w>kgg
+		\ "cy:3wincmd w<cr>gg
 		\ :%s/<c-r>c\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}}
@@ -394,7 +394,7 @@ endfunction "}}}
 " let @d='GUID'
 function! F1_Shift_Normal_Loc() "{{{
   nnoremap <buffer> <silent> <s-f1>
-		\ $2F	l"dyt	<c-w>t<c-w>wgg
+		\ $2F	l"dyt	:2wincmd w<cr>gg
 		\ :%s/<c-r>d\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}} 
@@ -423,13 +423,13 @@ endfunction "}}}
 " search English buffer
 function! F2_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f2> 
-		\ ^yt	<c-w>t<c-w>wgg
+		\ ^yt	:2wincmd w<cr>gg
 		\ :%s/\(\t#MARK#\t.\{-\}\)\@<=<c-r>"\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}}
 function! F2_Shift_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <s-f2> 
-		\ y<c-w>t<c-w>wgg
+		\ y:2wincmd w<cr>gg
 		\ :%s/\(\t#MARK#\t.\{-\}\)\@<=<c-r>"\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}}
@@ -461,7 +461,7 @@ endfunction "}}}
 " nnoremap <f12> ggdGoTEST<esc>
 function! F3_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f3>
-		\ :let @d=''\|:g/<c-r>//y D<cr><c-w>b
+		\ :let @d=''\|:g/<c-r>//y D<cr>:4wincmd w<cr>
 		\ :call PutText(0)<cr>
 endfunction "}}}
 
@@ -518,19 +518,19 @@ endfunction "}}}
 function! F5_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f5>
 		\ mS^"dy$
-		\ <c-w>t<c-w>wgg/<c-r>d/+1<cr>
+		\ :2wincmd w<cr>gg/<c-r>d/+1<cr>
 		\ :let @e=''<cr>
 		\ :?#MARK#?;/#END#/y E<cr>
-		\ <c-w>t'Scc<c-r>e<esc>gg
+		\ :1wincmd w<cr>'Scc<c-r>e<esc>gg
 		\ :g/^$/d<cr>/<c-r>d<cr>/#END#/+1<cr>
 endfunction "}}}
 function! F5_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f5>
 		\ mS"dy
-		\ <c-w>t<c-w>wgg/<c-r>d/+1<cr>
+		\ :2wincmd w<cr>gg/<c-r>d/+1<cr>
 		\ :let @e=''<cr>
 		\ :?#MARK#?;/#END#/y E<cr>
-		\ <c-w>t'Scc<c-r>e<esc>gg
+		\ :1wincmd w<cr>'Scc<c-r>e<esc>gg
 		\ :g/^$/d<cr>/<c-r>d<cr>/#END#/+1<cr>
 endfunction "}}}
 " put broken lines into Scratch (left)
@@ -539,7 +539,7 @@ function! F5_Shift_Normal_Loc() "{{{
 		\ :let @d=''<cr>
 		\ :g/\(#END#\)\@<!$/d D<cr>
 		\ :let @"=@d<cr>
-		\ <c-w>t:b 2<cr>:call PutText(0)<cr>
+		\ :1wincmd w<cr>:b 2<cr>:call PutText(0)<cr>
 endfunction "}}}
 
 function! F5_Loc() "{{{
@@ -553,17 +553,17 @@ endfunction "}}}
 " add text to bug fix
 function! F6_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f6>
-		\ :1,$yank<cr><c-w>t
+		\ :1,$yank<cr>:1wincmd w<cr>
 		\ :b chinese.loc<cr>
 		\ :$put! "<cr>'a
-		\ <c-w>b
+		\ :4wincmd w<cr>
 endfunction "}}}
 " put lines into Scratch buffer
 " the previous search pattern is shown at the center of window
 function! F6_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f6>
 		\ :call NearbyLines_Loc()<cr>
-		\ <c-w>t:buffer 2\|call PutText(0)<cr>
+		\ :1wincmd w<cr>:buffer 2\|call PutText(0)<cr>
 		\ /<c-r>d<cr>ma
 		\ :call DeleteColumns_Loc()<cr>
 		\ 'azz
@@ -580,23 +580,23 @@ endfunction "}}}
 " overwrite buffer
 function! F7_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f7>
-		\ :y<cr><c-w>b
+		\ :y<cr>:4wincmd w<cr>
 		\ :call PutText(0)<cr>
 endfunction "}}}
 function! F7_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f7>
-		\ :y<cr><c-w>b
+		\ :y<cr>:4wincmd w<cr>
 		\ :call PutText(0)<cr>
 endfunction "}}}
 " append to buffer
 function! F7_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f7>
-		\ :y<cr><c-w>b
+		\ :y<cr>:4wincmd w<cr>
 		\ :call PutText(2)<cr>
 endfunction "}}}
 function! F7_Shift_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <s-f7>
-		\ :y<cr><c-w>b
+		\ :y<cr>:4wincmd w<cr>
 		\ :call PutText(2)<cr>
 endfunction "}}}
 function! F7_Loc() "{{{
@@ -616,7 +616,7 @@ endfunction "}}}
 " move cursor into the top-right buffer
 function! F8_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f8>
-		\ <c-w>h<c-w>w
+		\ :2wincmd w<cr>
 endfunction "}}}
 function! F8_Loc() "{{{
 	call F8_Normal_Loc()
