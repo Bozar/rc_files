@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Jan 29 | 11:51:24 | 2014
+" Last Update: Wed, Jan 29 | 16:52:07 | 2014
 
 set nocompatible
 filetype off
@@ -147,7 +147,7 @@ function! Scratch_Detect() "{{{
 	endif
 endfunction "}}}
 " creat (3) and edit (4)
-" overwrite (0), insert (1) and append (2)
+" substitute (0), insert (1) and append (2)
 function! ScratchBuffer(scratch) "{{{
 	" creat scratch buffer "{{{
 	if a:scratch==3
@@ -173,7 +173,7 @@ function! ScratchBuffer(scratch) "{{{
 		call Scratch_Detect()
 		call PutText(1)
 	" }}}
-	" overwrite Scratch "{{{
+	" substitute whole Scratch "{{{
 	elseif a:scratch==0
 		call Scratch_Detect()
 		call PutText(0)
@@ -299,7 +299,7 @@ function! ColletWordList_EnVoc() "{{{
 	let @a=''
 	'j,'kg/^Word List {{{$/.+1;/ }}}$/-1y A
 	let @"=@a
-	ScratchOverwrite
+	ScSubs
 	g/^$/d
 	1s/^/Word List {{{1\r\r
 	$s/$/\r }}}1
@@ -796,31 +796,31 @@ nnoremap <silent> <a-\> :set linebreak!<cr>:set linebreak?<cr>
 nnoremap <silent> \ :call SetBackground()<cr>
 " }}}
 " change fold level "{{{
-nnoremap <silent> <a-=> :call ChangeFoldLevel(1)<cr>
-nnoremap <silent> <a--> :call ChangeFoldLevel(0)<cr>
+nnoremap <silent> <a-=> :FoldAdd<cr>
+nnoremap <silent> <a--> :FoldSub<cr>
 " }}}
 " edit Scratch buffer "{{{
-nnoremap <silent> <c-q> :call ScratchBuffer(4)<cr>
+nnoremap <silent> <c-q> :ScEdit<cr>
 " }}}
 " search visual selection "{{{
 vnoremap <silent> <tab> y:%s/<c-r>"\c//gn<cr>/<c-r>/<cr>''
 vnoremap <silent> <s-tab> y:%s/<c-r>"\c//gn<cr>?<c-r>/<cr>''
 " }}}
 " Scratch buffer "{{{
-nnoremap <silent> <backspace> :ScratchOverwrite<cr>
-nnoremap <silent> <s-backspace> :ScratchAppend<cr>
-nnoremap <silent> <c-backspace> :ScratchInsert<cr>
-nnoremap <silent> <a-backspace> :ScratchCreat<cr>
-vnoremap <silent> <backspace> y:ScratchOverwrite<cr>
-vnoremap <silent> <s-backspace> y:ScratchAppend<cr>
-vnoremap <silent> <c-backspace> y:ScratchInsert<cr>
+nnoremap <silent> <backspace> :ScSubs<cr>
+nnoremap <silent> <s-backspace> :ScAppend<cr>
+nnoremap <silent> <c-backspace> :ScInsert<cr>
+nnoremap <silent> <a-backspace> :ScCreat<cr>
+vnoremap <silent> <backspace> y:ScSubs<cr>
+vnoremap <silent> <s-backspace> y:ScAppend<cr>
+vnoremap <silent> <c-backspace> y:ScInsert<cr>
 " }}}
 " }}}1
 
 " User defined commands "{{{1
 
 " insert bullet points
-command! BulletPoint call InsertBulletPoint()
+command! Bullet call InsertBulletPoint()
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
@@ -828,24 +828,29 @@ command! TimeStamp call CurrentTime()|normal ''
 " replace '\t' with '\s\s\s\s' | '\t\t' with '\t'
 command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
 " delete empty lines
-command! DeleteEmpty call EmptyLines(1)
-command! DeleteAdditional call EmptyLines(0)
+command! DelEmpty call EmptyLines(1)
+command! DelAdd call EmptyLines(0)
 " put text to Scratch buffer
-command! ScratchAppend call ScratchBuffer(2)
-command! ScratchInsert call ScratchBuffer(1)
-command! ScratchOverwrite call ScratchBuffer(0)
+command! ScAppend call ScratchBuffer(2)
+command! ScInsert call ScratchBuffer(1)
+command! ScSubs call ScratchBuffer(0)
 " creat new Scratch buffer
-command! ScratchCreat call ScratchBuffer(3)|ls!
+command! ScCreat call ScratchBuffer(3)|ls!
+" edit Scratch buffer
+command! ScEdit call ScratchBuffer(4)
+" change fold level
+command! FoldAdd call ScratchBuffer(1)
+command! FoldSub call ScratchBuffer(0)
 " word count
-command! WordCountCN %s/[^\x00-\xff]//gn
-command! WordCountEN %s/\a\+//gn
+command! WordCN %s/[^\x00-\xff]//gn
+command! WordEN %s/\a\+//gn
 " load key mappings
-command! KeyMappingEN call EnglishVocabulary()
-command! KeyMappingLoc call LocKeyMapping()
+command! KMapEN call EnglishVocabulary()
+command! KMapLoc call LocKeyMapping()
 " localization
-command! FormatLocFile call FileFormat_Loc()
+command! FormatLoc call FileFormat_Loc()
 " edit .vimrc
-command! EditVimrc e $MYVIMRC
+command! EdVimrc e $MYVIMRC
 " autocommands
 autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead achievement.note call GetThingsDone()
