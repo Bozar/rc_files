@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Wed, Jan 29 | 17:44:45 | 2014
+" Last Update: Wed, Jan 29 | 18:18:54 | 2014
 
 set nocompatible
 filetype off
@@ -25,13 +25,21 @@ function! CheckOS() "{{{
 endfunction "}}}
 " }}}2
 
-" change background color "{{{2
-" :h expr-option
-function! SetBackground() "{{{
-	if &background=='dark'
-		set background=light
-	else
-		set background=dark
+" switch settings "{{{2
+function! SwitchSettings(setting) "{{{
+	if a:setting=='hlsearch'
+		set hlsearch!
+		set hlsearch?
+	elseif a:setting=='linebreak'
+		set linebreak!
+		set linebreak?
+	" :h expr-option
+	elseif a:setting=='background'
+		if &background=='dark'
+			set background=light
+		else
+			set background=dark
+		endif
 	endif
 endfunction "}}}
 " }}}2
@@ -800,9 +808,9 @@ vnoremap q %
 onoremap q %
 " }}}
 " switch settings "{{{
-nnoremap <silent> <c-\> :set hlsearch!<cr>:set hlsearch?<cr>
-nnoremap <silent> <a-\> :set linebreak!<cr>:set linebreak?<cr>
-nnoremap <silent> \ :call SetBackground()<cr>
+nnoremap <silent> <c-\> :SwHlsearch<cr>
+nnoremap <silent> <a-\> :SwLinebreak<cr>
+nnoremap <silent> \ :SwBackground<cr>
 " }}}
 " change fold level "{{{
 nnoremap <silent> <a-=> :FoldAdd<cr>
@@ -828,44 +836,62 @@ vnoremap <silent> <c-backspace> y:ScInsert<cr>
 
 " User defined commands "{{{1
 
-" insert bullet points
+" insert bullet points "{{{
 command! Bullet call BulletPoint()
-" update current time
+" }}}
+" update current time "{{{
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
 command! TimeStamp call CurrentTime(0)|normal ''
 command! Date call CurrentTime(1)
-" replace '\t' with '\s\s\s\s' | '\t\t' with '\t'
+" }}}
+" replace '\t' with '\s\s\s\s' | '\t\t' with '\t' "{{{
 command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
-" delete empty lines
+" }}}
+" delete empty lines "{{{
 command! DelEmpty call EmptyLines(1)
 command! DelAdd call EmptyLines(0)
-" put text to Scratch buffer
+" }}}
+" put text to Scratch buffer "{{{
 command! ScAppend call ScratchBuffer(2)
 command! ScInsert call ScratchBuffer(1)
 command! ScSubs call ScratchBuffer(0)
-" creat new Scratch buffer
+" }}}
+" creat new Scratch buffer "{{{
 command! ScCreat call ScratchBuffer(3)|ls!
-" edit Scratch buffer
+" }}}
+" edit Scratch buffer "{{{
 command! ScEdit call ScratchBuffer(4)
-" change fold level
+" }}}
+" change fold level "{{{
 command! FoldAdd call ChangeFoldLevel(1)
 command! FoldSub call ChangeFoldLevel(0)
-" word count
+" }}}
+" switch settings "{{{
+command! SwHlsearch call SwitchSettings('hlsearch')
+command! SwLinebreak call SwitchSettings('linebreak')
+command! SwBackground call SwitchSettings('background')
+ "}}}
+" word count "{{{
 command! WordCh %s/[^\x00-\xff]//gn
 command! WordEn %s/\a\+//gn
-" load key mappings
+" }}}
+" load key mappings "{{{
 command! KeyMapEn call EnglishVocabulary()
 command! KeyMapLoc call LocKeyMapping()
-" localization
+" }}}
+" localization "{{{
 command! FormatLoc call FileFormat_Loc()
-" edit .vimrc
+" }}}
+" edit .vimrc "{{{
 command! EdVimrc e $MYVIMRC
-" autocommands
+" }}}
+" autocommands "{{{
 autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead achievement.note call GetThingsDone()
 autocmd VimEnter * call ScratchBuffer(3)
+" }}}
 " }}}1
 
 " vim: set nolinebreak number foldlevel=20:
