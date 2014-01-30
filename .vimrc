@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Thu, Jan 30 | 02:10:41 | 2014
+" Last Update: Thu, Jan 30 | 23:39:37 | 2014
 
 set nocompatible
 filetype off
@@ -896,7 +896,8 @@ command! EdVimrc e $MYVIMRC
 " }}}
 " autocommands "{{{
 autocmd BufRead *.loc call LocKeyMapping()
-autocmd BufRead achievement.note call GetThingsDone()
+autocmd BufRead *.gtd call GetThingsDone()
+autocmd BufRead *.voca call EnglishVocabulary()
 autocmd VimEnter * call ScratchBuffer(3)
 " }}}
 " }}}1
