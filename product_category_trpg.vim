@@ -1,13 +1,14 @@
-" Last Update: Sun, Jan 26 | 20:36:01 | 2014
+" Last Update: Sun, Feb 02 | 17:08:26 | 2014
 " trpg product category "{{{1
 function! BlockedText() "{{{
 	" product name
-	g/^http/s/^\(.*\)$/\1\r\r\1
-	g/^http/.+2s/^http.*\//英文名：/
+	g/{\{3\}2/.+1s/^\(http.*\)$/\1\r\r\1
+	g/{\{3\}2/.+3s/^http.*\//英文名：/
 	g/^英文名：/s/-/ /g
 	g/^英文名：/s/\(?\|-%\).*$//
 	g/^英文名：/.+1d
 	" other information
+	g/^英文名：/.+1s/^From /出版方：
 	%s/^\(\$\d\)/售价：\1
 	%s/^Pages \(\d\)/页数：\1
 	%s/^File Size: \(\d\)/PDF文件大小：\1
