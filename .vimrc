@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Sun, Feb 02 | 19:13:14 | 2014
+" Last Update: Tue, Feb 04 | 14:45:45 | 2014
 
 set nocompatible
 filetype off
@@ -152,6 +152,26 @@ function! CurrentTime(time_stamp) "{{{
 		s/$/\r
 		s/^/\=strftime('%b %d | %a | %Y')
 	endif
+endfunction "}}}
+" }}}2
+
+" creat page number "{{{2
+function! PageNumber() "{{{
+	" creat two strings
+	let a=1|g/1/s//\=a/|let a=a+10
+	%s/$/\r#INSERT_NUMBER#\r
+	let a=11|g/#INSERT_NUMBER#/s//\=a/|let a=a+10
+	" join nearby lines
+	g/1$/.-1,.j
+	" add fold marker
+	%s/\s/-
+	%s/$/ {{{/|%s/$/\r\r }}}
+	%s/\({\|}\)$/\12
+	" delete additional lines
+	" insert title
+	g/^ {\{3\}2$/.,.+1delete
+	1s/^\(.*\)$/\1\r\1
+	1s/2$/1/|$s/2$/1
 endfunction "}}}
 " }}}2
 
@@ -841,6 +861,9 @@ vnoremap <silent> <c-backspace> y:ScInsert<cr>
 " insert bullet points "{{{
 command! Bullet call BulletPoint()
 " }}}
+" creat page number "{{{
+command! Page call PageNumber()
+ "}}}
 " update current time "{{{
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
