@@ -1,4 +1,4 @@
-" Last Update: Sun, Feb 02 | 17:08:26 | 2014
+" Last Update: Wed, Feb 05 | 00:50:27 | 2014
 " trpg product category "{{{1
 function! BlockedText() "{{{
 	" product name
@@ -8,7 +8,7 @@ function! BlockedText() "{{{
 	g/^英文名：/s/\(?\|-%\).*$//
 	g/^英文名：/.+1d
 	" other information
-	g/^英文名：/.+1s/^From /出版方：
+	g/^英文名：/.+1s/^/出版方：
 	%s/^\(\$\d\)/售价：\1
 	%s/^Pages \(\d\)/页数：\1
 	%s/^File Size: \(\d\)/PDF文件大小：\1
@@ -41,17 +41,17 @@ function! MarkDown() "{{{
 endfunction "}}}
 
 function! HyperLinkJoin() "{{{
-mark j
-'j,'j+2s/^\t//e
-'js/^\(.*\)$/[\1]
-'j+1s/^\(.*\)$/(\1)
-'j-1,'j+2join!
+	mark j
+	'j,'j+2s/^\t//e
+	'js/^\(.*\)$/[\1]
+	'j+1s/^\(.*\)$/(\1)
+	'j-1,'j+2join!
 endfunction "}}}
 
 function! HyperLinkSeperate() "{{{
-put!
-s/$/\r
-.-1mark a
+	put!
+	s/$/
+	mark a
 endfunction "}}}
 
 vnoremap <buffer> <silent> <f1> s**<c-r>"**<esc>
