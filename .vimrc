@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Tue, Feb 04 | 14:45:45 | 2014
+" Last Update: Feb 08, Sat | 23:06:16 | 2014
 
 set nocompatible
 filetype off
@@ -145,8 +145,8 @@ endfunction "}}}
 function! CurrentTime(time_stamp) "{{{
 	" update time-stamp
 	if a:time_stamp==0
-		1,5s/\(Last\sUpdate:\s\|Date:\s\|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
-		$-4,$s/\(Last\sUpdate:\s\|Date:\s\|最后更新：\|日期：\)\@<=.*$/\=strftime('%a, %b %d | %H:%M:%S | %Y')/e
+		1,5s/\(Last\sUpdate:\s\|Date:\s\|最后更新：\|日期：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
+		$-4,$s/\(Last\sUpdate:\s\|Date:\s\|最后更新：\|日期：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
 	" append time
 	elseif a:time_stamp==1
 		s/$/\r
