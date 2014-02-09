@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 09, Sun | 23:41:27 | 2014
+" Last Update: Feb 10, Mon | 00:20:50 | 2014
 
 set nocompatible
 filetype off
@@ -253,110 +253,117 @@ endfunction "}}}
 
 " Function key: <F1> "{{{3
 " search bracket '['
-function! F1_Normal_EnVoc() "{{{
+function! F1_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f1> /\[<cr>"+yi[
 endfunction "}}}
-function! F1_Shift_Normal_EnVoc() "{{{
+function! F1_Shift_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <s-f1> b?\[<cr>"+yi[
 endfunction "}}}
 
-function! F1_EnVoc() "{{{
-	call F1_Normal_EnVoc()
-	call F1_Shift_Normal_EnVoc()
+function! F1_Vocab() "{{{
+	call F1_Normal_Vocab()
+	call F1_Shift_Normal_Vocab()
 endfunction "}}}
 " }}}3
 
 " Function key: <F2> "{{{3
 " search word
-function! F2_Normal_EnVoc() "{{{
+function! F2_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f2> "+yi[/\[<c-r>+\]<cr>zz
 endfunction "}}}
 
-function! F2_EnVoc() "{{{
-	call F2_Normal_EnVoc()
+function! F2_Vocab() "{{{
+	call F2_Normal_Vocab()
 endfunction "}}}
 " }}}3
 
 " Function key: <F3> "{{{3
 " insert brackets
-function! F3_Normal_EnVoc() "{{{
+function! F3_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f3> "+ciw[<c-r>"]<esc>
 endfunction "}}}
-function! F3_Visual_EnVoc() "{{{
+function! F3_Visual_Vocab() "{{{
 	vnoremap <buffer> <silent> <f3> s[<c-r>"]<esc>
 endfunction "}}}
 " delete brackets
-function! F3_Shift_Normal_EnVoc() "{{{
+function! F3_Shift_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <s-f3> di[pF[2x
 endfunction "}}}
 
-function! F3_EnVoc() "{{{
-	call F3_Normal_EnVoc()
-	call F3_Shift_Normal_EnVoc()
-	call F3_Visual_EnVoc()
+function! F3_Vocab() "{{{
+	call F3_Normal_Vocab()
+	call F3_Shift_Normal_Vocab()
+	call F3_Visual_Vocab()
 endfunction "}}}
 " }}}3
 
 " Function key: <F4> "{{{3
 " update word list
+" there should be ONLY ONE list in a file
 " Word List {{{
 " [word 1]
 " [word 2]
 " }}}
-" h: cursor line | l: last line | j: folder begins | k: folder ends
-function! UpdateWordList_EnVoc() "{{{
-	mark h|? {\{3\}\d$?mark j|/ }\{3\}\d$/mark k
+" j: cursor line | k: last line
+function! UpdateWordList_Vocab() "{{{
+	mark j|$mark k
+	" clear old list
 	?^Word List {{{$?+1;/^ }}}$/-1delete
-	'j,'ky|$mark l|'lput
-	'l+1,$s/\[/\r[/g|'l+1,$s/\]/]\r/g|'l+1,$g!/\[/d
-	'l+1,$delete
-	normal 'j
+	" put whole text to the end
+	1,$yank|$put
+	" delete non-bracket text
+	'k+1,$s/\[/\r[/g
+	'k+1,$s/\]/]\r/g
+	'k+1,$g!/\[/delete
+	" move words back to list
+	'k+1,$delete
+	1
 	/^Word List {\{3\}$/put
 	?^Word List {\{3\}?s/$/\r
 	"}}}
-	normal 'h
+	normal 'j
 endfunction "}}}
-function! F4_Normal_EnVoc() "{{{
-	nnoremap <buffer> <silent> <f4> :call UpdateWordList_EnVoc()<cr>
+function! F4_Normal_Vocab() "{{{
+	nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
 endfunction "}}}
 " creat blank word list
-function! F4_Shift_Normal_EnVoc() "{{{
+function! F4_Shift_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <s-f4> :?{{{?+1s/^/\rWord List {{{\r\r }}}\r<cr>
 endfunction "}}}
 
-function! F4_EnVoc() "{{{
-	call F4_Normal_EnVoc()
-	call F4_Shift_Normal_EnVoc()
+function! F4_Vocab() "{{{
+	call F4_Normal_Vocab()
+	call F4_Shift_Normal_Vocab()
 endfunction "}}}
 " }}}3
 
 " Function key: <F5> "{{{3
 " collect word lists
-function! ColletWordList_EnVoc() "{{{
+" j: cursor line
+function! ColletWordList_Vocab() "{{{
 	let @a=''
-	'j,'kg/^Word List {{{$/.+1;/ }}}$/-1y A
+	mark j
+	1
+	/^Word List {{{$/;/ }}}$/y A
 	let @"=@a
 	ScSubs
 	g/^$/d
-	1s/^/Word List {{{1\r\r
-	$s/$/\r }}}1
-	%s/\[//n
 endfunction "}}}
-function! F5_Normal_EnVoc() "{{{
-	nnoremap <buffer> <silent> <f5> :call ColletWordList_EnVoc()<cr>
+function! F5_Normal_Vocab() "{{{
+	nnoremap <buffer> <silent> <f5> :call ColletWordList_Vocab()<cr>
 endfunction "}}}
 
-function! F5_EnVoc() "{{{
-	call F5_Normal_EnVoc()
+function! F5_Vocab() "{{{
+	call F5_Normal_Vocab()
 endfunction "}}}
 " }}}3
 
-function! EnglishVocabulary() "{{{
-	call F1_EnVoc()
-	call F2_EnVoc()
-	call F3_EnVoc()
-	call F4_EnVoc()
-	call F5_EnVoc()
+function! Vocabulary() "{{{
+	call F1_Vocab()
+	call F2_Vocab()
+	call F3_Vocab()
+	call F4_Vocab()
+	call F5_Vocab()
 endfunction "}}}
 " }}}2
 
@@ -907,7 +914,7 @@ command! SwBackground call SwitchSettings('background')
 command! Word %s/[^\x00-\xff]//gn
 " }}}
 " load key mappings "{{{
-command! KeEnVoc call EnglishVocabulary()
+command! KeVocab call Vocabulary()
 command! KeLocal call LocKeyMapping()
 command! KeGTD call GetThingsDone()
 " }}}
@@ -920,7 +927,7 @@ command! EdVimrc e $MYVIMRC
 " autocommands "{{{
 autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead *.gtd call GetThingsDone()
-autocmd BufRead *.vocab call EnglishVocabulary()
+autocmd BufRead *.vocab call Vocabulary()
 autocmd VimEnter * call ScratchBuffer(3)
 " }}}
 " }}}1
