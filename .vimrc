@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 09, Sun | 23:20:50 | 2014
+" Last Update: Feb 09, Sun | 23:41:27 | 2014
 
 set nocompatible
 filetype off
@@ -160,9 +160,9 @@ function! PageNumber() "{{{
 	" creat two strings
 	let a=1|g/1/s//\=a/|let a=a+10
 	%s/$/\r#INSERT_NUMBER#\r
-	let a=11|g/#INSERT_NUMBER#/s//\=a/|let a=a+10
+	let a=10|g/#INSERT_NUMBER#/s//\=a/|let a=a+10
 	" join nearby lines
-	g/1$/.-1,.j
+	g/0$/.-1,.j
 	" add fold marker
 	%s/\s/-
 	%s/$/ {{{/|%s/$/\r\r }}}
