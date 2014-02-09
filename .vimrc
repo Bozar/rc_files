@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 09, Sun | 13:01:49 | 2014
+" Last Update: Feb 09, Sun | 23:20:50 | 2014
 
 set nocompatible
 filetype off
@@ -704,8 +704,6 @@ set statusline=
 set statusline+=%f%m%r%h%w
 " fileencoding, fileformat, buffer number, window number
 set statusline+=\ [%{&fenc}][%{&ff}][%n,%{winnr()}]
-" set statusline+=[%{winnr()}]
-" [%{winnr()}]
 " right aligned items
 set statusline+=%=
 " cursor line number
@@ -922,7 +920,7 @@ command! EdVimrc e $MYVIMRC
 " autocommands "{{{
 autocmd BufRead *.loc call LocKeyMapping()
 autocmd BufRead *.gtd call GetThingsDone()
-autocmd BufRead *.voca call EnglishVocabulary()
+autocmd BufRead *.vocab call EnglishVocabulary()
 autocmd VimEnter * call ScratchBuffer(3)
 " }}}
 " }}}1
