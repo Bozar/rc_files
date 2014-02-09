@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 08, Sat | 23:06:16 | 2014
+" Last Update: Feb 09, Sun | 13:01:49 | 2014
 
 set nocompatible
 filetype off
@@ -134,7 +134,7 @@ function! EmptyLines(empty_line) "{{{
 		g/^###DELETE_EMPTY_LINES###$/d
 	elseif a:empty_line==1
 		g/^$/d
-	endif	
+	endif
 endfunction "}}}
 " }}}2
 
@@ -393,8 +393,8 @@ function! FileFormat_Loc() "{{{
 	set fileencoding=utf-8
 	set fileformat=unix
 	%s/\r//ge
-	%s/ \+\t/\t/ge
-	%s/\t \+/\t/ge
+	%s/\s\+\t/\t/ge
+	%s/\t\s\+/\t/ge
 endfunction "}}}
 
 " Function key: <F1> "{{{3
@@ -463,13 +463,6 @@ endfunction "}}}
 " }}}3
 
 " Function key: <F3> "{{{3
-" search wrong translation
-" let @c='English'
-" let @b='Chinese correction'
-function! F3_Normal_Loc() "{{{
-	nnoremap <buffer> <silent> <f3>
-		\ :%s/<c-r>c\(.\{-\}\t.\{-\}<c-r>b\)\@!\c//n<cr>
-endfunction "}}}
 " put '<c-r>/' text into tmp buffer
 " let @d='search pattern'
 " note: it seems that when a command will delete all characters in one buffer,
@@ -479,10 +472,17 @@ endfunction "}}}
 " nnoremap <f12> ggdG
 " \ oTEST<esc>
 " nnoremap <f12> ggdGoTEST<esc>
-function! F3_Shift_Normal_Loc() "{{{
-	nnoremap <buffer> <silent> <s-f3>
+function! F3_Normal_Loc() "{{{
+	nnoremap <buffer> <silent> <f3>
 		\ :let @d=''\|:g/<c-r>//y D<cr>:4wincmd w<cr>
 		\ :call PutText(0)<cr>
+endfunction "}}}
+" search wrong translation
+" let @c='English'
+" let @b='Chinese correction'
+function! F3_Shift_Normal_Loc() "{{{
+	nnoremap <buffer> <silent> <s-f3>
+		\ :%s/<c-r>c\(.\{-\}\t.\{-\}<c-r>b\)\@!\c//n<cr>
 endfunction "}}}
 
 function! F3_Loc() "{{{
@@ -702,8 +702,10 @@ set ruler
 set statusline=
 " relative path, modified, readonly, help, preview
 set statusline+=%f%m%r%h%w
-" fileencoding, fileformat, buffer number
-set statusline+=\ [%{&fenc}][%{&ff}][%n]
+" fileencoding, fileformat, buffer number, window number
+set statusline+=\ [%{&fenc}][%{&ff}][%n,%{winnr()}]
+" set statusline+=[%{winnr()}]
+" [%{winnr()}]
 " right aligned items
 set statusline+=%=
 " cursor line number
@@ -912,7 +914,7 @@ command! KeLocal call LocKeyMapping()
 command! KeGTD call GetThingsDone()
 " }}}
 " localization "{{{
-command! FormatLoc call FileFormat_Loc()
+command! LoFormat call FileFormat_Loc()
 " }}}
 " edit .vimrc "{{{
 command! EdVimrc e $MYVIMRC
