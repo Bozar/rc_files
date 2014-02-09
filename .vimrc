@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 10, Mon | 00:20:50 | 2014
+" Last Update: Feb 10, Mon | 00:33:21 | 2014
 
 set nocompatible
 filetype off
@@ -321,7 +321,7 @@ function! UpdateWordList_Vocab() "{{{
 	/^Word List {\{3\}$/put
 	?^Word List {\{3\}?s/$/\r
 	"}}}
-	normal 'j
+	'j
 endfunction "}}}
 function! F4_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
@@ -341,11 +341,16 @@ endfunction "}}}
 " collect word lists
 " j: cursor line
 function! ColletWordList_Vocab() "{{{
+	" clear register, mark position
 	let @a=''
 	mark j
+	" yank word list
 	1
 	/^Word List {{{$/;/ }}}$/y A
 	let @"=@a
+	" back to cursor line
+	'j
+	" put list into Scratch buffer
 	ScSubs
 	g/^$/d
 endfunction "}}}
