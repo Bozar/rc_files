@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 10, Mon | 09:26:07 | 2014
+" Last Update: Feb 10, Mon | 10:39:28 | 2014
 
 set nocompatible
 filetype off
@@ -405,8 +405,6 @@ function! FileFormat_Loc() "{{{
 	set fileencoding=utf-8
 	set fileformat=unix
 	%s/\r//ge
-	%s/\s\+\t/\t/ge
-	%s/\t\s\+/\t/ge
 endfunction "}}}
 
 " Function key: <F1> "{{{3
