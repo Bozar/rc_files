@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 10, Mon | 00:33:21 | 2014
+" Last Update: Feb 10, Mon | 09:26:07 | 2014
 
 set nocompatible
 filetype off
@@ -715,7 +715,8 @@ set statusline=
 " relative path, modified, readonly, help, preview
 set statusline+=%f%m%r%h%w
 " fileencoding, fileformat, buffer number, window number
-set statusline+=\ [%{&fenc}][%{&ff}][%n,%{winnr()}]
+set statusline+=\ [%{&fenc}][%{&ff}][%n]
+" set statusline+=\ [%{&fenc}][%{&ff}][%n,%{winnr()}]
 " right aligned items
 set statusline+=%=
 " cursor line number
