@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 10, Mon | 10:39:28 | 2014
+" Last Update: Feb 11, Tue | 21:20:49 | 2014
 
 set nocompatible
 filetype off
@@ -71,10 +71,9 @@ function! YankFoldMarker(fold_marker) "{{{
 		'jyank "
 		'jput! "
 		'jput! "
-		'j-2,'j-1s/^.*\( \(\|"\){\{3\}\)\@=//
+		'j-2,'j-1s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
 		'j-1s/{{{/}}}
-		'j-2
-		normal ^
+		'j-2s/^/FOLDMARKER/
 	" }}}
 	" append "{{{
 	elseif a:fold_marker==2
@@ -82,10 +81,9 @@ function! YankFoldMarker(fold_marker) "{{{
 		'jyank "
 		'kput "
 		'kput "
-		'k+1,'k+2s/^.*\( \(\|"\){\{3\}\)\@=//
+		'k+1,'k+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
 		'k+2s/{{{/}}}
-		'k+1
-		normal ^
+		'k+1s/^/FOLDMARKER/
 	" }}}
 	" creat "{{{
 	elseif a:fold_marker==0
