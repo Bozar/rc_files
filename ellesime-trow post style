@@ -1,0 +1,24 @@
+" ellesime-trow post style
+" Last Update: Feb 13, Thu | 02:35:57 | 2014
+
+" substitution "{{{1
+" title
+" bulletin
+" url
+" character
+" quote
+" seperation line
+function! PostStyle_ET(forum) "{{{2
+	if a:forum=='t'
+		" trow
+	elseif a:forum=='e'
+		" ellesime
+	endif
+endfunction "}}}2
+" }}}1
+
+" command "{{{1
+command! PoEllesime call PostStyle_ET(e)
+command! PoTrow call PostStyle_ET(t)
+" }}}1
+" vim: set nolinebreak number foldlevel=20:
