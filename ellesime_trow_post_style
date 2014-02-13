@@ -1,5 +1,5 @@
 " ellesime/trow post style
-" Last Update: Feb 13, Thu | 02:35:57 | 2014
+" Last Update: Feb 13, Thu | 09:49:44 | 2014
 
 " substitution "{{{1
 " title
@@ -8,17 +8,44 @@
 " character
 " quote
 " seperation line
-function! PostStyle_ET(forum) "{{{2
+function! Title_ET(forum) "{{{
 	if a:forum=='t'
 		" trow
 	elseif a:forum=='e'
 		" ellesime
 	endif
-endfunction "}}}2
+endfunction "}}}
+function! Paragraph_ET(forum) "{{{
+	if a:forum=='t'
+		" trow
+	elseif a:forum=='e'
+		" ellesime
+	endif
+endfunction "}}}
+function! Character_ET(forum) "{{{
+	if a:forum=='t'
+		" trow
+	elseif a:forum=='e'
+		" ellesime
+	endif
+endfunction "}}}
+" }}}1
+
+" main function "{{{1
+function! Ellesime_ET() "{{{
+	call Title_ET(e)
+	call Paragraph_ET(e)
+	call Character_ET(e)
+endfunction "}}}
+function! Trow_ET() "{{{
+	call Title_ET(t)
+	call Paragraph_ET(t)
+	call Character_ET(t)
+endfunction "}}}
 " }}}1
 
 " command "{{{1
-command! PoEllesime call PostStyle_ET(e)
-command! PoTrow call PostStyle_ET(t)
+command! PoEllesime call Ellesime_ET()
+command! PoTrow call Trow_ET()
 " }}}1
 " vim: set nolinebreak number foldlevel=20:
