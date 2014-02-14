@@ -1,5 +1,5 @@
 " ellesime/trow post style
-" Last Update: Feb 13, Thu | 09:49:44 | 2014
+" Last Update: Feb 15, Sat | 00:59:26 | 2014
 
 " substitution "{{{1
 " title
@@ -9,23 +9,42 @@
 " quote
 " seperation line
 function! Title_ET(forum) "{{{
-	if a:forum=='t'
-		" trow
-	elseif a:forum=='e'
-		" ellesime
+	" ellesime style
+	if a:forum==1
+		" markdown bracket
+		1g/^\[markdown\]$/delete
+		$g/^\[\/markdown\]$/delete
+		" main title
+		g/^#\{2\}\s/s/$/[\/size]\r[hr]/e
+		%s/^#\{2\}\s/[size=18pt]/e
+		" sub title
+		g/^#\{3\}\s/s/$/[\/size]/e
+		%s/^#\{3\}\s/[size=14pt]/e
+	" trow style
+	elseif a:forum==0
+		" markdown bracket
+		1s/^/[markdown]\r
+		$s/$/\r[\/markdown]
+		" main title
+		g/\[size=18pt\]/.+1delete
+		%s/^\[size=18pt\]/## /e
+		" sub title
+		%s/^\[size=14pt\]/### /e
+		" clear [/size]
+		%s/\[\/size\]//e
 	endif
 endfunction "}}}
 function! Paragraph_ET(forum) "{{{
-	if a:forum=='t'
+	if a:forum==1
 		" trow
-	elseif a:forum=='e'
+	elseif a:forum==0
 		" ellesime
 	endif
 endfunction "}}}
 function! Character_ET(forum) "{{{
-	if a:forum=='t'
+	if a:forum==1
 		" trow
-	elseif a:forum=='e'
+	elseif a:forum==0
 		" ellesime
 	endif
 endfunction "}}}
@@ -33,14 +52,14 @@ endfunction "}}}
 
 " main function "{{{1
 function! Ellesime_ET() "{{{
-	call Title_ET(e)
-	call Paragraph_ET(e)
-	call Character_ET(e)
+	call Title_ET(1)
+	call Paragraph_ET(1)
+	call Character_ET(1)
 endfunction "}}}
 function! Trow_ET() "{{{
-	call Title_ET(t)
-	call Paragraph_ET(t)
-	call Character_ET(t)
+	call Title_ET(0)
+	call Paragraph_ET(0)
+	call Character_ET(0)
 endfunction "}}}
 " }}}1
 
