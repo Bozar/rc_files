@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 11, Tue | 21:20:49 | 2014
+" Last Update: Feb 14, Fri | 21:55:07 | 2014
 
 set nocompatible
 filetype off
@@ -257,10 +257,14 @@ endfunction "}}}
 function! F1_Shift_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <s-f1> b?\[<cr>"+yi[
 endfunction "}}}
+function! F1_Visual_Vocab() "{{{
+	vnoremap <buffer> <silent> <f1> :s/\[//gn<cr>
+endfunction "}}}
 
 function! F1_Vocab() "{{{
 	call F1_Normal_Vocab()
 	call F1_Shift_Normal_Vocab()
+	call F1_Visual_Vocab()
 endfunction "}}}
 " }}}3
 
