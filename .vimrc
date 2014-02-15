@@ -1,19 +1,17 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 14, Fri | 21:55:07 | 2014
+" Last Update: Feb 16, Sun | 03:43:22 | 2014
 
-set nocompatible
-filetype off
-" }}}1
-
-" Vundle "{{{1
+" Vundle "{{{2
 
 " I'll try on some plugins later
+set nocompatible
+filetype off
 filetype plugin on
-" }}}1
+" }}}2
 
-" Functions "{{{1
+" Functions "{{{2
 
-" windows or linux "{{{2
+" windows or linux "{{{3
 function! CheckOS() "{{{
 	if has('win32')
 		return 'windows'
@@ -23,9 +21,9 @@ function! CheckOS() "{{{
 		return 'linux'
 	endif
 endfunction "}}}
-" }}}2
+" }}}3
 
-" switch settings "{{{2
+" switch settings "{{{3
 function! SwitchSettings(setting) "{{{
 	if a:setting=='hlsearch'
 		set hlsearch!
@@ -42,9 +40,9 @@ function! SwitchSettings(setting) "{{{
 		endif
 	endif
 endfunction "}}}
-" }}}2
+" }}}3
 
-" put text to another file "{{{2
+" put text to another file "{{{3
 " 0: overwrite old text
 " 1: insert into old text
 " 2: append to old text
@@ -60,9 +58,9 @@ function! PutText(put_line) "{{{
 		'j+1
 	endif
 endfunction "}}}
-" }}}2
+" }}}3
 
-" append(2), insert(1) and creat(0) fold markers "{{{2
+" append(2), insert(1) and creat(0) fold markers "{{{3
 " apply the fold level of cursor line
 function! YankFoldMarker(fold_marker) "{{{
 	" insert "{{{
@@ -93,9 +91,9 @@ function! YankFoldMarker(fold_marker) "{{{
 	" }}}
 	endif
 endfunction "}}}
-" }}}2
+" }}}3
 
-" insert bullets: special characters at the beginning of a line "{{{2
+" insert bullets: special characters at the beginning of a line "{{{3
 function! BulletPoint() "{{{
 	" title "{{{
 	" do not indent title '-'
@@ -113,9 +111,9 @@ function! BulletPoint() "{{{
 	'j,'ks/^\(\t\)=/\1* /e
 	" }}}
 endfunction "}}}
-" }}}2
+" }}}3
 
-" add(1) or substract(0) fold level "{{{2
+" add(1) or substract(0) fold level "{{{3
 function! ChangeFoldLevel(fold_level)  "{{{
 	if a:fold_level==0
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)-1
@@ -123,9 +121,9 @@ function! ChangeFoldLevel(fold_level)  "{{{
 		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)+1
 	endif
 endfunction "}}}
-" }}}2
+" }}}3
 
-" delete lines "{{{2
+" delete lines "{{{3
 function! EmptyLines(empty_line) "{{{
 	if a:empty_line==0
 		g/^$/.+1s/^$/###DELETE_EMPTY_LINES###
@@ -134,9 +132,9 @@ function! EmptyLines(empty_line) "{{{
 		g/^$/d
 	endif
 endfunction "}}}
-" }}}2
+" }}}3
 
-" current time {{{2
+" current time {{{3
 " there should be at least 5 lines in a file
 " year (%Y) | month (%b) | day (%d) | weekday (%a)
 " hour (%H) | miniute (%M) | second (%S)
@@ -151,9 +149,9 @@ function! CurrentTime(time_stamp) "{{{
 		s/^/\=strftime('%b %d | %a | %Y')
 	endif
 endfunction "}}}
-" }}}2
+" }}}3
 
-" creat page number "{{{2
+" creat page number "{{{3
 function! PageNumber() "{{{
 	" creat two strings
 	let a=1|g/1/s//\=a/|let a=a+10
@@ -171,9 +169,9 @@ function! PageNumber() "{{{
 	1s/^\(.*\)$/\1\r\1
 	1s/2$/1/|$s/2$/1
 endfunction "}}}
-" }}}2
+" }}}3
 
-" scratch buffer "{{{2
+" scratch buffer "{{{3
 function! Scratch_Detect() "{{{
 	if bufwinnr(2)==-1
 		buffer 2
@@ -215,9 +213,9 @@ function! ScratchBuffer(scratch) "{{{
 	" }}}
 	endif
 endfunction "}}}
-" }}}2
+" }}}3
 
-" GTD "{{{2
+" GTD "{{{3
 " substitute bullet point (*) with finished mark (~)
 function! Finished_GTD() "{{{
 	nnoremap <buffer> <silent> <f1> :s/^\t\*/\t\~<cr>
@@ -245,11 +243,11 @@ function! GetThingsDone() "{{{
 	call Finished_GTD()
 	call AnotherDay_GTD()
 endfunction "}}}
-" }}}2
+" }}}3
 
-" English vocabulary "{{{2
+" English vocabulary "{{{3
 
-" Function key: <F1> "{{{3
+" Function key: <F1> "{{{4
 " search bracket '['
 function! F1_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f1> /\[<cr>"+yi[
@@ -266,9 +264,9 @@ function! F1_Vocab() "{{{
 	call F1_Shift_Normal_Vocab()
 	call F1_Visual_Vocab()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F2> "{{{3
+" Function key: <F2> "{{{4
 " search word
 function! F2_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f2> "+yi[/\[<c-r>+\]<cr>zz
@@ -277,9 +275,9 @@ endfunction "}}}
 function! F2_Vocab() "{{{
 	call F2_Normal_Vocab()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F3> "{{{3
+" Function key: <F3> "{{{4
 " insert brackets
 function! F3_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f3> "+ciw[<c-r>"]<esc>
@@ -297,9 +295,9 @@ function! F3_Vocab() "{{{
 	call F3_Shift_Normal_Vocab()
 	call F3_Visual_Vocab()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F4> "{{{3
+" Function key: <F4> "{{{4
 " update word list
 " there should be ONLY ONE list in a file
 " Word List {{{
@@ -337,9 +335,9 @@ function! F4_Vocab() "{{{
 	call F4_Normal_Vocab()
 	call F4_Shift_Normal_Vocab()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F5> "{{{3
+" Function key: <F5> "{{{4
 " collect word lists
 " j: cursor line
 function! ColletWordList_Vocab() "{{{
@@ -363,7 +361,7 @@ endfunction "}}}
 function! F5_Vocab() "{{{
 	call F5_Normal_Vocab()
 endfunction "}}}
-" }}}3
+" }}}4
 
 function! Vocabulary() "{{{
 	call F1_Vocab()
@@ -372,9 +370,9 @@ function! Vocabulary() "{{{
 	call F4_Vocab()
 	call F5_Vocab()
 endfunction "}}}
-" }}}2
+" }}}3
 
-" Localization "{{{2
+" Localization "{{{3
 
 " need to tweak the Excel table first
 " insert #MARK# before English column | #END# after the last column
@@ -409,7 +407,7 @@ function! FileFormat_Loc() "{{{
 	%s/\r//ge
 endfunction "}}}
 
-" Function key: <F1> "{{{3
+" Function key: <F1> "{{{4
 " put cursor after the first \t
 function! F1_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f1> ^f	
@@ -436,9 +434,9 @@ function! F1_Loc() "{{{
 	call F1_Visual_Loc()
 	call F1_Shift_Normal_Loc()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F2> "{{{3
+" Function key: <F2> "{{{4
 " search current buffer and put cursor after the first '\t'
 function! F2_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f2> 
@@ -472,9 +470,9 @@ function! F2_Loc() "{{{
 	call F2_Shift_Normal_Loc()
 	call F2_Shift_Visual_Loc()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F3> "{{{3
+" Function key: <F3> "{{{4
 " put '<c-r>/' text into tmp buffer
 " let @d='search pattern'
 " note: it seems that when a command will delete all characters in one buffer,
@@ -501,9 +499,9 @@ function! F3_Loc() "{{{
 	call F3_Normal_Loc()
 	call F3_Shift_Normal_Loc()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F4> "{{{3
+" Function key: <F4> "{{{4
 " substitute words
 " let @c='English'
 " let @b='Chinese correction'
@@ -539,9 +537,9 @@ function! F4_Loc() "{{{
 	call F4_Visual_Loc()
 	call F4_Shift_Visual_Loc()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F5> "{{{3
+" Function key: <F5> "{{{4
 " search and complete missing lines
 " when there are more than one lines in an Excel cell
 " let @d='search pattern'
@@ -579,9 +577,9 @@ function! F5_Loc() "{{{
 	call F5_Visual_Loc()
 	call F5_Shift_Normal_Loc()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F6> "{{{3
+" Function key: <F6> "{{{4
 " add text to bug fix
 function! F6_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f6>
@@ -605,9 +603,9 @@ function! F6_Loc() "{{{
 	call F6_Normal_Loc()
 	call F6_Shift_Normal_Loc()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F7> "{{{3
+" Function key: <F7> "{{{4
 " put text into the lower-right buffer
 " overwrite buffer
 function! F7_Normal_Loc() "{{{
@@ -637,9 +635,9 @@ function! F7_Loc() "{{{
 	call F7_Shift_Normal_Loc()
 	call F7_Shift_Visual_Loc()
 endfunction "}}}
-" }}}3
+" }}}4
 
-" Function key: <F8> "{{{3
+" Function key: <F8> "{{{4
 " move cursor to Chinese in an Excel line
 function! F8_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f8>
@@ -654,7 +652,7 @@ function! F8_Loc() "{{{
 	call F8_Normal_Loc()
 	call F8_Shift_Normal_Loc()
 endfunction "}}}
-" }}}3
+" }}}4
 
 function! LocKeyMapping() "{{{
 	call F1_Loc()
@@ -666,19 +664,19 @@ function! LocKeyMapping() "{{{
 	call F7_Loc()
 	call F8_Loc()
 endfunction "}}}
+" }}}3
 " }}}2
-" }}}1
 
-" Vim settings "{{{1
+" Vim settings "{{{2
 
-" Encoding "{{{2
+" Encoding "{{{3
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf-8,cp936,latin1
 set nobomb
-" }}}2
+" }}}3
 
-" Display "{{{2
+" Display "{{{3
 " text line
 set linespace=0
 set display=lastline
@@ -744,9 +742,9 @@ if CheckOS()=='windows' "{{{
 elseif CheckOS()=='linux'
 	set guifont=DejaVu\ Sans\ \Mono\ 14
 endif "}}}
-" }}}2
+" }}}3
 
-" Editing "{{{2
+" Editing "{{{3
 set modelines=1
 set backspace=indent,eol,start
 set sessionoptions=buffers,folds,sesdir,slash,unix,winsize
@@ -775,10 +773,10 @@ if CheckOS()=='windows' "{{{
 elseif CheckOS()=='linux'
 	cd ~/documents/
 endif "}}}
+" }}}3
 " }}}2
-" }}}1
 
-" Key mappings and abbreviations "{{{1
+" Key mappings and abbreviations "{{{2
 
 " use function keys and commands instead of mapleader "{{{
 " see below: '; and :'
@@ -867,9 +865,9 @@ vnoremap <silent> <backspace> y:ScSubs<cr>
 vnoremap <silent> <s-backspace> y:ScAppend<cr>
 vnoremap <silent> <c-backspace> y:ScInsert<cr>
 " }}}
-" }}}1
+" }}}2
 
-" User defined commands "{{{1
+" User defined commands "{{{2
 
 " insert bullet points "{{{
 command! Bullet call BulletPoint()
@@ -881,7 +879,7 @@ command! Page call PageNumber()
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
-command! TimeStamp call CurrentTime(0)|normal ''
+command! TimeStamp call CurrentTime(0)|normal ''zz
 command! Date call CurrentTime(1)
 " }}}
 " replace '\t' with '\s\s\s\s' | '\t\t' with '\t' "{{{
@@ -936,6 +934,5 @@ autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd VimEnter * call ScratchBuffer(3)
 " }}}
-" }}}1
-
-" vim: set nolinebreak number foldlevel=20:
+" }}}2
+" vim: set nolinebreak number foldlevel=20: "}}}1
