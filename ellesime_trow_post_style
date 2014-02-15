@@ -1,5 +1,5 @@
 " ellesime/trow post style
-" Last Update: Feb 15, Sat | 23:45:49 | 2014
+" Last Update: Feb 16, Sun | 01:56:24 | 2014
 
 " substitution "{{{1
 " character
@@ -12,9 +12,12 @@ function! Title_ET(forum) "{{{
 			" main title
 				g/^#\{2\}\s/s/$/[\/size]\r[hr]/e
 				%s/^#\{2\}\s/[size=18pt]/e
-			" sub title
+			" sub title 1
 				g/^#\{3\}\s/s/$/[\/size]/e
 				%s/^#\{3\}\s/[size=14pt]/e
+			" sub title 2
+				g/^#\{4\}\s/s/$/[\/size]/e
+				%s/^#\{4\}\s/[size=12pt]/e
 	" trow style
 		elseif a:forum==1
 			" markdown bracket
@@ -23,8 +26,10 @@ function! Title_ET(forum) "{{{
 			" main title
 				g/\[size=18pt\]/.+1s/^\[hr\]$//e
 				%s/^\[size=18pt\]/## /e
-			" sub title
+			" sub title 1
 				%s/^\[size=14pt\]/### /e
+			" sub title 2
+				%s/^\[size=12pt\]/#### /e
 			" clear [/size]
 				%s/\[\/size\]//e
 		endif
@@ -63,12 +68,22 @@ endfunction "}}}
 function! Character_ET(forum) "{{{
 	" ellesime style
 		if a:forum==0
-			" hyper-link
-			" avoid this style: [text1]text2[text3](url)
-			" while this is allowed: [text1[text2]text3](url)
-				%s/\(\[.\{-\}\](http:.\{-\})\)/\r\1\r/ge
+			" hyper-link, [text](url) <--> [url=]text[/url]
+			" cut brackets '[]'
+				%s/\[/\r[/ge
+				%s/\]/]\r/ge
+			" fix broken ones like '[text1[text2]text3]
+				g/^\[.*\(\]\)\@<!$/.,.+1join!
+				g/^\(\[\)\@!.*\]$/.-1,.join!
+			" cut url
+				g/http:/s/^\((http:.\{-\})\)/\1\r/e
+			" join [text] and (url)
+				g/^(http:/.-1,.join!
+			" change style
 				g/(http:/s/^\[\(.\{-\}\)\](\(http:.\{-}\))$/[url=\2]\1[\/url]/e
-				g/\[url=http:/.-1,.+1join!
+			" join lines begin/end with brackets '[]'
+				g/^\[/.-1,.join!
+				g/\]$/.,.+1join!
 			" bold
 				%s/\(\*\{2\}.\{-\}\*\{2\}\)/\r\1\r/ge
 				%s/^\*\{2\}\(.\{-\}\)\*\{2\}$/[b]\1[\/b]/e
@@ -97,14 +112,14 @@ endfunction "}}}
 
 " main function "{{{1
 function! Ellesime_ET() "{{{
+	call Character_ET(0)
 	call Title_ET(0)
 	call Paragraph_ET(0)
-	call Character_ET(0)
 endfunction "}}}
 function! Trow_ET() "{{{
+	call Character_ET(1)
 	call Title_ET(1)
 	call Paragraph_ET(1)
-	call Character_ET(1)
 endfunction "}}}
 " }}}1
 
