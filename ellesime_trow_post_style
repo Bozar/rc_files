@@ -1,5 +1,5 @@
 " ellesime/trow post style
-" Last Update: Feb 15, Sat | 23:07:00 | 2014
+" Last Update: Feb 15, Sat | 23:45:49 | 2014
 
 " substitution "{{{1
 " character
@@ -35,8 +35,8 @@ function! Paragraph_ET(forum) "{{{
 			" seperation line
 				%s/^_\{3,\}$/[hr]/e
 			" bullet point *
-				g/^*\s/s/$/[\/li][\/list]/e
-				%s/^*\s/[list][li]/e
+				g/^\*\s/s/$/[\/li][\/list]/e
+				%s/^\*\s/[list][li]/e
 			" bullet point +
 				g/^\(\s\{4\}\|\t\)+\s/s/$/[\/li][\/list][\/list]/e
 				%s/^\(\s\{4\}\|\t\)+\s/[list][list][li]/e
@@ -69,12 +69,28 @@ function! Character_ET(forum) "{{{
 				%s/\(\[.\{-\}\](http:.\{-\})\)/\r\1\r/ge
 				g/(http:/s/^\[\(.\{-\}\)\](\(http:.\{-}\))$/[url=\2]\1[\/url]/e
 				g/\[url=http:/.-1,.+1join!
+			" bold
+				%s/\(\*\{2\}.\{-\}\*\{2\}\)/\r\1\r/ge
+				%s/^\*\{2\}\(.\{-\}\)\*\{2\}$/[b]\1[\/b]/e
+				g/^\[b\]/.-1,.+1join!
+			" italic
+				%s/\(\*.\{-\}\*\)/\r\1\r/ge
+				%s/^\*\(.\{-\}\)\*$/[i]\1[\/i]/ge
+				g/^\[i\]/.-1,.+1join!
 	" trow style
 		elseif a:forum==1
 			" hyper-link
 				%s/\(\[url=.\{-\}\/url]\)/\r\1\r/ge
 				g/\[url=/s/^\[url=\(http:.\{-\}\)\]\(.\{-\}\)\[\/url\]$/[\2](\1)/e
 				g/\](http:/.-1,.+1join!
+			" bold
+				%s/\(\[b\].\{-\}\[\/b\]\)/\r\1\r/ge
+				%s/^\[b\]\(.\{-\}\)\[\/b\]/**\1**/e
+				g/^\*\{2\}.\{-\}\*\{2\}$/.-1,.+1join!
+			" italic
+				%s/\(\[i\].\{-\}\[\/i\]\)/\r\1\r/ge
+				%s/^\[i\]\(.\{-\}\)\[\/i\]/*\1*/e
+				g/^\*[^\*].\{-\}[^\*]\*$/.-1,.+1join!
 		endif
 endfunction "}}}
 " }}}1
