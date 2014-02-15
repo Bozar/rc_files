@@ -1,13 +1,8 @@
 " ellesime/trow post style
-" Last Update: Feb 15, Sat | 18:56:00 | 2014
+" Last Update: Feb 15, Sat | 23:07:00 | 2014
 
 " substitution "{{{1
-" title
-" bulletin
-" url
 " character
-" quote
-" seperation line
 function! Title_ET(forum) "{{{
 	" ellesime style
 		if a:forum==0
@@ -39,28 +34,48 @@ function! Paragraph_ET(forum) "{{{
 		if a:forum==0
 			" seperation line
 				%s/^_\{3,\}$/[hr]/e
-			" bullet point, * and +
+			" bullet point *
 				g/^*\s/s/$/[\/li][\/list]/e
 				%s/^*\s/[list][li]/e
+			" bullet point +
 				g/^\(\s\{4\}\|\t\)+\s/s/$/[\/li][\/list][\/list]/e
 				%s/^\(\s\{4\}\|\t\)+\s/[list][list][li]/e
+			" bullet text
+			" texts under both bullets are substituted into the same pattern
+			" it is a bug that I can't fix
+				g/^\(\s\{4\}\|\t\)/s/$/[\/list]/e
+				%s/^\(\s\{4\}\|\t\)/[list]/e
 	" trow style
 		elseif a:forum==1
 			" seperation line
 				%s/^\[hr\]$/__________/e
-			" bullet point, * and +
-				g/\[list\]\[li\]/left 0
+			" bullet point *
+				g/\[list\]/left 0
 				%s/^\[list\]\[li\]/* /e
-				%s/^\[list\]\[list\]\[li\]/\t+ /e
-				%s/\[\/li\]\(\[\/list\]\)\{1,2\}//e
-	endif
+			" bullet point +
+				%s/^\(\[list\]\)\{2\}\[li\]/\t+ /e
+			" bullet text
+				%s/^\(\[list\]\)\{1,2\}/\t/e
+			" clear [/li][/list]
+				%s/\(\[\/li\]\|\)\(\[\/list\]\)\{1,2\}$//e
+		endif
 endfunction "}}}
 function! Character_ET(forum) "{{{
-	if a:forum==0
-		" ellesime
-	elseif a:forum==1
-		" trow
-	endif
+	" ellesime style
+		if a:forum==0
+			" hyper-link
+			" avoid this style: [text1]text2[text3](url)
+			" while this is allowed: [text1[text2]text3](url)
+				%s/\(\[.\{-\}\](http:.\{-\})\)/\r\1\r/ge
+				g/(http:/s/^\[\(.\{-\}\)\](\(http:.\{-}\))$/[url=\2]\1[\/url]/e
+				g/\[url=http:/.-1,.+1join!
+	" trow style
+		elseif a:forum==1
+			" hyper-link
+				%s/\(\[url=.\{-\}\/url]\)/\r\1\r/ge
+				g/\[url=/s/^\[url=\(http:.\{-\}\)\]\(.\{-\}\)\[\/url\]$/[\2](\1)/e
+				g/\](http:/.-1,.+1join!
+		endif
 endfunction "}}}
 " }}}1
 
