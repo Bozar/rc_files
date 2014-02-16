@@ -1,5 +1,5 @@
 " ellesime/trow post style "{{{1
-" Last Update: Feb 16, Sun | 13:28:30 | 2014
+" Last Update: Feb 16, Sun | 20:20:48 | 2014
 
 " substitution "{{{2
 
@@ -93,12 +93,7 @@ function! Character_ET(forum) "{{{
 			" change style
 				g/(http/s/^\[\(.\{-\}\)\](\(http.\{-}\))$/[url=\2]\1[\/url]/e
 			" join lines begin/end with brackets '[]'
-				g/^\[/.-1,.join!
-				g/\]$/.,.+1join!
-			" the line below will not be joined correctly
-			" text_1[url_a]text_2[url_b]text_3
-			" fix it
-				g/\].\+\]$/.,.+1join!
+				g/\]$/.-1,.+1join!
 			" bold
 				%s/\*\{2\}\(.\{-\}\)\*\{2\}/[b]\1[\/b]/ge
 			" italic
