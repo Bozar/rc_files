@@ -1,5 +1,5 @@
 " trpg product category "{{{1
-" Last Update: Feb 16, Sun | 04:09:34 | 2014
+" Last Update: Feb 16, Sun | 14:58:49 | 2014
 
 " title and paragraph "{{{2
 
@@ -7,7 +7,7 @@
 function! BlockedText_Product() "{{{
 	g/{\{3\}2/.+3s/^/英文名：
 	g/^英文名：/.+1s/^/出版方：
-	%s/^\(\$\d\)/售价：\1
+	%s/^\(\$\d\)/\r售价：\1
 	%s/^Pages \(\d\)/页数：\1
 	%s/^File Size: \(\d\)/PDF文件大小：\1
 	%s/^File Last Updated: \(.*\)$/最后更新：\1年月日
@@ -32,6 +32,7 @@ function! MarkDown_Product() "{{{
 		%s/ {\{3\}2//
 		%s/}\{3\}2//
 		g/{\{3\}1/s/^.*$/[markdown]\r## 《TRPG产品目录》第一辑，第期
+		g/^##\s《TRPG产品目录》/s/$/\r译者：Bozar
 		%s/}\{3\}1/[\/markdown]
 	" translator's note
 		g/^$/.-1s/^\(\[\d\{1,2\}\]\s.*\)$/\1\r__________
