@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 16, Sun | 03:43:22 | 2014
+" Last Update: Feb 16, Sun | 12:52:03 | 2014
 
 " Vundle "{{{2
 
@@ -63,53 +63,48 @@ endfunction "}}}
 " append(2), insert(1) and creat(0) fold markers "{{{3
 " apply the fold level of cursor line
 function! YankFoldMarker(fold_marker) "{{{
-	" insert "{{{
-	if a:fold_marker==1
-		normal [zmj]zmk
-		'jyank "
-		'jput! "
-		'jput! "
-		'j-2,'j-1s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
-		'j-1s/{{{/}}}
-		'j-2s/^/FOLDMARKER/
-	" }}}
-	" append "{{{
-	elseif a:fold_marker==2
-		normal [zmj]zmk
-		'jyank "
-		'kput "
-		'kput "
-		'k+1,'k+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
-		'k+2s/{{{/}}}
-		'k+1s/^/FOLDMARKER/
-	" }}}
-	" creat "{{{
-	elseif a:fold_marker==0
-		s/$/\rFOLDMARKER {{{\r }}}
-		.-1,.s/$/1
-		-1
-	" }}}
-	endif
+	" insert
+		if a:fold_marker==1
+			normal [zmj]zmk
+			'jyank "
+			'jput! "
+			'jput! "
+			'j-2,'j-1s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
+			'j-1s/{{{/}}}
+			'j-2s/^/FOLDMARKER/
+	" append
+		elseif a:fold_marker==2
+			normal [zmj]zmk
+			'jyank "
+			'kput "
+			'kput "
+			'k+1,'k+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
+			'k+2s/{{{/}}}
+			'k+1s/^/FOLDMARKER/
+	" creat
+		elseif a:fold_marker==0
+			s/$/\rFOLDMARKER {{{\r }}}
+			.-1,.s/$/1
+			-1
+		endif
 endfunction "}}}
 " }}}3
 
 " insert bullets: special characters at the beginning of a line "{{{3
 function! BulletPoint() "{{{
-	" title "{{{
+	" title
 	" do not indent title '-'
-	'j,'kg/^\(\t\{1,2\}\|\s\{4,8\}\)\-/left 0
-	'j,'ks/^-//e
-	" }}}
-	" paragraph "{{{
+		'j,'kg/^\(\t\{1,2\}\|\s\{4,8\}\)\-/left 0
+		'j,'ks/^-//e
+	" paragraph
 	" '==' will be replaced with '+'
 	"		indent 2 tabs (8 spaces)
-	'j,'kg/^\(\|\t\|\s\{4\}\)==/left 8
-	'j,'ks/^\(\t\t\)==/\1+ /e
+		'j,'kg/^\(\|\t\|\s\{4\}\)==/left 8
+		'j,'ks/^\(\t\t\)==/\1+ /e
 	" '=' will be replaced with '*'
 	"	indent 1 tab (4 spaces)
-	'j,'kg/^\(\|\s\{4\}\)=/left 4
-	'j,'ks/^\(\t\)=/\1* /e
-	" }}}
+		'j,'kg/^\(\|\s\{4\}\)=/left 4
+		'j,'ks/^\(\t\)=/\1* /e
 endfunction "}}}
 " }}}3
 
@@ -139,35 +134,35 @@ endfunction "}}}
 " year (%Y) | month (%b) | day (%d) | weekday (%a)
 " hour (%H) | miniute (%M) | second (%S)
 function! CurrentTime(time_stamp) "{{{
-	" update time-stamp
-	if a:time_stamp==0
-		1,5s/\(Last\sUpdate:\s\|Date:\s\|最后更新：\|日期：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
-		$-4,$s/\(Last\sUpdate:\s\|Date:\s\|最后更新：\|日期：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
+	" update time
+		if a:time_stamp==0
+			1,5s/\(Last\sUpdate:\s\|最后更新：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
+			$-4,$s/\(Last\sUpdate:\s\|最后更新：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
 	" append time
-	elseif a:time_stamp==1
-		s/$/\r
-		s/^/\=strftime('%b %d | %a | %Y')
-	endif
+		elseif a:time_stamp==1
+			s/$/\r
+			s/^/\=strftime('%b %d | %a | %Y')
+		endif
 endfunction "}}}
 " }}}3
 
 " creat page number "{{{3
 function! PageNumber() "{{{
 	" creat two strings
-	let a=1|g/1/s//\=a/|let a=a+10
-	%s/$/\r#INSERT_NUMBER#\r
-	let a=10|g/#INSERT_NUMBER#/s//\=a/|let a=a+10
+		let a=1|g/1/s//\=a/|let a=a+10
+		%s/$/\r#INSERT_NUMBER#\r
+		let a=10|g/#INSERT_NUMBER#/s//\=a/|let a=a+10
 	" join nearby lines
-	g/0$/.-1,.j
+		g/0$/.-1,.j
 	" add fold marker
-	%s/\s/-
-	%s/$/ {{{/|%s/$/\r\r }}}
-	%s/\({\|}\)$/\12
+		%s/\s/-
+		%s/$/ {{{/|%s/$/\r\r }}}
+		%s/\({\|}\)$/\12
 	" delete additional lines
+		g/^ {\{3\}2$/.,.+1delete
 	" insert title
-	g/^ {\{3\}2$/.,.+1delete
-	1s/^\(.*\)$/\1\r\1
-	1s/2$/1/|$s/2$/1
+		1s/^\(.*\)$/\1\r\1
+		1s/2$/1/|$s/2$/1
 endfunction "}}}
 " }}}3
 
@@ -182,36 +177,31 @@ endfunction "}}}
 " creat (3) and edit (4)
 " substitute (0), insert (1) and append (2)
 function! ScratchBuffer(scratch) "{{{
-	" creat scratch buffer "{{{
-	if a:scratch==3
-		new
-		setlocal buftype=nofile
-		setlocal bufhidden=hide
-		setlocal noswapfile
-		setlocal nobuflisted
-		s/^/SCRATCH_BUFFER\r
-		close
-	" }}}
-	" edit scratch buffer "{{{
-	elseif a:scratch==4
-		call Scratch_Detect()
-	" }}}
-	" append text "{{{
-	elseif a:scratch==2
-		call Scratch_Detect()
-		call PutText(2)
-	" }}}
-	" insert text "{{{
-	elseif a:scratch==1
-		call Scratch_Detect()
-		call PutText(1)
-	" }}}
-	" substitute whole Scratch "{{{
-	elseif a:scratch==0
-		call Scratch_Detect()
-		call PutText(0)
-	" }}}
-	endif
+	" creat scratch buffer
+		if a:scratch==3
+			new
+			setlocal buftype=nofile
+			setlocal bufhidden=hide
+			setlocal noswapfile
+			setlocal nobuflisted
+			s/^/SCRATCH_BUFFER\r
+			close
+	" edit scratch buffer
+		elseif a:scratch==4
+			call Scratch_Detect()
+	" append text
+		elseif a:scratch==2
+			call Scratch_Detect()
+			call PutText(2)
+	" insert text
+		elseif a:scratch==1
+			call Scratch_Detect()
+			call PutText(1)
+	" substitute whole Scratch
+		elseif a:scratch==0
+			call Scratch_Detect()
+			call PutText(0)
+		endif
 endfunction "}}}
 " }}}3
 
@@ -304,24 +294,24 @@ endfunction "}}}
 " [word 1]
 " [word 2]
 " }}}
-" j: cursor line | k: last line
 function! UpdateWordList_Vocab() "{{{
-	mark j|$mark k
+	" j: cursor line | k: last line
+		mark j|$mark k
 	" clear old list
-	?^Word List {{{$?+1;/^ }}}$/-1delete
+		?^Word List {{{$?+1;/^ }}}$/-1delete
 	" put whole text to the end
-	1,$yank|$put
+		1,$yank|$put
 	" delete non-bracket text
-	'k+1,$s/\[/\r[/g
-	'k+1,$s/\]/]\r/g
-	'k+1,$g!/\[/delete
+		'k+1,$s/\[/\r[/g
+		'k+1,$s/\]/]\r/g
+		'k+1,$g!/\[/delete
 	" move words back to list
-	'k+1,$delete
-	1
-	/^Word List {\{3\}$/put
-	?^Word List {\{3\}?s/$/\r
-	"}}}
-	'j
+		'k+1,$delete
+		1
+		/^Word List {\{3\}$/put
+		?^Word List {\{3\}?s/$/\r
+	" back to cursor line
+		'j
 endfunction "}}}
 function! F4_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
@@ -342,17 +332,17 @@ endfunction "}}}
 " j: cursor line
 function! ColletWordList_Vocab() "{{{
 	" clear register, mark position
-	let @a=''
-	mark j
+		let @a=''
+		mark j
 	" yank word list
-	1
-	/^Word List {{{$/;/ }}}$/y A
-	let @"=@a
+		1
+		/^Word List {{{$/;/ }}}$/y A
+		let @"=@a
 	" back to cursor line
-	'j
+		'j
 	" put list into Scratch buffer
-	ScSubs
-	g/^$/d
+		ScSubs
+		g/^$/d
 endfunction "}}}
 function! F5_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f5> :call ColletWordList_Vocab()<cr>
