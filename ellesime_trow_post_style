@@ -1,5 +1,5 @@
 " ellesime/trow post style "{{{1
-" Last Update: Feb 16, Sun | 12:13:27 | 2014
+" Last Update: Feb 16, Sun | 13:28:30 | 2014
 
 " substitution "{{{2
 
@@ -25,7 +25,8 @@ function! Title_ET(forum) "{{{
 				1s/^/[markdown]\r
 				$s/$/\r[\/markdown]
 			" main title
-				g/\[size=18pt\]/.+1s/^\[hr\]$//e
+				g/\[size=18pt\]/.+1s/^\[hr\]$/#####HOLD_POSITION#####/e
+				g/^#####HOLD_POSITION#####$/delete
 				%s/^\[size=18pt\]/## /e
 			" sub title 1
 				%s/^\[size=14pt\]/### /e
