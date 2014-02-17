@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 16, Sun | 12:52:03 | 2014
+" Last Update: Feb 17, Mon | 13:22:35 | 2014
 
 " Vundle "{{{2
 
@@ -70,7 +70,7 @@ function! YankFoldMarker(fold_marker) "{{{
 			'jput! "
 			'jput! "
 			'j-2,'j-1s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
-			'j-1s/{{{/}}}
+			'j-1s/\s\(.\{0,1\}\){{{/\1 }}}
 			'j-2s/^/FOLDMARKER/
 	" append
 		elseif a:fold_marker==2
@@ -79,7 +79,7 @@ function! YankFoldMarker(fold_marker) "{{{
 			'kput "
 			'kput "
 			'k+1,'k+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
-			'k+2s/{{{/}}}
+			'k+2s/\s\(.\{0,1\}\){{{/\1 }}}
 			'k+1s/^/FOLDMARKER/
 	" creat
 		elseif a:fold_marker==0
