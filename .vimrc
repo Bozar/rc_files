@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 17, Mon | 13:22:35 | 2014
+" Last Update: Feb 18, Tue | 10:19:41 | 2014
 
 " Vundle "{{{2
 
@@ -60,7 +60,7 @@ function! PutText(put_line) "{{{
 endfunction "}}}
 " }}}3
 
-" append(2), insert(1) and creat(0) fold markers "{{{3
+" fold marker: append(2), insert(1), creat new(0) and sub-level(3) "{{{3
 " apply the fold level of cursor line
 function! YankFoldMarker(fold_marker) "{{{
 	" insert
@@ -81,11 +81,21 @@ function! YankFoldMarker(fold_marker) "{{{
 			'k+1,'k+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
 			'k+2s/\s\(.\{0,1\}\){{{/\1 }}}
 			'k+1s/^/FOLDMARKER/
-	" creat
+	" creat new
 		elseif a:fold_marker==0
 			s/$/\rFOLDMARKER {{{\r }}}
 			.-1,.s/$/1
 			-1
+	" creat sub-level
+		elseif a:fold_marker==3
+			normal mk[z
+			yank "
+			'kput "
+			'kput "
+			'k+1,'k+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
+			'k+2s/\s\(.\{0,1\}\){{{/\1 }}}
+			'k+1s/^/FOLDMARKER/
+			'k+1,'k+2s/\(\d\{1,2\}\)$/\=submatch(0)+1/e
 		endif
 endfunction "}}}
 " }}}3
@@ -835,7 +845,8 @@ nnoremap <silent> <a--> :FlSub<cr>
 " append, insert and creat fold marker "{{{
 nnoremap <tab> :FmAppend<cr>
 nnoremap <s-tab> :FmInsert<cr>
-nnoremap <c-tab> :FmCreat<cr>
+nnoremap <c-tab> :FmSubLevel<cr>
+nnoremap ~ :FmCreat<cr>
 " }}}
 " edit Scratch buffer "{{{
 nnoremap <silent> <c-q> :ScEdit<cr>
@@ -898,6 +909,7 @@ command! FlSub call ChangeFoldLevel(0)
 command! FmAppend call YankFoldMarker(2)
 command! FmInsert call YankFoldMarker(1)
 command! FmCreat call YankFoldMarker(0)
+command! FmSubLevel call YankFoldMarker(3)
  "}}}
 " switch settings "{{{
 command! SwHlsearch call SwitchSettings('hlsearch')
