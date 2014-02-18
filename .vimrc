@@ -1,12 +1,14 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 18, Tue | 10:19:41 | 2014
+" Last Update: Feb 18, Tue | 23:12:08 | 2014
 
-" Vundle "{{{2
+" Plugins "{{{2
 
-" I'll try on some plugins later
 set nocompatible
 filetype off
 filetype plugin on
+
+" fcitx
+" NerdTree
 " }}}2
 
 " Functions "{{{2
@@ -96,6 +98,7 @@ function! YankFoldMarker(fold_marker) "{{{
 			'k+2s/\s\(.\{0,1\}\){{{/\1 }}}
 			'k+1s/^/FOLDMARKER/
 			'k+1,'k+2s/\(\d\{1,2\}\)$/\=submatch(0)+1/e
+			-1
 		endif
 endfunction "}}}
 " }}}3
