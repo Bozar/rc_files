@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 18, Tue | 23:12:08 | 2014
+" Last Update: Feb 21, Fri | 11:25:44 | 2014
 
 " Plugins "{{{2
 
@@ -390,20 +390,33 @@ endfunction "}}}
 " split window equally between all buffers except for glossary
 " :resize 3
 
-" search nearby lines in English buffer
-" let @d='previous search pattern'
-" let @e='current search pattern'
-function! NearbyLines_Loc() "{{{
-	let @d=@/
-	let @e=''
-	?#MARK#?-20,/#MARK#/+20g=#MARK#=y E
-endfunction "}}}
-" delete all other columns except English and Chinese
-" example: A1, B1, C1(#MARK#), D1(ENG), E1(CHS), F1, ...
-function! DeleteColumns_Loc() "{{{
-	%s/^.*#MARK#\t//e
-	%s/\(^.\{-\}\t.\{-\}\)\t.*$/\1/e
-endfunction "}}}
+" " outdated {{{4
+" " search nearby lines in English buffer
+" " let @d='previous search pattern'
+" " let @e='current search pattern'
+" function! NearbyLines_Loc() "{{{
+" 	let @d=@/
+" 	let @e=''
+" 	?#MARK#?-20,/#MARK#/+20g=#MARK#=y E
+" endfunction "}}}
+" " delete all other columns except English and Chinese
+" " example: A1, B1, C1(#MARK#), D1(ENG), E1(CHS), F1, ...
+" function! DeleteColumns_Loc() "{{{
+" 	%s/^.*#MARK#\t//e
+" 	%s/\(^.\{-\}\t.\{-\}\)\t.*$/\1/e
+" endfunction "}}}
+" " put lines into Scratch buffer
+" " the previous search pattern is shown at the center of window
+" function! F6_Shift_Normal_Loc() "{{{
+" 	nnoremap <buffer> <silent> <s-f6>
+" 		\ :call NearbyLines_Loc()<cr>
+" 		\ :1wincmd w<cr>:buffer 2\|call PutText(0)<cr>
+" 		\ /<c-r>d<cr>ma
+" 		\ :call DeleteColumns_Loc()<cr>
+" 		\ 'azz
+" endfunction "}}}
+"  }}}4
+
 function! FileFormat_Loc() "{{{
 	set fileencoding=utf-8
 	set fileformat=unix
@@ -591,15 +604,12 @@ function! F6_Normal_Loc() "{{{
 		\ :$put! "<cr>'a
 		\ :4wincmd w<cr>
 endfunction "}}}
-" put lines into Scratch buffer
-" the previous search pattern is shown at the center of window
 function! F6_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f6>
-		\ :call NearbyLines_Loc()<cr>
-		\ :1wincmd w<cr>:buffer 2\|call PutText(0)<cr>
-		\ /<c-r>d<cr>ma
-		\ :call DeleteColumns_Loc()<cr>
-		\ 'azz
+		\ $F-T	yt	
+		\ :2wincmd w<cr>gg
+		\ :%s/<c-r>"\c//n<cr>
+		\ /<c-r>/<cr>
 endfunction "}}}
 
 function! F6_Loc() "{{{
