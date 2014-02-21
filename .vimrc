@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 21, Fri | 11:25:44 | 2014
+" Last Update: Feb 21, Fri | 11:31:16 | 2014
 
 " Plugins "{{{2
 
@@ -436,7 +436,7 @@ function! F1_Visual_Loc() "{{{
 		\ :%s/<c-r>c\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}}
-" search GUID in English buffer
+" search GUID (short line) in English buffer
 " let @d='GUID'
 function! F1_Shift_Normal_Loc() "{{{
   nnoremap <buffer> <silent> <s-f1>
@@ -604,6 +604,7 @@ function! F6_Normal_Loc() "{{{
 		\ :$put! "<cr>'a
 		\ :4wincmd w<cr>
 endfunction "}}}
+" search GUID (long line) in English buffer
 function! F6_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f6>
 		\ $F-T	yt	
