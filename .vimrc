@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 21, Fri | 11:31:16 | 2014
+" Last Update: Feb 22, Sat | 23:51:30 | 2014
 
 " Plugins "{{{2
 
@@ -134,10 +134,11 @@ endfunction "}}}
 " delete lines "{{{3
 function! EmptyLines(empty_line) "{{{
 	if a:empty_line==0
-		g/^$/.+1s/^$/###DELETE_EMPTY_LINES###
-		g/^###DELETE_EMPTY_LINES###$/d
+		1,$-1g/^$/.+1s/^$/###DELETE_EMPTY_LINES###
+		g/^###DELETE_EMPTY_LINES###$/delete
+		$g/^$/delete
 	elseif a:empty_line==1
-		g/^$/d
+		g/^$/delete
 	endif
 endfunction "}}}
 " }}}3
