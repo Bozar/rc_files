@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 22, Sat | 23:51:30 | 2014
+" Last Update: Feb 24, Mon | 15:22:26 | 2014
 
 " Plugins "{{{2
 
@@ -180,7 +180,7 @@ function! PageNumber() "{{{
 endfunction "}}}
 " }}}3
 
-" scratch buffer "{{{3
+" Scratch buffer "{{{3
 function! Scratch_Detect() "{{{
 	if bufwinnr(2)==-1
 		buffer 2
@@ -190,9 +190,22 @@ function! Scratch_Detect() "{{{
 endfunction "}}}
 " creat (3) and edit (4)
 " substitute (0), insert (1) and append (2)
+" move (5) text between buffers
 function! ScratchBuffer(scratch) "{{{
-	" creat scratch buffer
-		if a:scratch==3
+	" substitute whole Scratch
+		if a:scratch==0
+			call Scratch_Detect()
+			call PutText(0)
+	" insert text
+		elseif a:scratch==1
+			call Scratch_Detect()
+			call PutText(1)
+	" append text
+		elseif a:scratch==2
+			call Scratch_Detect()
+			call PutText(2)
+	" creat Scratch buffer
+		elseif a:scratch==3
 			new
 			setlocal buftype=nofile
 			setlocal bufhidden=hide
@@ -200,21 +213,20 @@ function! ScratchBuffer(scratch) "{{{
 			setlocal nobuflisted
 			s/^/SCRATCH_BUFFER\r
 			close
-	" edit scratch buffer
+	" edit Scratch buffer
 		elseif a:scratch==4
 			call Scratch_Detect()
-	" append text
-		elseif a:scratch==2
-			call Scratch_Detect()
-			call PutText(2)
-	" insert text
-		elseif a:scratch==1
-			call Scratch_Detect()
-			call PutText(1)
-	" substitute whole Scratch
-		elseif a:scratch==0
-			call Scratch_Detect()
-			call PutText(0)
+	" move text between Scratch and other buffers
+		elseif a:scratch==5
+			if bufnr('%')!=2
+				'j-1mark J
+				'j,'kdelete
+				call ScratchBuffer(0)
+			elseif bufnr('%')==2
+				1,$y
+				'J
+				put
+			endif
 		endif
 endfunction "}}}
 " }}}3
@@ -877,9 +889,11 @@ nnoremap <silent> <backspace> :ScSubs<cr>
 nnoremap <silent> <s-backspace> :ScAppend<cr>
 nnoremap <silent> <c-backspace> :ScInsert<cr>
 nnoremap <silent> <a-backspace> :ScCreat<cr>
+nnoremap <silent> <c-a-backspace> :ScMove<cr>
 vnoremap <silent> <backspace> y:ScSubs<cr>
 vnoremap <silent> <s-backspace> y:ScAppend<cr>
 vnoremap <silent> <c-backspace> y:ScInsert<cr>
+vnoremap <silent> <c-a-backspace> y:ScMove<cr>
 " }}}
 " }}}2
 
@@ -915,6 +929,9 @@ command! ScCreat call ScratchBuffer(3)|ls!
 " }}}
 " edit Scratch buffer "{{{
 command! ScEdit call ScratchBuffer(4)
+" }}}
+" move text between Scratch and other buffers "{{{
+command! ScMove call ScratchBuffer(5)
 " }}}
 " change fold level "{{{
 command! FlAdd call ChangeFoldLevel(1)
