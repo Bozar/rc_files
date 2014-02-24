@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 24, Mon | 22:21:32 | 2014
+" Last Update: Feb 24, Mon | 23:26:16 | 2014
 
 " Plugins "{{{2
 
@@ -236,32 +236,86 @@ endfunction "}}}
 " }}}3
 
 " GTD "{{{3
+
+" Function key: <F1> "{{{4
 " substitute bullet point (*) with finished mark (~)
-function! Finished_GTD() "{{{
-	nnoremap <buffer> <silent> <f1> :s/^\t\*/\t\~<cr>
-	nnoremap <buffer> <silent> <s-f1> :s/^\t\~/\t\*<cr>
+function! Finished_GTD(day) "{{{
+	if a:day==0
+		s/^\t\*/\t\~
+	elseif a:day==1
+		s/^\t\~/\t\*
+	endif
 endfunction "}}}
-" insert new lines for another day
-"	mark j and k: yesterday
-"	mark h and l: another day
-" change date
-" fix substitution errors on rare occasions:
-"	the second day in a month (in which case both two }2 will be changed)
-" change foldlevel
-function! AnotherDay_GTD() "{{{
-	nnoremap <buffer> <silent> <f2>
-		\ :call YankFoldMarker(1)<cr>
-		\ :'j-2mark h<cr>:'j-1mark l<cr>
-		\ :'j,'j+2y<cr>:'hput<cr>
-		\ :'h+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1<cr>
-		\ :call ChangeFoldLevel(1)<cr>
-		\ :g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12<cr>
-		\ :'hd<cr>:'l-1<cr>wma
+function! F1_Normal_GTD() "{{{
+	nnoremap <buffer> <silent> <f1> :call Finished_GTD(0)<cr>
+endfunction "}}}
+function! F1_Shift_Normal_GTD() "{{{
+	nnoremap <buffer> <silent> <s-f1> :call Finished_GTD(1)<cr>
 endfunction "}}}
 
+function! F1_GTD() "{{{
+	call F1_Normal_GTD()
+	call F1_Shift_Normal_GTD()
+endfunction "}}}
+" }}}4
+
+" Function key: <F2> "{{{4
+function! AnotherDay_GTD() "{{{
+	" insert new lines for another day
+	"	mark j and k: yesterday
+		call YankFoldMarker(1)
+	"	mark h and l: another day
+		'j-2mark h
+		'j-1mark l
+		'j,'j+2y
+		'hput
+	" change date
+		'h+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1
+	" change foldlevel
+		call ChangeFoldLevel(1)
+	" fix substitution errors on rare occasions:
+	" the second day in a month
+	" in which case both }2 will be changed
+		g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12
+	" delete additional lines
+		'hdelete
+		'l-1
+		normal wma
+endfunction "}}}
+function! F2_Normal_GTD() "{{{
+	nnoremap <buffer> <silent> <f2> :call AnotherDay_GTD()<cr>
+endfunction "}}}
+
+function! F2_GTD() "{{{
+	call F2_Normal_GTD()
+endfunction "}}}
+" }}}4
+
+" Function key: <F3> "{{{4
+" weekly check
+function! WeeklyCheck_GTD(week) "{{{
+	if a:week==0
+		s/\(（未完成）\|\)$/（完成）
+	elseif a:week==1
+		s/\(（完成）\|\)$/（未完成）
+	endif
+endfunction "}}}
+function! F3_Normal_GTD() "{{{
+	nnoremap <buffer> <silent> <f3> :call WeeklyCheck_GTD(0)<cr>
+endfunction "}}}
+function! F3_Shift_Normal_GTD() "{{{
+	nnoremap <buffer> <silent> <s-f3> :call WeeklyCheck_GTD(1)<cr>
+endfunction "}}}
+
+function! F3_GTD() "{{{
+	call F3_Normal_GTD()
+	call F3_Shift_Normal_GTD()
+endfunction "}}}
+" }}}4
 function! GetThingsDone() "{{{
-	call Finished_GTD()
-	call AnotherDay_GTD()
+	call F1_GTD()
+	call F2_GTD()
+	call F3_GTD()
 endfunction "}}}
 " }}}3
 
