@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 25, Tue | 00:04:07 | 2014
+" Last Update: Feb 25, Tue | 01:00:27 | 2014
 
 " Plugins "{{{2
 
@@ -955,6 +955,7 @@ nnoremap <silent> <c-backspace> :ScrInsert<cr>
 nnoremap <silent> <a-backspace> :ScrMove<cr>
 vnoremap <silent> <backspace> y:ScrSubs<cr>
 vnoremap <silent> <s-backspace> y:ScrAppend<cr>
+vnoremap <silent> <c-backspace> y:ScrInsert<cr>
 " }}}
 " }}}2
 
@@ -965,7 +966,7 @@ command! Bullet call BulletPoint()
 " }}}
 " creat page number "{{{
 command! Page call PageNumber()
- "}}}
+" }}}
 " update current time "{{{
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
@@ -980,35 +981,33 @@ command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
 command! DelEmpty call EmptyLines(1)
 command! DelAdd call EmptyLines(0)
 " }}}
-" put text to Scratch buffer "{{{
+" Scratch buffer "{{{
+" put text to Scratch buffer
 command! ScrAppend call ScratchBuffer(2)
 command! ScrInsert call ScratchBuffer(1)
 command! ScrSubs call ScratchBuffer(0)
-" }}}
-" creat new Scratch buffer "{{{
+" creat new Scratch buffer
 command! ScrCreat call ScratchBuffer(3)|ls!
-" }}}
-" edit Scratch buffer "{{{
+" edit Scratch buffer
 command! ScrEdit call ScratchBuffer(4)
-" }}}
-" move text between Scratch and other buffers "{{{
+" move text between Scratch and other buffers
 command! ScrMove call ScratchBuffer(5)
 " }}}
-" change fold level "{{{
+" folds "{{{
+" change fold level
 command! FlAdd call ChangeFoldLevel(1)
 command! FlSub call ChangeFoldLevel(0)
-" }}}
-" append, insert and creat fold marker "{{{
+" append, insert and creat fold marker
 command! FmAppend call YankFoldMarker(2)
 command! FmInsert call YankFoldMarker(1)
 command! FmCreat call YankFoldMarker(0)
 command! FmSubLevel call YankFoldMarker(3)
- "}}}
+" }}}
 " switch settings "{{{
 command! SwHlsearch call SwitchSettings('hlsearch')
 command! SwLinebreak call SwitchSettings('linebreak')
 command! SwBackground call SwitchSettings('background')
- "}}}
+" }}}
 " Chines word count "{{{
 command! Word %s/[^\x00-\xff]//gn
 " }}}
