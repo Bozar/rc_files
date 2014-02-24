@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 24, Mon | 15:31:52 | 2014
+" Last Update: Feb 24, Mon | 15:47:57 | 2014
 
 " Plugins "{{{2
 
@@ -223,7 +223,7 @@ function! ScratchBuffer(scratch) "{{{
 				'j,'kdelete
 				call ScratchBuffer(0)
 			elseif bufnr('%')==2
-				1,$y
+				1,$yank
 				'J
 				put
 			endif
@@ -367,7 +367,7 @@ function! ColletWordList_Vocab() "{{{
 	" back to cursor line
 		'j
 	" put list into Scratch buffer
-		ScSubs
+		ScrSubs
 		g/^$/d
 endfunction "}}}
 function! F5_Normal_Vocab() "{{{
@@ -876,7 +876,7 @@ nnoremap <c-tab> :FmSubLevel<cr>
 nnoremap ~ :FmCreat<cr>
 " }}}
 " edit Scratch buffer "{{{
-nnoremap <silent> <c-q> :ScEdit<cr>
+nnoremap <silent> <c-q> :ScrEdit<cr>
 " }}}
 " search visual selection "{{{
 " forward, backward and yank match pattern
@@ -885,15 +885,15 @@ vnoremap <silent> <s-tab> y:%s/<c-r>"\c//gn<cr>?<c-r>/<cr>''
 vnoremap <silent> <c-tab> y:%s/<c-r>"\c//gn\|let @a=''\|g/<c-r>"\c/y A\|let @"=@a<cr>
 " }}}
 " Scratch buffer "{{{
-nnoremap <silent> <backspace> :ScSubs<cr>
-nnoremap <silent> <s-backspace> :ScAppend<cr>
-nnoremap <silent> <c-backspace> :ScInsert<cr>
-nnoremap <silent> <a-backspace> :ScCreat<cr>
-nnoremap <silent> <c-a-backspace> :ScMove<cr>
-vnoremap <silent> <backspace> y:ScSubs<cr>
-vnoremap <silent> <s-backspace> y:ScAppend<cr>
-vnoremap <silent> <c-backspace> y:ScInsert<cr>
-vnoremap <silent> <c-a-backspace> x:.-1mark J<cr>:ScSubs<cr>
+nnoremap <silent> <backspace> :ScrSubs<cr>
+nnoremap <silent> <s-backspace> :ScrAppend<cr>
+nnoremap <silent> <c-backspace> :ScrInsert<cr>
+nnoremap <silent> <a-backspace> :ScrCreat<cr>
+nnoremap <silent> <c-a-backspace> :ScrMove<cr>
+vnoremap <silent> <backspace> y:ScrSubs<cr>
+vnoremap <silent> <s-backspace> y:ScrAppend<cr>
+vnoremap <silent> <c-backspace> y:ScrInsert<cr>
+vnoremap <silent> <c-a-backspace> x:.-1mark J<cr>:ScrSubs<cr>
 " }}}
 " }}}2
 
@@ -916,22 +916,22 @@ command! Date call CurrentTime(1)
 command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
 " }}}
 " delete empty lines "{{{
-command! DeEmpty call EmptyLines(1)
-command! DeAdd call EmptyLines(0)
+command! DelEmpty call EmptyLines(1)
+command! DelAdd call EmptyLines(0)
 " }}}
 " put text to Scratch buffer "{{{
-command! ScAppend call ScratchBuffer(2)
-command! ScInsert call ScratchBuffer(1)
-command! ScSubs call ScratchBuffer(0)
+command! ScrAppend call ScratchBuffer(2)
+command! ScrInsert call ScratchBuffer(1)
+command! ScrSubs call ScratchBuffer(0)
 " }}}
 " creat new Scratch buffer "{{{
-command! ScCreat call ScratchBuffer(3)|ls!
+command! ScrCreat call ScratchBuffer(3)|ls!
 " }}}
 " edit Scratch buffer "{{{
-command! ScEdit call ScratchBuffer(4)
+command! ScrEdit call ScratchBuffer(4)
 " }}}
 " move text between Scratch and other buffers "{{{
-command! ScMove call ScratchBuffer(5)
+command! ScrMove call ScratchBuffer(5)
 " }}}
 " change fold level "{{{
 command! FlAdd call ChangeFoldLevel(1)
