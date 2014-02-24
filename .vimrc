@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 24, Mon | 23:26:16 | 2014
+" Last Update: Feb 25, Tue | 00:04:07 | 2014
 
 " Plugins "{{{2
 
@@ -223,13 +223,18 @@ function! ScratchBuffer(scratch) "{{{
 	" move text between Scratch and other buffers
 		elseif a:scratch==5
 			if bufnr('%')!=2
+				set nofoldenable
 				'j-1mark J
 				'j,'kdelete
+				set foldenable
 				call ScratchBuffer(0)
 			elseif bufnr('%')==2
 				1,$yank
 				'J
+				set nofoldenable
+				'J
 				put
+				set foldenable
 			endif
 		endif
 endfunction "}}}
@@ -312,6 +317,7 @@ function! F3_GTD() "{{{
 	call F3_Shift_Normal_GTD()
 endfunction "}}}
 " }}}4
+
 function! GetThingsDone() "{{{
 	call F1_GTD()
 	call F2_GTD()
