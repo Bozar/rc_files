@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 24, Mon | 15:27:04 | 2014
+" Last Update: Feb 24, Mon | 15:31:52 | 2014
 
 " Plugins "{{{2
 
@@ -893,7 +893,7 @@ nnoremap <silent> <c-a-backspace> :ScMove<cr>
 vnoremap <silent> <backspace> y:ScSubs<cr>
 vnoremap <silent> <s-backspace> y:ScAppend<cr>
 vnoremap <silent> <c-backspace> y:ScInsert<cr>
-vnoremap <silent> <c-a-backspace> xkmJ:ScSubs<cr>
+vnoremap <silent> <c-a-backspace> x:.-1mark J<cr>:ScSubs<cr>
 " }}}
 " }}}2
 
