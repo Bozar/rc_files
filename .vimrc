@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 24, Mon | 15:47:57 | 2014
+" Last Update: Feb 24, Mon | 22:21:32 | 2014
 
 " Plugins "{{{2
 
@@ -45,20 +45,20 @@ endfunction "}}}
 " }}}3
 
 " put text to another file "{{{3
-" 0: overwrite old text
-" 1: insert into old text
-" 2: append to old text
 function! PutText(put_line) "{{{
-	if a:put_line==0
-		$mark j|$put "
-		1,'jdelete
-	elseif a:put_line==1
-		1put! "
-		1
-	elseif a:put_line==2
-		$mark j|$put "
-		'j+1
-	endif
+	" 0: overwrite old text
+		if a:put_line==0
+			$mark j|$put "
+			1,'jdelete
+	" 1: insert into old text
+		elseif a:put_line==1
+			1put! "
+			1
+	" 2: append to old text
+		elseif a:put_line==2
+			$mark j|$put "
+			'j+1
+		endif
 endfunction "}}}
 " }}}3
 
@@ -181,7 +181,7 @@ endfunction "}}}
 " }}}3
 
 " Scratch buffer "{{{3
-function! Scratch_Detect() "{{{
+function! Switch_Scratch() "{{{
 	if bufwinnr(2)==-1
 		buffer 2
 	else
@@ -192,20 +192,8 @@ endfunction "}}}
 " substitute (0), insert (1) and append (2)
 " move (5) text between buffers
 function! ScratchBuffer(scratch) "{{{
-	" substitute whole Scratch
-		if a:scratch==0
-			call Scratch_Detect()
-			call PutText(0)
-	" insert text
-		elseif a:scratch==1
-			call Scratch_Detect()
-			call PutText(1)
-	" append text
-		elseif a:scratch==2
-			call Scratch_Detect()
-			call PutText(2)
-	" creat Scratch buffer
-		elseif a:scratch==3
+	" creat Scratch
+		if a:scratch==3
 			new
 			setlocal buftype=nofile
 			setlocal bufhidden=hide
@@ -213,9 +201,25 @@ function! ScratchBuffer(scratch) "{{{
 			setlocal nobuflisted
 			s/^/SCRATCH_BUFFER\r
 			close
+	" detect Scratch
+		elseif bufexists(2)==0
+			echo 'ERROR: No Scratch Buffer 2!'
+			return
+	" substitute whole Scratch
+		elseif a:scratch==0
+			call Switch_Scratch()
+			call PutText(0)
+	" insert text
+		elseif a:scratch==1
+			call Switch_Scratch()
+			call PutText(1)
+	" append text
+		elseif a:scratch==2
+			call Switch_Scratch()
+			call PutText(2)
 	" edit Scratch buffer
 		elseif a:scratch==4
-			call Scratch_Detect()
+			call Switch_Scratch()
 	" move text between Scratch and other buffers
 		elseif a:scratch==5
 			if bufnr('%')!=2
@@ -888,12 +892,9 @@ vnoremap <silent> <c-tab> y:%s/<c-r>"\c//gn\|let @a=''\|g/<c-r>"\c/y A\|let @"=@
 nnoremap <silent> <backspace> :ScrSubs<cr>
 nnoremap <silent> <s-backspace> :ScrAppend<cr>
 nnoremap <silent> <c-backspace> :ScrInsert<cr>
-nnoremap <silent> <a-backspace> :ScrCreat<cr>
-nnoremap <silent> <c-a-backspace> :ScrMove<cr>
+nnoremap <silent> <a-backspace> :ScrMove<cr>
 vnoremap <silent> <backspace> y:ScrSubs<cr>
 vnoremap <silent> <s-backspace> y:ScrAppend<cr>
-vnoremap <silent> <c-backspace> y:ScrInsert<cr>
-vnoremap <silent> <c-a-backspace> x:.-1mark J<cr>:ScrSubs<cr>
 " }}}
 " }}}2
 
