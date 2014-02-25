@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 25, Tue | 01:00:27 | 2014
+" Last Update: Feb 25, Tue | 11:28:13 | 2014
 
 " Plugins "{{{2
 
@@ -939,9 +939,6 @@ nnoremap <s-tab> :FmInsert<cr>
 nnoremap <c-tab> :FmSubLevel<cr>
 nnoremap ~ :FmCreat<cr>
 " }}}
-" edit Scratch buffer "{{{
-nnoremap <silent> <c-q> :ScrEdit<cr>
-" }}}
 " search visual selection "{{{
 " forward, backward and yank match pattern
 vnoremap <silent> <tab> y:%s/<c-r>"\c//gn<cr>/<c-r>/<cr>''
@@ -949,13 +946,19 @@ vnoremap <silent> <s-tab> y:%s/<c-r>"\c//gn<cr>?<c-r>/<cr>''
 vnoremap <silent> <c-tab> y:%s/<c-r>"\c//gn\|let @a=''\|g/<c-r>"\c/y A\|let @"=@a<cr>
 " }}}
 " Scratch buffer "{{{
+" edit
+nnoremap <silent> <c-q> :ScrEdit<cr>
+" substitute
 nnoremap <silent> <backspace> :ScrSubs<cr>
-nnoremap <silent> <s-backspace> :ScrAppend<cr>
-nnoremap <silent> <c-backspace> :ScrInsert<cr>
-nnoremap <silent> <a-backspace> :ScrMove<cr>
 vnoremap <silent> <backspace> y:ScrSubs<cr>
+" append
+nnoremap <silent> <s-backspace> :ScrAppend<cr>
 vnoremap <silent> <s-backspace> y:ScrAppend<cr>
+" insert
+nnoremap <silent> <c-backspace> :ScrInsert<cr>
 vnoremap <silent> <c-backspace> y:ScrInsert<cr>
+" move
+nnoremap <silent> <a-backspace> :ScrMove<cr>
 " }}}
 " }}}2
 
@@ -982,13 +985,13 @@ command! DelEmpty call EmptyLines(1)
 command! DelAdd call EmptyLines(0)
 " }}}
 " Scratch buffer "{{{
-" put text to Scratch buffer
+" put text to Scratch
 command! ScrAppend call ScratchBuffer(2)
 command! ScrInsert call ScratchBuffer(1)
 command! ScrSubs call ScratchBuffer(0)
-" creat new Scratch buffer
+" creat new Scratch
 command! ScrCreat call ScratchBuffer(3)|ls!
-" edit Scratch buffer
+" edit Scratch
 command! ScrEdit call ScratchBuffer(4)
 " move text between Scratch and other buffers
 command! ScrMove call ScratchBuffer(5)
