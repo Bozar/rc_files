@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 25, Tue | 11:28:13 | 2014
+" Last Update: Feb 26, Wed | 02:10:18 | 2014
 
 " Plugins "{{{2
 
@@ -181,6 +181,7 @@ endfunction "}}}
 " }}}3
 
 " Scratch buffer "{{{3
+" switch between Scratch and other buffers
 function! Switch_Scratch() "{{{
 	if bufwinnr(2)==-1
 		buffer 2
@@ -188,11 +189,21 @@ function! Switch_Scratch() "{{{
 		execute bufwinnr(2) . 'wincmd w'
 	endif
 endfunction "}}}
+" move text out of Scratch
+function! MoveOut_Scratch() "{{{
+	1,$yank
+	'J
+	set nofoldenable
+	'Jput
+	1g/^$/d
+	set foldenable
+endfunction "}}}
 " creat (3) and edit (4)
 " substitute (0), insert (1) and append (2)
-" move (5) text between buffers
+" move (5,6) text between buffers
 function! ScratchBuffer(scratch) "{{{
-	" creat Scratch
+	" if - endif "{{{
+	" creat Scratch "{{{
 		if a:scratch==3
 			new
 			setlocal buftype=nofile
@@ -200,43 +211,62 @@ function! ScratchBuffer(scratch) "{{{
 			setlocal noswapfile
 			setlocal nobuflisted
 			s/^/SCRATCH_BUFFER\r
-			close
-	" detect Scratch
+			close "}}}
+	" detect if Scratch exsists "{{{
 		elseif bufexists(2)==0
 			echo 'ERROR: No Scratch Buffer 2!'
-			return
-	" substitute whole Scratch
+			return "}}}
+	" substitute whole Scratch "{{{
 		elseif a:scratch==0
 			call Switch_Scratch()
-			call PutText(0)
-	" insert text
+			call PutText(0) "}}}
+	" insert text "{{{
 		elseif a:scratch==1
 			call Switch_Scratch()
-			call PutText(1)
-	" append text
+			call PutText(1) "}}}
+	" append text "{{{
 		elseif a:scratch==2
 			call Switch_Scratch()
-			call PutText(2)
-	" edit Scratch buffer
+			call PutText(2) "}}}
+	" edit Scratch "{{{
 		elseif a:scratch==4
-			call Switch_Scratch()
-	" move text between Scratch and other buffers
+			call Switch_Scratch() "}}}
+	" move text between Scratch and other buffers "{{{
+	" normal mode
 		elseif a:scratch==5
 			if bufnr('%')!=2
 				set nofoldenable
-				'j-1mark J
-				'j,'kdelete
+				1s/^/\r
+				if line("'j")==1
+					'jmark J
+					'j+1,'kdelete
+				elseif line("'j")!=1
+					'j-1mark J
+					'j,'kdelete
+				endif
 				set foldenable
 				call ScratchBuffer(0)
 			elseif bufnr('%')==2
-				1,$yank
-				'J
+				call MoveOut_Scratch()
+			endif "}}}
+	" visual mode "{{{
+		elseif a:scratch==6
+			if bufnr('%')!=2
 				set nofoldenable
-				'J
-				put
+				1s/^/\r
+				if line("'<")==1
+					'<mark J
+					'<+1,'>delete
+				elseif line("'<")!=1
+					'<-1mark J
+					'<,'>delete
+				endif
 				set foldenable
-			endif
-		endif
+				call ScratchBuffer(0)
+			elseif bufnr('%')==2
+				call MoveOut_Scratch()
+			endif "}}}
+		endif "}}}
 endfunction "}}}
 " }}}3
 
@@ -959,6 +989,7 @@ nnoremap <silent> <c-backspace> :ScrInsert<cr>
 vnoremap <silent> <c-backspace> y:ScrInsert<cr>
 " move
 nnoremap <silent> <a-backspace> :ScrMove<cr>
+vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
 " }}}
 " }}}2
 
@@ -995,6 +1026,7 @@ command! ScrCreat call ScratchBuffer(3)|ls!
 command! ScrEdit call ScratchBuffer(4)
 " move text between Scratch and other buffers
 command! ScrMove call ScratchBuffer(5)
+command! ScrVMove call ScratchBuffer(6)
 " }}}
 " folds "{{{
 " change fold level
