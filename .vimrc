@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 26, Wed | 02:10:18 | 2014
+" Last Update: Feb 26, Wed | 11:02:32 | 2014
 
 " Plugins "{{{2
 
@@ -62,44 +62,73 @@ function! PutText(put_line) "{{{
 endfunction "}}}
 " }}}3
 
-" fold marker: append(2), insert(1), creat new(0) and sub-level(3) "{{{3
-" apply the fold level of cursor line
+" fold marker "{{{3
+" creat fold marker around text
+function! Surrounding_FoldMarker(surround) "{{{
+	if a:surround==0
+		'l+1,'kdelete
+	elseif a:surround==1
+		'l+1,'>delete
+	endif
+	'hput
+	'h-1,'hjoin!
+	s/FOLDMARKER\(\s.\{0,1\}{\{3\}\d\{0,2\}\)$/\1/
+	'l-1,'ljoin!
+endfunction "}}}
+" new(0), insert(1), append(2)
+" sub-level(3), surrounding(4,5)
 function! YankFoldMarker(fold_marker) "{{{
-	" insert
-		if a:fold_marker==1
-			normal [zmj]zmk
-			'jyank "
-			'jput! "
-			'jput! "
-			'j-2,'j-1s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
-			'j-1s/\s\(.\{0,1\}\){{{/\1 }}}
-			'j-2s/^/FOLDMARKER/
-	" append
-		elseif a:fold_marker==2
-			normal [zmj]zmk
-			'jyank "
-			'kput "
-			'kput "
-			'k+1,'k+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
-			'k+2s/\s\(.\{0,1\}\){{{/\1 }}}
-			'k+1s/^/FOLDMARKER/
+	" if-endif "{{{
 	" creat new
-		elseif a:fold_marker==0
+		if a:fold_marker==0 "{{{
 			s/$/\rFOLDMARKER {{{\r }}}
 			.-1,.s/$/1
-			-1
-	" creat sub-level
-		elseif a:fold_marker==3
-			normal mk[z
-			yank "
-			'kput "
-			'kput "
+			-1 "}}}
+	" insert
+		elseif a:fold_marker==1 "{{{
+			normal [zmj]zmk
+			'jyank
+			'jput!
+			'jput!
+			'j-2,'j-1s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
+			'j-1s/\s\(.\{0,1\}\){{{/\1 }}}
+			'j-2s/^/FOLDMARKER/ "}}}
+	" append
+		elseif a:fold_marker==2 "{{{
+			normal [zmj]zmk
+			'jyank
+			'kput
+			'kput
 			'k+1,'k+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
 			'k+2s/\s\(.\{0,1\}\){{{/\1 }}}
-			'k+1s/^/FOLDMARKER/
-			'k+1,'k+2s/\(\d\{1,2\}\)$/\=submatch(0)+1/e
-			-1
-		endif
+			'k+1s/^/FOLDMARKER/ "}}}
+	" creat sub-level
+		elseif a:fold_marker==3 "{{{
+			normal mh[z
+			yank
+			'hput
+			'hput
+			'h+1,'h+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
+			'h+2s/\s\(.\{0,1\}\){{{/\1 }}}
+			'h+1s/^/FOLDMARKER/
+			'h+1,'h+2s/\(\d\{1,2\}\)$/\=submatch(0)+1/e
+			-1 "}}}
+	" creat surrounding sub-level
+	" normal
+		elseif a:fold_marker==4 "{{{
+			'j
+			call YankFoldMarker(3)
+			'j+1mark h
+			'j+2mark l
+			call Surrounding_FoldMarker(0) "}}}
+	" visual
+		elseif a:fold_marker==5 "{{{
+			'<
+			call YankFoldMarker(3)
+			'<+1mark h
+			'<+2mark l
+			call Surrounding_FoldMarker(1) "}}}
+		endif "}}}
 endfunction "}}}
 " }}}3
 
@@ -202,9 +231,9 @@ endfunction "}}}
 " substitute (0), insert (1) and append (2)
 " move (5,6) text between buffers
 function! ScratchBuffer(scratch) "{{{
-	" if - endif "{{{
-	" creat Scratch "{{{
-		if a:scratch==3
+	" if-endif "{{{
+	" creat Scratch
+		if a:scratch==3 "{{{
 			new
 			setlocal buftype=nofile
 			setlocal bufhidden=hide
@@ -212,28 +241,28 @@ function! ScratchBuffer(scratch) "{{{
 			setlocal nobuflisted
 			s/^/SCRATCH_BUFFER\r
 			close "}}}
-	" detect if Scratch exsists "{{{
-		elseif bufexists(2)==0
+	" detect if Scratch exsists
+		elseif bufexists(2)==0 "{{{
 			echo 'ERROR: No Scratch Buffer 2!'
 			return "}}}
-	" substitute whole Scratch "{{{
-		elseif a:scratch==0
+	" substitute whole Scratch
+		elseif a:scratch==0 "{{{
 			call Switch_Scratch()
 			call PutText(0) "}}}
-	" insert text "{{{
-		elseif a:scratch==1
+	" insert text
+		elseif a:scratch==1 "{{{
 			call Switch_Scratch()
 			call PutText(1) "}}}
-	" append text "{{{
-		elseif a:scratch==2
+	" append text
+		elseif a:scratch==2 "{{{
 			call Switch_Scratch()
 			call PutText(2) "}}}
-	" edit Scratch "{{{
-		elseif a:scratch==4
+	" edit Scratch
+		elseif a:scratch==4 "{{{
 			call Switch_Scratch() "}}}
-	" move text between Scratch and other buffers "{{{
+	" move text between Scratch and other buffers
 	" normal mode
-		elseif a:scratch==5
+		elseif a:scratch==5 "{{{
 			if bufnr('%')!=2
 				set nofoldenable
 				1s/^/\r
@@ -249,8 +278,8 @@ function! ScratchBuffer(scratch) "{{{
 			elseif bufnr('%')==2
 				call MoveOut_Scratch()
 			endif "}}}
-	" visual mode "{{{
-		elseif a:scratch==6
+	" visual mode
+		elseif a:scratch==6 "{{{
 			if bufnr('%')!=2
 				set nofoldenable
 				1s/^/\r
@@ -968,6 +997,8 @@ nnoremap <tab> :FmAppend<cr>
 nnoremap <s-tab> :FmInsert<cr>
 nnoremap <c-tab> :FmSubLevel<cr>
 nnoremap ~ :FmCreat<cr>
+nnoremap <a-`> :FmSurround<cr>
+vnoremap <a-`> <esc>:FmVSurround<cr>
 " }}}
 " search visual selection "{{{
 " forward, backward and yank match pattern
@@ -1033,10 +1064,12 @@ command! ScrVMove call ScratchBuffer(6)
 command! FlAdd call ChangeFoldLevel(1)
 command! FlSub call ChangeFoldLevel(0)
 " append, insert and creat fold marker
-command! FmAppend call YankFoldMarker(2)
-command! FmInsert call YankFoldMarker(1)
 command! FmCreat call YankFoldMarker(0)
+command! FmInsert call YankFoldMarker(1)
+command! FmAppend call YankFoldMarker(2)
 command! FmSubLevel call YankFoldMarker(3)
+command! FmSurround call YankFoldMarker(4)
+command! FmVSurround call YankFoldMarker(5)
 " }}}
 " switch settings "{{{
 command! SwHlsearch call SwitchSettings('hlsearch')
