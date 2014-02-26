@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 26, Wed | 15:15:50 | 2014
+" Last Update: Feb 26, Wed | 15:46:51 | 2014
 
 " Plugins "{{{2
 
@@ -63,14 +63,6 @@ endfunction "}}}
 " }}}3
 
 " fold marker "{{{3
-" creat fold marker around text
-function! Surrounding_FoldMarker() "{{{
-	'l+1,'kdelete
-	'hput
-	'h-1,'hjoin!
-	s/FOLDMARKER\(\s.\{0,1\}{\{3\}\d\{0,2\}\)$/\1/
-	'l-1,'ljoin!
-endfunction "}}}
 " new(0), insert(1), append(2)
 " sub-level(3), surrounding(4,5)
 function! YankFoldMarker(fold_marker) "{{{
@@ -116,7 +108,11 @@ function! YankFoldMarker(fold_marker) "{{{
 			call YankFoldMarker(3)
 			'j+1mark h
 			'j+2mark l
-			call Surrounding_FoldMarker() "}}}
+			'l+1,'kdelete
+			'hput
+			'h-1,'hjoin!
+			s/FOLDMARKER\(\s.\{0,1\}{\{3\}\d\{0,2\}\)$/\1/
+			'l-1,'ljoin! "}}}
 	" visual
 		elseif a:fold_marker==5 "{{{
 			'<mark j
