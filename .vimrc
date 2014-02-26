@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 26, Wed | 11:02:32 | 2014
+" Last Update: Feb 26, Wed | 15:15:50 | 2014
 
 " Plugins "{{{2
 
@@ -64,12 +64,8 @@ endfunction "}}}
 
 " fold marker "{{{3
 " creat fold marker around text
-function! Surrounding_FoldMarker(surround) "{{{
-	if a:surround==0
-		'l+1,'kdelete
-	elseif a:surround==1
-		'l+1,'>delete
-	endif
+function! Surrounding_FoldMarker() "{{{
+	'l+1,'kdelete
 	'hput
 	'h-1,'hjoin!
 	s/FOLDMARKER\(\s.\{0,1\}{\{3\}\d\{0,2\}\)$/\1/
@@ -120,14 +116,12 @@ function! YankFoldMarker(fold_marker) "{{{
 			call YankFoldMarker(3)
 			'j+1mark h
 			'j+2mark l
-			call Surrounding_FoldMarker(0) "}}}
+			call Surrounding_FoldMarker() "}}}
 	" visual
 		elseif a:fold_marker==5 "{{{
-			'<
-			call YankFoldMarker(3)
-			'<+1mark h
-			'<+2mark l
-			call Surrounding_FoldMarker(1) "}}}
+			'<mark j
+			'>mark k
+			call YankFoldMarker(4) "}}}
 		endif "}}}
 endfunction "}}}
 " }}}3
@@ -280,21 +274,9 @@ function! ScratchBuffer(scratch) "{{{
 			endif "}}}
 	" visual mode
 		elseif a:scratch==6 "{{{
-			if bufnr('%')!=2
-				set nofoldenable
-				1s/^/\r
-				if line("'<")==1
-					'<mark J
-					'<+1,'>delete
-				elseif line("'<")!=1
-					'<-1mark J
-					'<,'>delete
-				endif
-				set foldenable
-				call ScratchBuffer(0)
-			elseif bufnr('%')==2
-				call MoveOut_Scratch()
-			endif "}}}
+			'<mark j
+			'>mark k
+			call ScratchBuffer(5) "}}}
 		endif "}}}
 endfunction "}}}
 " }}}3
