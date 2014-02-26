@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 26, Wed | 15:46:51 | 2014
+" Last Update: Feb 27, Thu | 01:37:24 | 2014
 
 " Plugins "{{{2
 
@@ -66,7 +66,6 @@ endfunction "}}}
 " new(0), insert(1), append(2)
 " sub-level(3), surrounding(4,5)
 function! YankFoldMarker(fold_marker) "{{{
-	" if-endif "{{{
 	" creat new
 		if a:fold_marker==0 "{{{
 			s/$/\rFOLDMARKER {{{\r }}}
@@ -118,7 +117,7 @@ function! YankFoldMarker(fold_marker) "{{{
 			'<mark j
 			'>mark k
 			call YankFoldMarker(4) "}}}
-		endif "}}}
+		endif
 endfunction "}}}
 " }}}3
 
@@ -221,7 +220,6 @@ endfunction "}}}
 " substitute (0), insert (1) and append (2)
 " move (5,6) text between buffers
 function! ScratchBuffer(scratch) "{{{
-	" if-endif "{{{
 	" creat Scratch
 		if a:scratch==3 "{{{
 			new
@@ -273,7 +271,7 @@ function! ScratchBuffer(scratch) "{{{
 			'<mark j
 			'>mark k
 			call ScratchBuffer(5) "}}}
-		endif "}}}
+		endif
 endfunction "}}}
 " }}}3
 
@@ -486,6 +484,102 @@ function! Vocabulary() "{{{
 	call F3_Vocab()
 	call F4_Vocab()
 	call F5_Vocab()
+endfunction "}}}
+" }}}3
+
+" Repository "{{{3
+
+" new date
+function! Update_Repo() "{{{
+	1s/^\(Last Update:\).*$/\1
+	call CurrentTime(1)
+	1,2join
+endfunction "}}}
+" put repository text to Scratch
+function! PutIntoScratch_Repo(put) "{{{
+	" normal, substitute
+		if a:put==0 "{{{
+			yank
+			call ScratchBuffer(0) "}}}
+	" visual, substitute
+		elseif a:put==2 "{{{
+			'<,'>yank
+			call ScratchBuffer(0) "}}}
+	" normal, append
+		elseif a:put==1 "{{{
+			yank
+			call ScratchBuffer(2) "}}}
+	" visual, append
+		elseif a:put==3 "{{{
+			'<,'>yank
+			call ScratchBuffer(2) "}}}
+		endif
+endfunction "}}}
+" move whole Scratch to repository
+function! TakeOutScratch_Repo() "{{{
+	mark j
+	buffer 2
+	1,$yank
+	buffer #
+	set nofoldenable
+	set modifiable
+	'jput
+	set foldenable
+endfunction "}}}
+
+" Function key: <F1> "{{{4
+" put text into Scratch, substitute
+function! F1_Normal_Repo() "{{{
+	nnoremap <buffer> <silent> <f1> :call PutIntoScratch_Repo(0)<cr>
+endfunction "}}}
+function! F1_Visual_Repo() "{{{
+	vnoremap <buffer> <silent> <f1> <esc>:call PutIntoScratch_Repo(2)<cr>
+endfunction "}}}
+function! F1_Shift_Normal_Repo() "{{{
+	nnoremap <buffer> <silent> <s-f1> :call TakeOutScratch_Repo()<cr>
+endfunction "}}}
+
+function! F1_Repo() "{{{
+	call F1_Normal_Repo()
+	call F1_Visual_Repo()
+	call F1_Shift_Normal_Repo()
+endfunction "}}}
+" }}}4
+
+" Function key: <F2> "{{{4
+" put text into Scratch, append
+function! F2_Normal_Repo() "{{{
+	nnoremap <buffer> <silent> <f2> :call PutIntoScratch_Repo(1)<cr>
+endfunction "}}}
+function! F2_Visual_Repo() "{{{
+	vnoremap <buffer> <silent> <f2> <esc>:call PutIntoScratch_Repo(3)<cr>
+endfunction "}}}
+
+function! F2_Repo() "{{{
+	call F2_Normal_Repo()
+	call F2_Visual_Repo()
+endfunction "}}}
+" }}}4
+
+" Function key: <F3> "{{{4
+" switch 'modifiable'
+function! F3_Normal_Repo() "{{{
+	nnoremap <buffer> <silent> <f3> :set modifiable!<cr>
+endfunction "}}}
+
+function! F3_Repo() "{{{
+	call F3_Normal_Repo()
+endfunction "}}}
+" }}}4
+
+function! Repository(repo) "{{{
+	if a:repo==0
+		call F1_Repo()
+		call F2_Repo()
+		call F3_Repo()
+	elseif a:repo==1
+		call Update_Repo()
+	endif
 endfunction "}}}
 " }}}3
 
@@ -782,7 +876,7 @@ function! F8_Loc() "{{{
 endfunction "}}}
 " }}}4
 
-function! LocKeyMapping() "{{{
+function! Localization() "{{{
 	call F1_Loc()
 	call F2_Loc()
 	call F3_Loc()
@@ -975,8 +1069,8 @@ nnoremap <tab> :FmAppend<cr>
 nnoremap <s-tab> :FmInsert<cr>
 nnoremap <c-tab> :FmSubLevel<cr>
 nnoremap ~ :FmCreat<cr>
-nnoremap <a-`> :FmSurround<cr>
-vnoremap <a-`> <esc>:FmVSurround<cr>
+nnoremap <a-q> :FmSurround<cr>
+vnoremap <a-q> <esc>:FmVSurround<cr>
 " }}}
 " search visual selection "{{{
 " forward, backward and yank match pattern
@@ -1059,8 +1153,9 @@ command! Word %s/[^\x00-\xff]//gn
 " }}}
 " load key mappings "{{{
 command! KeVocab call Vocabulary()
-command! KeLocal call LocKeyMapping()
+command! KeLocal call Localization()
 command! KeGTD call GetThingsDone()
+command! KeRepo call Repository(0)
 " }}}
 " localization "{{{
 command! LoFormat call FileFormat_Loc()
@@ -1069,9 +1164,11 @@ command! LoFormat call FileFormat_Loc()
 command! EdVimrc e $MYVIMRC
 " }}}
 " autocommands "{{{
-autocmd BufRead *.loc call LocKeyMapping()
+autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
+autocmd BufRead *.repo call Repository(0)
+autocmd BufWrite *.repo call Repository(1)
 autocmd VimEnter * call ScratchBuffer(3)
 " }}}
 " }}}2
