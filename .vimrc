@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 28, Fri | 01:47:22 | 2014
+" Last Update: Feb 28, Fri | 01:52:24 | 2014
 
 " Plugins "{{{2
 
@@ -1113,11 +1113,11 @@ nnoremap <silent> <c-q> :ScrEdit<cr>
 nnoremap <silent> <backspace> :ScrSubs<cr>
 vnoremap <silent> <backspace> y:ScrSubs<cr>
 " append
-nnoremap <silent> <s-backspace> :ScrAppend<cr>
-vnoremap <silent> <s-backspace> y:ScrAppend<cr>
+nnoremap <silent> <s-backspace> :ScrAfter<cr>
+vnoremap <silent> <s-backspace> y:ScrAfter<cr>
 " insert
-nnoremap <silent> <c-backspace> :ScrInsert<cr>
-vnoremap <silent> <c-backspace> y:ScrInsert<cr>
+nnoremap <silent> <c-backspace> :ScrBefore<cr>
+vnoremap <silent> <c-backspace> y:ScrBefore<cr>
 " move
 nnoremap <silent> <a-backspace> :ScrMove<cr>
 vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
@@ -1145,8 +1145,8 @@ command! DelAdd call EmptyLines(0)
 " }}}
 " Scratch buffer "{{{
 " put text to Scratch
-command! ScrAppend call ScratchBuffer(4)
-command! ScrInsert call ScratchBuffer(3)
+command! ScrAfter call ScratchBuffer(4)
+command! ScrBefore call ScratchBuffer(3)
 command! ScrSubs call ScratchBuffer(2)
 " creat new Scratch
 command! ScrCreat call ScratchBuffer(0)|ls!
