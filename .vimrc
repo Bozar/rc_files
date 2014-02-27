@@ -325,9 +325,7 @@ endfunction "}}}
 " Function key: <F2> "{{{4
 function! AnotherDay_GTD() "{{{
 	" insert new lines for another day
-	" mark h and l: yesterday
 		call MoveFoldMarker(2)
-	" mark j and k: another day
 		'h,'h+2yank
 		'h-2put
 	" change date
