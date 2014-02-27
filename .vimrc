@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 27, Thu | 10:34:13 | 2014
+" Last Update: Feb 28, Fri | 00:48:41 | 2014
 
 " Plugins "{{{2
 
@@ -45,85 +45,96 @@ endfunction "}}}
 " }}}3
 
 " put text to another file "{{{3
-function! PutText(put_line) "{{{
-	" 0: overwrite old text
-		if a:put_line==0
-			$mark j|$put "
-			1,'jdelete
-	" 1: insert into old text
-		elseif a:put_line==1
+function! PutText(put) "{{{
+	" overwrite(0)
+		if a:put==0 "{{{
+			$mark j|$put
+			1,'jdelete "}}}
+	" before(1)
+		elseif a:put==1 "{{{
 			1put! "
-			1
-	" 2: append to old text
-		elseif a:put_line==2
-			$mark j|$put "
-			'j+1
+			1 "}}}
+	" after(2)
+		elseif a:put==2 "{{{
+			$mark j|$put
+			'j+1 "}}}
 		endif
 endfunction "}}}
 " }}}3
 
 " mark j & k: visual mode "{{{3
-function! VisualMark() "{{{
+function! VisualMarker() "{{{
 	'<mark j
 	'>mark k
 endfunction "}}}
 " }}}3
 
 " fold marker "{{{3
-" new(0), insert(1), append(2)
-" sub-level(3), surrounding(4,5)
-function! YankFoldMarker(fold_marker) "{{{
-	" creat new
-		if a:fold_marker==0 "{{{
+" creat new fold marker
+function! CreatFoldMarker(level) "{{{
+	" level one
+		if a:level==0 "{{{
 			s/$/\rFOLDMARKER {{{\r }}}
 			.-1,.s/$/1
 			-1 "}}}
-	" insert
-		elseif a:fold_marker==1 "{{{
-			normal [zmj]zmk
-			'jyank
-			'jput!
-			'jput!
-			'j-2,'j-1s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
-			'j-1s/\s\(.\{0,1\}\){{{/\1 }}}
-			'j-2s/^/FOLDMARKER/ "}}}
-	" append
-		elseif a:fold_marker==2 "{{{
-			normal [zmj]zmk
-			'jyank
-			'kput
-			'kput
-			'k+1,'k+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
-			'k+2s/\s\(.\{0,1\}\){{{/\1 }}}
-			'k+1s/^/FOLDMARKER/ "}}}
-	" creat sub-level
-		elseif a:fold_marker==3 "{{{
-			normal mh[z
-			yank
+	" open folds
+		set nofoldenable
+	" same level
+		elseif a:level==1 "{{{
+			normal [zmh]zml
+			'hyank
 			'hput
 			'hput
-			'h+1,'h+2s/^.*\(\s.\{0,1\}{\{3\}\)/\1/
-			'h+2s/\s\(.\{0,1\}\){{{/\1 }}}
-			'h+1s/^/FOLDMARKER/
+			'h+1,'h+2s/^.*\(\s.\{0,1\}{\{3\}\d\{0,2\}\)$/\1/
+			'h+2s/\s\(.\{0,1\}\){{{/\1 }}}/
+			'h+1s/^/FOLDMARKER/ "}}}
+	" higher level
+		elseif a:level==2 "{{{
+			call CreatFoldMarker(1)
 			'h+1,'h+2s/\(\d\{1,2\}\)$/\=submatch(0)+1/e
-			-1 "}}}
-	" creat surrounding sub-level
-	" normal
-		elseif a:fold_marker==4 "{{{
-			'j
-			call YankFoldMarker(3)
-			'j+1mark h
-			'j+2mark l
-			'l+1,'kdelete
-			'hput
-			'h-1,'hjoin!
-			s/FOLDMARKER\(\s.\{0,1\}{\{3\}\d\{0,2\}\)$/\1/
-			'l-1,'ljoin! "}}}
-	" visual
-		elseif a:fold_marker==5 "{{{
-			call VisualMark()
-			call YankFoldMarker(4) "}}}
 		endif
+endfunction "}}}
+" new(0), after(1), before(2)
+" inside(3), wrap text(4,5)
+function! MoveFoldMarker(position) "{{{
+	" creat level one marker
+		if a:position==0 "{{{
+			call CreatFoldMarker(0)
+	" in related to current marker
+	" after
+		elseif a:position==1 "{{{
+			call CreatFoldMarker(1)
+			'h+1,'h+2delete
+			'lput "}}}
+	" before
+		elseif a:position==2 "{{{
+			call CreatFoldMarker(1)
+			'h+1,'h+2delete
+			'hput!
+		" }}}
+	" inside
+		elseif a:position==3 "{{{
+			mark j
+			call CreatFoldMarker(2)
+			'h+1,'h+2delete
+			'jput "}}}
+	" wrap text
+	" normal
+		elseif a:position==4 "{{{
+			call CreatFoldMarker(2)
+			'h+1,'h+2delete
+			'jput
+			'j+1s/^FOLDMARKER//
+			'j+2delete
+			'kput
+			'j,'j+1join!
+			'k,'k+1join! "}}}
+	" visual
+		elseif a:position==5 "{{{
+			call VisualMarker()
+			call MoveFoldMarker(4) "}}}
+		endif
+		set foldenable
 endfunction "}}}
 " }}}3
 
@@ -135,43 +146,44 @@ function! BulletPoint() "{{{
 		'j,'ks/^-//e
 	" paragraph
 	" '==' will be replaced with '+'
-	"		indent 2 tabs (8 spaces)
+	"		indent 2 tabs(8 spaces)
 		'j,'kg/^\(\|\t\|\s\{4\}\)==/left 8
 		'j,'ks/^\(\t\t\)==/\1+ /e
 	" '=' will be replaced with '*'
-	"	indent 1 tab (4 spaces)
+	"	indent 1 tab(4 spaces)
 		'j,'kg/^\(\|\s\{4\}\)=/left 4
 		'j,'ks/^\(\t\)=/\1* /e
 endfunction "}}}
 " }}}3
 
 " change fold level "{{{3
-function! ChangeFoldLevel(fold_level)  "{{{
-	" substract (0), normal
-		if a:fold_level==0
-			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)-1
-	" substract (1), visual
-		elseif a:fold_level==1
-			call VisualMark()
+function! ChangeFoldLevel(level)  "{{{
+	" substract(0), normal
+		if a:level==0
+			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)-1/e
+			'j,'ks/\({{{\|}}}\)\@<=0$//e
+	" substract(1), visual
+		elseif a:level==1
+			call VisualMarker()
 			call ChangeFoldLevel(0)
-	" add (2), normal
-		elseif a:fold_level==2
-			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)+1
-	" add (3), visual
-		elseif a:fold_level==3
-			call VisualMark()
+	" add(2), normal
+		elseif a:level==2
+			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)+1/e
+	" add(3), visual
+		elseif a:level==3
+			call VisualMarker()
 			call ChangeFoldLevel(2)
 		endif
 endfunction "}}}
 " }}}3
 
 " delete lines "{{{3
-function! EmptyLines(empty_line) "{{{
-	if a:empty_line==0
+function! EmptyLines(line) "{{{
+	if a:line==0
 		1,$-1g/^$/.+1s/^$/###DELETE_EMPTY_LINES###
 		g/^###DELETE_EMPTY_LINES###$/delete
 		$g/^$/delete
-	elseif a:empty_line==1
+	elseif a:line==1
 		g/^$/delete
 	endif
 endfunction "}}}
@@ -181,13 +193,13 @@ endfunction "}}}
 " there should be at least 5 lines in a file
 " year (%Y) | month (%b) | day (%d) | weekday (%a)
 " hour (%H) | miniute (%M) | second (%S)
-function! CurrentTime(time_stamp) "{{{
+function! CurrentTime(time) "{{{
 	" update time
-		if a:time_stamp==0
+		if a:time==0
 			1,5s/\(Last\sUpdate:\s\|最后更新：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
 			$-4,$s/\(Last\sUpdate:\s\|最后更新：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
 	" append time
-		elseif a:time_stamp==1
+		elseif a:time==1
 			s/$/\r
 			s/^/\=strftime('%b %d | %a | %Y')
 		endif
@@ -215,26 +227,17 @@ endfunction "}}}
 " }}}3
 
 " Scratch buffer "{{{3
-" switch between Scratch and other buffers
-function! Switch_Scratch() "{{{
+" switch to Scratch
+function! SwitchToScratch() "{{{
 	if bufwinnr(2)==-1
 		buffer 2
 	else
 		execute bufwinnr(2) . 'wincmd w'
 	endif
 endfunction "}}}
-" move text out of Scratch
-function! MoveOut_Scratch() "{{{
-	1,$yank
-	'J
-	set nofoldenable
-	'Jput
-	1g/^$/d
-	set foldenable
-endfunction "}}}
-" creat (0) and edit (1)
-" substitute (2), insert (3) and append (4)
-" move (5,6) text between buffers
+" creat(0) and edit(1)
+" substitute(2), insert(3) and append(4)
+" move(5,6) text between buffers
 function! ScratchBuffer(scratch) "{{{
 	" creat Scratch
 		if a:scratch==0 "{{{
@@ -251,18 +254,18 @@ function! ScratchBuffer(scratch) "{{{
 			return "}}}
 	" edit Scratch
 		elseif a:scratch==1 "{{{
-			call Switch_Scratch() "}}}
+			call SwitchToScratch() "}}}
 	" substitute whole Scratch
 		elseif a:scratch==2 "{{{
-			call Switch_Scratch()
+			call SwitchToScratch()
 			call PutText(0) "}}}
-	" insert text
+	" before
 		elseif a:scratch==3 "{{{
-			call Switch_Scratch()
+			call SwitchToScratch()
 			call PutText(1) "}}}
-	" append text
+	" after
 		elseif a:scratch==4 "{{{
-			call Switch_Scratch()
+			call SwitchToScratch()
 			call PutText(2) "}}}
 	" move text between Scratch and other buffers
 	" normal mode
@@ -280,11 +283,16 @@ function! ScratchBuffer(scratch) "{{{
 				set foldenable
 				call ScratchBuffer(0)
 			elseif bufnr('%')==2
-				call MoveOut_Scratch()
+				1,$yank
+				'J
+				set nofoldenable
+				'Jput
+				1g/^$/d
+				set foldenable
 			endif "}}}
 	" visual mode
 		elseif a:scratch==6 "{{{
-			call VisualMark()
+			call VisualMarker()
 			call ScratchBuffer(5) "}}}
 		endif
 endfunction "}}}
@@ -318,7 +326,7 @@ endfunction "}}}
 function! AnotherDay_GTD() "{{{
 	" insert new lines for another day
 	"	mark j and k: yesterday
-		call YankFoldMarker(1)
+		call MoveFoldMarker(1)
 	"	mark h and l: another day
 		'j-2mark h
 		'j-1mark l
@@ -1070,6 +1078,10 @@ nnoremap q %
 vnoremap q %
 onoremap q %
 " }}}
+" A-B substitute "{{{
+nnoremap Q :%s/<c-r>a/<c-r>b/gc<cr>
+vnoremap Q "by:%s/<c-r>a/<c-r>b/gc<cr>
+" }}}
 " switch settings "{{{
 nnoremap <silent> <c-\> :SwHlsearch<cr>
 nnoremap <silent> <a-\> :SwLinebreak<cr>
@@ -1082,12 +1094,12 @@ nnoremap <silent> <a--> :FlSub<cr>
 vnoremap <silent> <a--> <esc>:FlVSub<cr>
 " }}}
 " append, insert and creat fold marker "{{{
-nnoremap <tab> :FmAppend<cr>
-nnoremap <s-tab> :FmInsert<cr>
-nnoremap <c-tab> :FmSubLevel<cr>
+nnoremap <tab> :FmAfter<cr>
+nnoremap <s-tab> :FmBefore<cr>
+nnoremap <c-tab> :FmInside<cr>
 nnoremap ~ :FmCreat<cr>
-nnoremap <a-q> :FmSurround<cr>
-vnoremap <a-q> <esc>:FmVSurround<cr>
+nnoremap <a-q> :FmWrap<cr>
+vnoremap <a-q> <esc>:FmVWrap<cr>
 " }}}
 " search visual selection "{{{
 " forward, backward and yank match pattern
@@ -1128,9 +1140,6 @@ command! Page call PageNumber()
 command! TimeStamp call CurrentTime(0)|normal ''zz
 command! Date call CurrentTime(1)
 " }}}
-" replace '\t' with '\s\s\s\s' | '\t\t' with '\t' "{{{
-command! TabToSpace 'j,'ks/\(\t\)\@<!\t\(\t\)\@!/    /ge|'j,'ks/\t\t/\t/ge
-" }}}
 " delete empty lines "{{{
 command! DelEmpty call EmptyLines(1)
 command! DelAdd call EmptyLines(0)
@@ -1155,12 +1164,12 @@ command! FlVSub call ChangeFoldLevel(1)
 command! FlAdd call ChangeFoldLevel(2)
 command! FlVAdd call ChangeFoldLevel(3)
 " append, insert and creat fold marker
-command! FmCreat call YankFoldMarker(0)
-command! FmInsert call YankFoldMarker(1)
-command! FmAppend call YankFoldMarker(2)
-command! FmSubLevel call YankFoldMarker(3)
-command! FmSurround call YankFoldMarker(4)
-command! FmVSurround call YankFoldMarker(5)
+command! FmCreat call MoveFoldMarker(0)
+command! FmAfter call MoveFoldMarker(1)
+command! FmBefore call MoveFoldMarker(2)
+command! FmInside call MoveFoldMarker(3)
+command! FmWrap call MoveFoldMarker(4)
+command! FmVWrap call MoveFoldMarker(5)
 " }}}
 " switch settings "{{{
 command! SwHlsearch call SwitchSettings('hlsearch')
