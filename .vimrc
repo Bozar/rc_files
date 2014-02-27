@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 28, Fri | 00:48:41 | 2014
+" Last Update: Feb 28, Fri | 01:09:55 | 2014
 
 " Plugins "{{{2
 
@@ -304,9 +304,9 @@ endfunction "}}}
 " substitute bullet point (*) with finished mark (~)
 function! Finished_GTD(day) "{{{
 	if a:day==0
-		s/^\t\*/\t\~
+		s/^\t\*/\t\~/e
 	elseif a:day==1
-		s/^\t\~/\t\*
+		s/^\t\~/\t\*/e
 	endif
 endfunction "}}}
 function! F1_Normal_GTD() "{{{
@@ -325,24 +325,24 @@ endfunction "}}}
 " Function key: <F2> "{{{4
 function! AnotherDay_GTD() "{{{
 	" insert new lines for another day
-	"	mark j and k: yesterday
-		call MoveFoldMarker(1)
-	"	mark h and l: another day
-		'j-2mark h
-		'j-1mark l
-		'j,'j+2y
-		'hput
+	" mark h and l: yesterday
+		call MoveFoldMarker(2)
+	" mark j and k: another day
+		'h,'h+2yank
+		'h-2put
 	" change date
-		'h+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1
+		'h-4s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1
 	" change foldlevel
+		'hmark j
+		'lmark k
 		call ChangeFoldLevel(2)
 	" fix substitution errors on rare occasions:
 	" the second day in a month
 	" in which case both }2 will be changed
 		g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12
 	" delete additional lines
-		'hdelete
-		'l-1
+		'h-5delete
+		+2
 		normal wma
 endfunction "}}}
 function! F2_Normal_GTD() "{{{
