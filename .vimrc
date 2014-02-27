@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 27, Thu | 01:37:24 | 2014
+" Last Update: Feb 27, Thu | 10:34:13 | 2014
 
 " Plugins "{{{2
 
@@ -62,6 +62,13 @@ function! PutText(put_line) "{{{
 endfunction "}}}
 " }}}3
 
+" mark j & k: visual mode "{{{3
+function! VisualMark() "{{{
+	'<mark j
+	'>mark k
+endfunction "}}}
+" }}}3
+
 " fold marker "{{{3
 " new(0), insert(1), append(2)
 " sub-level(3), surrounding(4,5)
@@ -114,8 +121,7 @@ function! YankFoldMarker(fold_marker) "{{{
 			'l-1,'ljoin! "}}}
 	" visual
 		elseif a:fold_marker==5 "{{{
-			'<mark j
-			'>mark k
+			call VisualMark()
 			call YankFoldMarker(4) "}}}
 		endif
 endfunction "}}}
@@ -139,13 +145,23 @@ function! BulletPoint() "{{{
 endfunction "}}}
 " }}}3
 
-" add(1) or substract(0) fold level "{{{3
+" change fold level "{{{3
 function! ChangeFoldLevel(fold_level)  "{{{
-	if a:fold_level==0
-		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)-1
-	elseif a:fold_level==1
-		'j,'ks/\({{{\|}}}\)\@<=\d/\=submatch(0)+1
-	endif
+	" substract (0), normal
+		if a:fold_level==0
+			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)-1
+	" substract (1), visual
+		elseif a:fold_level==1
+			call VisualMark()
+			call ChangeFoldLevel(0)
+	" add (2), normal
+		elseif a:fold_level==2
+			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)+1
+	" add (3), visual
+		elseif a:fold_level==3
+			call VisualMark()
+			call ChangeFoldLevel(2)
+		endif
 endfunction "}}}
 " }}}3
 
@@ -216,12 +232,12 @@ function! MoveOut_Scratch() "{{{
 	1g/^$/d
 	set foldenable
 endfunction "}}}
-" creat (3) and edit (4)
-" substitute (0), insert (1) and append (2)
+" creat (0) and edit (1)
+" substitute (2), insert (3) and append (4)
 " move (5,6) text between buffers
 function! ScratchBuffer(scratch) "{{{
 	" creat Scratch
-		if a:scratch==3 "{{{
+		if a:scratch==0 "{{{
 			new
 			setlocal buftype=nofile
 			setlocal bufhidden=hide
@@ -233,21 +249,21 @@ function! ScratchBuffer(scratch) "{{{
 		elseif bufexists(2)==0 "{{{
 			echo 'ERROR: No Scratch Buffer 2!'
 			return "}}}
+	" edit Scratch
+		elseif a:scratch==1 "{{{
+			call Switch_Scratch() "}}}
 	" substitute whole Scratch
-		elseif a:scratch==0 "{{{
+		elseif a:scratch==2 "{{{
 			call Switch_Scratch()
 			call PutText(0) "}}}
 	" insert text
-		elseif a:scratch==1 "{{{
+		elseif a:scratch==3 "{{{
 			call Switch_Scratch()
 			call PutText(1) "}}}
 	" append text
-		elseif a:scratch==2 "{{{
+		elseif a:scratch==4 "{{{
 			call Switch_Scratch()
 			call PutText(2) "}}}
-	" edit Scratch
-		elseif a:scratch==4 "{{{
-			call Switch_Scratch() "}}}
 	" move text between Scratch and other buffers
 	" normal mode
 		elseif a:scratch==5 "{{{
@@ -268,8 +284,7 @@ function! ScratchBuffer(scratch) "{{{
 			endif "}}}
 	" visual mode
 		elseif a:scratch==6 "{{{
-			'<mark j
-			'>mark k
+			call VisualMark()
 			call ScratchBuffer(5) "}}}
 		endif
 endfunction "}}}
@@ -312,7 +327,7 @@ function! AnotherDay_GTD() "{{{
 	" change date
 		'h+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1
 	" change foldlevel
-		call ChangeFoldLevel(1)
+		call ChangeFoldLevel(2)
 	" fix substitution errors on rare occasions:
 	" the second day in a month
 	" in which case both }2 will be changed
@@ -502,11 +517,11 @@ function! PutIntoScratch_Repo(put) "{{{
 			yank
 			call ScratchBuffer(0) "}}}
 	" visual, substitute
-		elseif a:put==2 "{{{
+		elseif a:put==1 "{{{
 			'<,'>yank
 			call ScratchBuffer(0) "}}}
 	" normal, append
-		elseif a:put==1 "{{{
+		elseif a:put==2 "{{{
 			yank
 			call ScratchBuffer(2) "}}}
 	" visual, append
@@ -533,7 +548,7 @@ function! F1_Normal_Repo() "{{{
 	nnoremap <buffer> <silent> <f1> :call PutIntoScratch_Repo(0)<cr>
 endfunction "}}}
 function! F1_Visual_Repo() "{{{
-	vnoremap <buffer> <silent> <f1> <esc>:call PutIntoScratch_Repo(2)<cr>
+	vnoremap <buffer> <silent> <f1> <esc>:call PutIntoScratch_Repo(1)<cr>
 endfunction "}}}
 function! F1_Shift_Normal_Repo() "{{{
 	nnoremap <buffer> <silent> <s-f1> :call TakeOutScratch_Repo()<cr>
@@ -549,7 +564,7 @@ endfunction "}}}
 " Function key: <F2> "{{{4
 " put text into Scratch, append
 function! F2_Normal_Repo() "{{{
-	nnoremap <buffer> <silent> <f2> :call PutIntoScratch_Repo(1)<cr>
+	nnoremap <buffer> <silent> <f2> :call PutIntoScratch_Repo(2)<cr>
 endfunction "}}}
 function! F2_Visual_Repo() "{{{
 	vnoremap <buffer> <silent> <f2> <esc>:call PutIntoScratch_Repo(3)<cr>
@@ -1062,7 +1077,9 @@ nnoremap <silent> \ :SwBackground<cr>
 " }}}
 " change fold level "{{{
 nnoremap <silent> <a-=> :FlAdd<cr>
+vnoremap <silent> <a-=> <esc>:FlVAdd<cr>
 nnoremap <silent> <a--> :FlSub<cr>
+vnoremap <silent> <a--> <esc>:FlVSub<cr>
 " }}}
 " append, insert and creat fold marker "{{{
 nnoremap <tab> :FmAppend<cr>
@@ -1120,21 +1137,23 @@ command! DelAdd call EmptyLines(0)
 " }}}
 " Scratch buffer "{{{
 " put text to Scratch
-command! ScrAppend call ScratchBuffer(2)
-command! ScrInsert call ScratchBuffer(1)
-command! ScrSubs call ScratchBuffer(0)
+command! ScrAppend call ScratchBuffer(4)
+command! ScrInsert call ScratchBuffer(3)
+command! ScrSubs call ScratchBuffer(2)
 " creat new Scratch
-command! ScrCreat call ScratchBuffer(3)|ls!
+command! ScrCreat call ScratchBuffer(0)|ls!
 " edit Scratch
-command! ScrEdit call ScratchBuffer(4)
+command! ScrEdit call ScratchBuffer(1)
 " move text between Scratch and other buffers
 command! ScrMove call ScratchBuffer(5)
 command! ScrVMove call ScratchBuffer(6)
 " }}}
 " folds "{{{
 " change fold level
-command! FlAdd call ChangeFoldLevel(1)
 command! FlSub call ChangeFoldLevel(0)
+command! FlVSub call ChangeFoldLevel(1)
+command! FlAdd call ChangeFoldLevel(2)
+command! FlVAdd call ChangeFoldLevel(3)
 " append, insert and creat fold marker
 command! FmCreat call YankFoldMarker(0)
 command! FmInsert call YankFoldMarker(1)
@@ -1169,7 +1188,7 @@ autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd BufRead *.repo call Repository(0)
 autocmd BufWrite *.repo call Repository(1)
-autocmd VimEnter * call ScratchBuffer(3)
+autocmd VimEnter * call ScratchBuffer(0)
 " }}}
 " }}}2
 " vim: set nolinebreak number foldlevel=20: "}}}1
