@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 28, Fri | 01:09:55 | 2014
+" Last Update: Feb 28, Fri | 01:26:09 | 2014
 
 " Plugins "{{{2
 
@@ -326,10 +326,11 @@ endfunction "}}}
 function! AnotherDay_GTD() "{{{
 	" insert new lines for another day
 		call MoveFoldMarker(2)
+		'h-2mark z
 		'h,'h+2yank
-		'h-2put
+		'zput
 	" change date
-		'h-4s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1
+		'z+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1
 	" change foldlevel
 		'hmark j
 		'lmark k
@@ -339,7 +340,7 @@ function! AnotherDay_GTD() "{{{
 	" in which case both }2 will be changed
 		g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12
 	" delete additional lines
-		'h-5delete
+		'zdelete
 		+2
 		normal wma
 endfunction "}}}
