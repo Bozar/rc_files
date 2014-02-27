@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 28, Fri | 01:26:09 | 2014
+" Last Update: Feb 28, Fri | 01:47:22 | 2014
 
 " Plugins "{{{2
 
@@ -1078,8 +1078,8 @@ vnoremap q %
 onoremap q %
 " }}}
 " A-B substitute "{{{
-nnoremap Q :%s/<c-r>a/<c-r>b/gc<cr>
-vnoremap Q "by:%s/<c-r>a/<c-r>b/gc<cr>
+nnoremap <a-q> :%s/<c-r>a/<c-r>b/gc<cr>
+vnoremap <a-q> "by:%s/<c-r>a/<c-r>b/gc<cr>
 " }}}
 " switch settings "{{{
 nnoremap <silent> <c-\> :SwHlsearch<cr>
@@ -1097,8 +1097,8 @@ nnoremap <tab> :FmAfter<cr>
 nnoremap <s-tab> :FmBefore<cr>
 nnoremap <c-tab> :FmInside<cr>
 nnoremap ~ :FmCreat<cr>
-nnoremap <a-q> :FmWrap<cr>
-vnoremap <a-q> <esc>:FmVWrap<cr>
+nnoremap Q :FmWrap<cr>
+vnoremap Q <esc>:FmVWrap<cr>
 " }}}
 " search visual selection "{{{
 " forward, backward and yank match pattern
