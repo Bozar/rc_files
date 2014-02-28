@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 28, Fri | 10:33:31 | 2014
+" Last Update: Feb 28, Fri | 11:40:09 | 2014
 
 " Plugins "{{{2
 
@@ -46,15 +46,15 @@ endfunction "}}}
 
 " put text to another file "{{{3
 function! PutText(put) "{{{
-	" overwrite(0)
+	" overwrite (0)
 		if a:put==0 "{{{
 			$mark h|$put
 			1,'hdelete "}}}
-	" before(1)
+	" before (1)
 		elseif a:put==1 "{{{
 			1put! "
 			1 "}}}
-	" after(2)
+	" after (2)
 		elseif a:put==2 "{{{
 			$mark h|$put
 			'h+1 "}}}
@@ -101,8 +101,8 @@ function! CreatFoldMarker(level) "{{{
 			'h+1,'h+2s/\(\d\{1,2\}\)$/\=submatch(0)+1/e
 		endif
 endfunction "}}}
-" new(0), after(1), before(2)
-" inside(3), wrap text(4,5)
+" new (0), after (1), before (2)
+" inside (3), wrap text (4,5)
 function! MoveFoldMarker(position) "{{{
 	" creat level one marker
 		if a:position==0 "{{{
@@ -153,11 +153,11 @@ function! BulletPoint() "{{{
 		'j,'ks/^-//e
 	" paragraph
 	" '==' will be replaced with '+'
-	"		indent 2 tabs(8 spaces)
+	"		indent 2 tabs (8 spaces)
 		'j,'kg/^\(\|\t\|\s\{4\}\)==/left 8
 		'j,'ks/^\(\t\t\)==/\1+ /e
 	" '=' will be replaced with '*'
-	"	indent 1 tab(4 spaces)
+	"	indent 1 tab (4 spaces)
 		'j,'kg/^\(\|\s\{4\}\)=/left 4
 		'j,'ks/^\(\t\)=/\1* /e
 endfunction "}}}
@@ -165,18 +165,18 @@ endfunction "}}}
 
 " change fold level "{{{3
 function! ChangeFoldLevel(level)  "{{{
-	" substract(0), normal
+	" substract (0), normal
 		if a:level==0
 			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)-1/e
 			'j,'ks/\({{{\|}}}\)\@<=0$//e
-	" substract(1), visual
+	" substract (1), visual
 		elseif a:level==1
 			call MappingMarker(0)
 			call ChangeFoldLevel(0)
-	" add(2), normal
+	" add (2), normal
 		elseif a:level==2
 			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)+1/e
-	" add(3), visual
+	" add (3), visual
 		elseif a:level==3
 			call MappingMarker(0)
 			call ChangeFoldLevel(2)
@@ -242,9 +242,9 @@ function! SwitchToScratch() "{{{
 		execute bufwinnr(2) . 'wincmd w'
 	endif
 endfunction "}}}
-" creat(0) and edit(1)
-" substitute(2), insert(3) and append(4)
-" move(5,6) text between buffers
+" creat (0) and edit (1)
+" substitute (2), insert (3) and append (4)
+" move (5,6) text between buffers
 function! ScratchBuffer(scratch) "{{{
 	" creat Scratch
 		if a:scratch==0 "{{{
