@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 28, Fri | 10:21:00 | 2014
+" Last Update: Feb 28, Fri | 10:33:31 | 2014
 
 " Plugins "{{{2
 
@@ -288,7 +288,7 @@ function! ScratchBuffer(scratch) "{{{
 					'j,'kdelete
 				endif
 				set foldenable
-				call ScratchBuffer(0)
+				call ScratchBuffer(2)
 			elseif bufnr('%')==2
 				1,$yank
 				'H
