@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 28, Fri | 11:40:09 | 2014
+" Last Update: Mar 01, Sat | 03:37:57 | 2014
 
 " Plugins "{{{2
 
@@ -81,13 +81,26 @@ endfunction "}}}
 function! CreatFoldMarker(level) "{{{
 	" level one
 		if a:level==0 "{{{
-			s/$/\rFOLDMARKER {{{\r }}}
-			.-1,.s/$/1
-			-1 "}}}
-	" open folds
-		set nofoldenable
+			s/$/\rFOLDMARKER {{{\r }}}/
+			.-1,.s/$/1/
+		endif "}}}
+	" detect fold
+		mark h "{{{
+		normal [z
+		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')==getline('.')
+			" fold dose not exsist
+			echo "ERROR: Fold '[z' not found! (CreatFoldMarker)"
+			'h
+			return
+		else
+			'h
+		endif "}}}
+	" detect cursor position
+		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')!=getline('.') "{{{
+			+1
+		endif "}}}
 	" same level
-		elseif a:level==1 "{{{
+		if a:level==1 "{{{
 			normal [zmh]zml
 			'hyank
 			'hput
@@ -98,7 +111,7 @@ function! CreatFoldMarker(level) "{{{
 	" higher level
 		elseif a:level==2 "{{{
 			call CreatFoldMarker(1)
-			'h+1,'h+2s/\(\d\{1,2\}\)$/\=submatch(0)+1/e
+			'h+1,'h+2s/\(\d\{1,2\}\)$/\=submatch(0)+1/e "}}}
 		endif
 endfunction "}}}
 " new (0), after (1), before (2)
@@ -107,41 +120,60 @@ function! MoveFoldMarker(position) "{{{
 	" creat level one marker
 		if a:position==0 "{{{
 			call CreatFoldMarker(0)
+			mark k
+			-1mark j
+			-1
+		endif "}}}
 	" in related to current marker
+	" detect fold
+		mark h "{{{
+		normal [z
+		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')==getline('.')
+			" fold dose not exsist
+			echo "ERROR: Fold '[z' not found! (MoveFoldMarker)"
+			'h
+			return
+		else
+			'h
+		endif "}}}
 	" after
-		elseif a:position==1 "{{{
+		if a:position==1 "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2delete
-			'lput "}}}
+			'lput
+			-1 "}}}
 	" before
 		elseif a:position==2 "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2delete
 			'hput!
-		" }}}
+			-1 "}}}
 	" inside
 		elseif a:position==3 "{{{
 			mark z
 			call CreatFoldMarker(2)
 			'h+1,'h+2delete
-			'zput "}}}
+			'zput
+			-1 "}}}
 	" wrap text
 	" normal
 		elseif a:position==4 "{{{
 			call CreatFoldMarker(2)
+			'h+1,'h+2s/\d\{0,2\}$//
 			'h+1,'h+2delete
 			'jput
 			'j+1s/^FOLDMARKER//
 			'j+2delete
 			'kput
 			'j,'j+1join!
-			'k,'k+1join! "}}}
+			'k,'k+1join!
+			normal [z
+		" }}}
 	" visual
 		elseif a:position==5 "{{{
 			call MappingMarker(0)
 			call MoveFoldMarker(4) "}}}
 		endif
-		set foldenable
 endfunction "}}}
 " }}}3
 
@@ -175,7 +207,7 @@ function! ChangeFoldLevel(level)  "{{{
 			call ChangeFoldLevel(0)
 	" add (2), normal
 		elseif a:level==2
-			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)+1/e
+			'j,'ks/\({{{\|}}}\)\@<=\d\{0,2\}$/\=submatch(0)+1/e
 	" add (3), visual
 		elseif a:level==3
 			call MappingMarker(0)
@@ -187,7 +219,7 @@ endfunction "}}}
 " delete lines "{{{3
 function! EmptyLines(line) "{{{
 	if a:line==0
-		1,$-1g/^$/.+1s/^$/###DELETE_EMPTY_LINES###
+		1,$-1g/^$/.+1s/^$/###DELETE_EMPTY_LINES###/
 		g/^###DELETE_EMPTY_LINES###$/delete
 		$g/^$/delete
 	elseif a:line==1
@@ -207,8 +239,8 @@ function! CurrentTime(time) "{{{
 			$-4,$s/\(Last\sUpdate:\s\|最后更新：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
 	" append time
 		elseif a:time==1
-			s/$/\r
-			s/^/\=strftime('%b %d | %a | %Y')
+			s/$/\r/
+			s/^/\=strftime('%b %d | %a | %Y')/
 		endif
 endfunction "}}}
 " }}}3
@@ -216,20 +248,20 @@ endfunction "}}}
 " creat page number "{{{3
 function! PageNumber() "{{{
 	" creat two strings
-		let a=1|g/1/s//\=a/|let a=a+10
-		%s/$/\r#INSERT_NUMBER#\r
+		let a=1|g/1/s//\=a/|let a=a+10/
+		%s/$/\r#INSERT_NUMBER#\r/
 		let a=10|g/#INSERT_NUMBER#/s//\=a/|let a=a+10
 	" join nearby lines
 		g/0$/.-1,.j
 	" add fold marker
-		%s/\s/-
-		%s/$/ {{{/|%s/$/\r\r }}}
-		%s/\({\|}\)$/\12
+		%s/\s/-/
+		%s/$/ {{{/|%s/$/\r\r }}}/
+		%s/\({\|}\)$/\12/
 	" delete additional lines
 		g/^ {\{3\}2$/.,.+1delete
 	" insert title
-		1s/^\(.*\)$/\1\r\1
-		1s/2$/1/|$s/2$/1
+		1s/^\(.*\)$/\1\r\1/
+		1s/2$/1/|$s/2$/1/
 endfunction "}}}
 " }}}3
 
@@ -253,7 +285,7 @@ function! ScratchBuffer(scratch) "{{{
 			setlocal bufhidden=hide
 			setlocal noswapfile
 			setlocal nobuflisted
-			s/^/SCRATCH_BUFFER\r
+			s/^/SCRATCH_BUFFER\r/
 			close "}}}
 	" detect if Scratch exsists
 		elseif bufexists(2)==0 "{{{
@@ -277,9 +309,9 @@ function! ScratchBuffer(scratch) "{{{
 	" move text between Scratch and other buffers
 	" normal mode
 		elseif a:scratch==5 "{{{
-			if bufnr('%')!=2
+			if bufnr('%')!=2 "{{{
 				set nofoldenable
-				1s/^/\r
+				1s/^/\r/
 				if line("'j")==1
 					'jmark H
 					'j+1,'kdelete
@@ -288,14 +320,16 @@ function! ScratchBuffer(scratch) "{{{
 					'j,'kdelete
 				endif
 				set foldenable
-				call ScratchBuffer(2)
-			elseif bufnr('%')==2
+				call ScratchBuffer(2) "}}}
+			elseif bufnr('%')==2 "{{{
 				1,$yank
 				'H
 				set nofoldenable
 				'Hput
 				1g/^$/d
 				set foldenable
+				'H
+			" }}}
 			endif "}}}
 	" visual mode
 		elseif a:scratch==6 "{{{
@@ -308,24 +342,22 @@ endfunction "}}}
 " GTD "{{{3
 
 " Function key: <F1> "{{{4
-" substitute bullet point (*) with finished mark (~)
-function! Finished_GTD(day) "{{{
-	if a:day==0
-		s/^\t\*/\t\~/e
-	elseif a:day==1
-		s/^\t\~/\t\*/e
-	endif
+" to-do (*) and finished (~)
+function! Finished_GTD() "{{{
+	" substitute '*' with '~'
+		if substitute(getline('.'),'^\t\*','','')!=getline('.')
+			s/^\t\*/\t\~/
+	" substitute '~' with '*'
+		elseif substitute(getline('.'),'^\t\~','','')!=getline('.')
+			s/^\t\~/\t\*/
+		endif
 endfunction "}}}
 function! F1_Normal_GTD() "{{{
-	nnoremap <buffer> <silent> <f1> :call Finished_GTD(0)<cr>
-endfunction "}}}
-function! F1_Shift_Normal_GTD() "{{{
-	nnoremap <buffer> <silent> <s-f1> :call Finished_GTD(1)<cr>
+	nnoremap <buffer> <silent> <f1> :call Finished_GTD()<cr>
 endfunction "}}}
 
 function! F1_GTD() "{{{
 	call F1_Normal_GTD()
-	call F1_Shift_Normal_GTD()
 endfunction "}}}
 " }}}4
 
@@ -337,14 +369,14 @@ function! AnotherDay_GTD() "{{{
 		'h,'h+2yank
 		'zput
 	" change date
-		'z+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1
+		'z+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1/
 	" change foldlevel
 		call MappingMarker(1)
 		call ChangeFoldLevel(2)
 	" fix substitution errors on rare occasions:
 	" the second day in a month
 	" in which case both }2 will be changed
-		g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12
+		g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12/
 	" delete additional lines
 		'zdelete
 		+2
@@ -361,23 +393,25 @@ endfunction "}}}
 
 " Function key: <F3> "{{{4
 " weekly check
+" switch between 'blank', 'finished' and 'unfinished'
 function! WeeklyCheck_GTD(week) "{{{
-	if a:week==0
-		s/\(（未完成）\|\)$/（完成）
-	elseif a:week==1
-		s/\(（完成）\|\)$/（未完成）
-	endif
+	" 'blank' to 'finished'
+		if substitute(getline('.'),'完成）$','','')==getline('.')
+			s/$/（完成）/
+	" 'finished' to 'unfinished'
+		elseif substitute(getline('.'),'（完成）$','','')!=getline('.')
+			s/（完成）$/（未完成）/
+	" 'unfinished' to 'blank'
+		elseif substitute(getline('.'),'（未完成）$','','')!=getline('.')
+			s/（未完成）$//
+		endif
 endfunction "}}}
 function! F3_Normal_GTD() "{{{
 	nnoremap <buffer> <silent> <f3> :call WeeklyCheck_GTD(0)<cr>
 endfunction "}}}
-function! F3_Shift_Normal_GTD() "{{{
-	nnoremap <buffer> <silent> <s-f3> :call WeeklyCheck_GTD(1)<cr>
-endfunction "}}}
 
 function! F3_GTD() "{{{
 	call F3_Normal_GTD()
-	call F3_Shift_Normal_GTD()
 endfunction "}}}
 " }}}4
 
@@ -462,7 +496,7 @@ function! UpdateWordList_Vocab() "{{{
 		'l+1,$delete
 		1
 		/^Word List {\{3\}$/put
-		?^Word List {\{3\}?s/$/\r
+		?^Word List {\{3\}?s/$/\r/
 	" back to cursor line
 		'h
 endfunction "}}}
@@ -519,7 +553,7 @@ endfunction "}}}
 
 " new date
 function! Update_Repo() "{{{
-	1s/^\(Last Update:\).*$/\1
+	1s/^\(Last Update:\).*$/\1/
 	call CurrentTime(1)
 	1,2join
 endfunction "}}}
