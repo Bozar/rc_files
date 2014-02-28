@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Feb 28, Fri | 01:52:24 | 2014
+" Last Update: Feb 28, Fri | 10:21:00 | 2014
 
 " Plugins "{{{2
 
@@ -48,24 +48,31 @@ endfunction "}}}
 function! PutText(put) "{{{
 	" overwrite(0)
 		if a:put==0 "{{{
-			$mark j|$put
-			1,'jdelete "}}}
+			$mark h|$put
+			1,'hdelete "}}}
 	" before(1)
 		elseif a:put==1 "{{{
 			1put! "
 			1 "}}}
 	" after(2)
 		elseif a:put==2 "{{{
-			$mark j|$put
-			'j+1 "}}}
+			$mark h|$put
+			'h+1 "}}}
 		endif
 endfunction "}}}
 " }}}3
 
-" mark j & k: visual mode "{{{3
-function! VisualMarker() "{{{
-	'<mark j
-	'>mark k
+" mapping markers "{{{3
+function! MappingMarker(marker) "{{{
+	" visual
+		if a:marker==0
+			'<mark j
+			'>mark k
+	" h,l to j,k
+		elseif a:marker==1
+			'hmark j
+			'lmark k
+		endif
 endfunction "}}}
 " }}}3
 
@@ -114,10 +121,10 @@ function! MoveFoldMarker(position) "{{{
 		" }}}
 	" inside
 		elseif a:position==3 "{{{
-			mark j
+			mark z
 			call CreatFoldMarker(2)
 			'h+1,'h+2delete
-			'jput "}}}
+			'zput "}}}
 	" wrap text
 	" normal
 		elseif a:position==4 "{{{
@@ -131,7 +138,7 @@ function! MoveFoldMarker(position) "{{{
 			'k,'k+1join! "}}}
 	" visual
 		elseif a:position==5 "{{{
-			call VisualMarker()
+			call MappingMarker(0)
 			call MoveFoldMarker(4) "}}}
 		endif
 		set foldenable
@@ -164,14 +171,14 @@ function! ChangeFoldLevel(level)  "{{{
 			'j,'ks/\({{{\|}}}\)\@<=0$//e
 	" substract(1), visual
 		elseif a:level==1
-			call VisualMarker()
+			call MappingMarker(0)
 			call ChangeFoldLevel(0)
 	" add(2), normal
 		elseif a:level==2
 			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)+1/e
 	" add(3), visual
 		elseif a:level==3
-			call VisualMarker()
+			call MappingMarker(0)
 			call ChangeFoldLevel(2)
 		endif
 endfunction "}}}
@@ -274,25 +281,25 @@ function! ScratchBuffer(scratch) "{{{
 				set nofoldenable
 				1s/^/\r
 				if line("'j")==1
-					'jmark J
+					'jmark H
 					'j+1,'kdelete
 				elseif line("'j")!=1
-					'j-1mark J
+					'j-1mark H
 					'j,'kdelete
 				endif
 				set foldenable
 				call ScratchBuffer(0)
 			elseif bufnr('%')==2
 				1,$yank
-				'J
+				'H
 				set nofoldenable
-				'Jput
+				'Hput
 				1g/^$/d
 				set foldenable
 			endif "}}}
 	" visual mode
 		elseif a:scratch==6 "{{{
-			call VisualMarker()
+			call MappingMarker(0)
 			call ScratchBuffer(5) "}}}
 		endif
 endfunction "}}}
@@ -332,8 +339,7 @@ function! AnotherDay_GTD() "{{{
 	" change date
 		'z+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1
 	" change foldlevel
-		'hmark j
-		'lmark k
+		call MappingMarker(1)
 		call ChangeFoldLevel(2)
 	" fix substitution errors on rare occasions:
 	" the second day in a month
@@ -442,23 +448,23 @@ endfunction "}}}
 " [word 2]
 " }}}
 function! UpdateWordList_Vocab() "{{{
-	" j: cursor line | k: last line
-		mark j|$mark k
+	" h: cursor line | l: last line
+		mark h|$mark l
 	" clear old list
 		?^Word List {{{$?+1;/^ }}}$/-1delete
 	" put whole text to the end
 		1,$yank|$put
 	" delete non-bracket text
-		'k+1,$s/\[/\r[/g
-		'k+1,$s/\]/]\r/g
-		'k+1,$g!/\[/delete
+		'l+1,$s/\[/\r[/g
+		'l+1,$s/\]/]\r/g
+		'l+1,$g!/\[/delete
 	" move words back to list
-		'k+1,$delete
+		'l+1,$delete
 		1
 		/^Word List {\{3\}$/put
 		?^Word List {\{3\}?s/$/\r
 	" back to cursor line
-		'j
+		'h
 endfunction "}}}
 function! F4_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
@@ -480,15 +486,15 @@ endfunction "}}}
 function! ColletWordList_Vocab() "{{{
 	" clear register, mark position
 		let @a=''
-		mark j
+		mark h
 	" yank word list
 		1
 		/^Word List {{{$/;/ }}}$/y A
 		let @"=@a
 	" back to cursor line
-		'j
+		'h
 	" put list into Scratch buffer
-		ScrSubs
+		call ScratchBuffer(2)
 		g/^$/d
 endfunction "}}}
 function! F5_Normal_Vocab() "{{{
@@ -539,13 +545,13 @@ function! PutIntoScratch_Repo(put) "{{{
 endfunction "}}}
 " move whole Scratch to repository
 function! TakeOutScratch_Repo() "{{{
-	mark j
+	mark h
 	buffer 2
 	1,$yank
 	buffer #
 	set nofoldenable
 	set modifiable
-	'jput
+	'hput
 	set foldenable
 endfunction "}}}
 
