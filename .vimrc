@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 01, Sat | 17:41:29 | 2014
+" Last Update: Mar 01, Sat | 23:24:52 | 2014
 
 " Plugins "{{{2
 
@@ -44,6 +44,36 @@ function! SwitchSettings(setting) "{{{
 endfunction "}}}
  "}}}3
 
+" search pattern "{{{3
+function! SearchPattern(pattern) "{{{
+	" a-b substitution
+		if a:pattern==0 "{{{
+			let @z=substitute('%s/0/','0',@a,'')
+			let @x=substitute('1/gc','1',@b,'')
+			let @Z=@x
+			execute @z
+		endif "}}}
+	" count matches 1
+		let @z=@"
+	" search
+		if a:pattern==1 "{{{
+			let @/=@" "}}}
+	" yank all matched pattern
+		elseif a:pattern==2 "{{{
+			let @x=''
+			execute substitute('g/0/yank X','0',@",'')
+			let @"=@x
+			'' "}}}
+		endif
+	" count matches 2
+		execute substitute('%s/0//gn','0',@z,'')
+	" vim grep
+		if a:pattern==3 "{{{
+			execute substitute('vim /0/ %','0',@",'') 
+		endif "}}}
+endfunction "}}}
+ "}}}3
+
 " put text to another file "{{{3
 function! PutText(put) "{{{
 	" overwrite (0)
@@ -80,7 +110,7 @@ endfunction "}}}
 " creat new fold marker
 " DO NOT call 'CreatFoldMarker()' alone
 " call 'MoveFoldMarker()' instead
-" which has fail-safe 'substitute()'
+" which has fail-safe protocol 'substitute()'
 function! CreatFoldMarker(level) "{{{
 	" level one
 		if a:level==0 "{{{
@@ -227,7 +257,7 @@ function! EmptyLines(line) "{{{
 endfunction "}}}
  "}}}3
 
-" current time {{{3
+" current time "{{{3
 " there should be at least 5 lines in a file
 " year (%Y) | month (%b) | day (%d) | weekday (%a)
 " hour (%H) | miniute (%M) | second (%S)
@@ -478,7 +508,7 @@ endfunction "}}}
 " Function key: <F4> "{{{4
 " update word list
 " there should be ONLY ONE list in a file
-" Word List {{{
+" Word List "{{{
 " [word 1]
 " [word 2]
  "}}}
@@ -660,33 +690,6 @@ endfunction "}}}
 
 " split window equally between all buffers except for glossary
 " :resize 3
-
-" " outdated {{{4
-" " search nearby lines in English buffer
-" " let @d='previous search pattern'
-" " let @e='current search pattern'
-" function! NearbyLines_Loc() "{{{
-" 	let @d=@/
-" 	let @e=''
-" 	?#MARK#?-20,/#MARK#/+20g=#MARK#=y E
-" endfunction "}}}
-" " delete all other columns except English and Chinese
-" " example: A1, B1, C1(#MARK#), D1(ENG), E1(CHS), F1, ...
-" function! DeleteColumns_Loc() "{{{
-" 	%s/^.*#MARK#\t//e
-" 	%s/\(^.\{-\}\t.\{-\}\)\t.*$/\1/e
-" endfunction "}}}
-" " put lines into Scratch buffer
-" " the previous search pattern is shown at the center of window
-" function! F6_Shift_Normal_Loc() "{{{
-" 	nnoremap <buffer> <silent> <s-f6>
-" 		\ :call NearbyLines_Loc()<cr>
-" 		\ :1wincmd w<cr>:buffer 2\|call PutText(0)<cr>
-" 		\ /<c-r>d<cr>ma
-" 		\ :call DeleteColumns_Loc()<cr>
-" 		\ 'azz
-" endfunction "}}}
-"  }}}4
 
 function! FileFormat_Loc() "{{{
 	set fileencoding=utf-8
@@ -1118,9 +1121,9 @@ nnoremap q %
 vnoremap q %
 onoremap q %
  "}}}
-" A-B substitute "{{{
-nnoremap <silent> <a-q> :%s/<c-r>a/<c-r>b/gc<cr>
-vnoremap <silent> <a-q> "by:%s/<c-r>a/<c-r>b/gc<cr>
+" a-b substitution "{{{
+nnoremap <silent> <a-q> :ABSubs<cr>
+vnoremap <silent> <a-q> "by:ABSubs<cr>
  "}}}
 " switch settings "{{{
 nnoremap <silent> <c-\> :SwHlsearch<cr>
@@ -1143,9 +1146,9 @@ vnoremap <silent> Q <esc>:FmVWrap<cr>
  "}}}
 " search visual selection "{{{
 " forward, backward and yank match pattern
-vnoremap <silent> <tab> y:%s/<c-r>"\c//gn<cr>/<c-r>/<cr>''
-vnoremap <silent> <s-tab> y:%s/<c-r>"\c//gn<cr>?<c-r>/<cr>''
-vnoremap <silent> <c-tab> y:%s/<c-r>"\c//gn\|let @a=''\|g/<c-r>"\c/y A\|let @"=@a<cr>
+vnoremap <silent> <tab> y:SearchForward<cr>
+vnoremap <silent> <s-tab> y:SearchYankAll<cr>
+vnoremap <silent> <c-tab> y:SearchGrep<cr>:copen<cr>
  "}}}
 " Scratch buffer "{{{
 " edit
@@ -1183,6 +1186,14 @@ command! Date call CurrentTime(1)
 " delete empty lines "{{{
 command! DelEmpty call EmptyLines(1)
 command! DelAdd call EmptyLines(0)
+ "}}}
+" a-b substitution "{{{
+command! ABSubs call SearchPattern(0)
+ "}}}
+" foward/backward search "{{{
+command! SearchForward call SearchPattern(1)
+command! SearchYankAll call SearchPattern(2)
+command! SearchGrep call SearchPattern(3)
  "}}}
 " Scratch buffer "{{{
 " put text to Scratch
