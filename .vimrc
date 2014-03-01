@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 01, Sat | 13:44:33 | 2014
+" Last Update: Mar 01, Sat | 17:41:29 | 2014
 
 " Plugins "{{{2
 
@@ -9,7 +9,7 @@ filetype plugin on
 
 " fcitx
 " NerdTree
-" }}}2
+ "}}}2
 
 " Functions "{{{2
 
@@ -23,7 +23,7 @@ function! CheckOS() "{{{
 		return 'linux'
 	endif
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " switch settings "{{{3
 function! SwitchSettings(setting) "{{{
@@ -42,7 +42,7 @@ function! SwitchSettings(setting) "{{{
 		endif
 	endif
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " put text to another file "{{{3
 function! PutText(put) "{{{
@@ -60,7 +60,7 @@ function! PutText(put) "{{{
 			'h+1 "}}}
 		endif
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " mapping markers "{{{3
 function! MappingMarker(marker) "{{{
@@ -74,7 +74,7 @@ function! MappingMarker(marker) "{{{
 			'lmark k
 		endif
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " fold marker "{{{3
 " creat new fold marker
@@ -98,7 +98,7 @@ function! CreatFoldMarker(level) "{{{
 			'hput
 			'hput
 			'h+1,'h+2s/^.*\(\s.\{0,1\}{\{3\}\d\{0,2\}\)$/\1/
-			'h+2s/\s\(.\{0,1\}\){{{/\1 }}}/
+			'h+2s/{{{/}}}/
 			'h+1s/^/FOLDMARKER/ "}}}
 	" higher level
 		elseif a:level==2 "{{{
@@ -118,9 +118,9 @@ function! MoveFoldMarker(position) "{{{
 		endif "}}}
 	" in related to current marker
 	" detect fold
-		mark h "{{{
+		mark h
 		normal [z
-		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')==getline('.')
+		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')==getline('.') "{{{
 			" fold dose not exsist
 			echo "ERROR: Fold '[z' not found!"
 			'h
@@ -160,14 +160,14 @@ function! MoveFoldMarker(position) "{{{
 			'j,'j+1join!
 			'k,'k+1join!
 			normal [z
-		" }}}
+		 "}}}
 	" visual
 		elseif a:position==5 "{{{
 			call MappingMarker(0)
 			call MoveFoldMarker(4) "}}}
 		endif
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " insert bullets: special characters at the beginning of a line "{{{3
 function! BulletPoint() "{{{
@@ -185,29 +185,35 @@ function! BulletPoint() "{{{
 		'j,'kg/^\(\|\s\{4\}\)=/left 4
 		'j,'ks/^\(\t\)=/\1* /e
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " change fold level "{{{3
 function! ChangeFoldLevel(level)  "{{{
 	" substract (0), normal
 		if a:level==0 "{{{
 			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)-1/e
-			'j,'ks/\({{{\|}}}\)\@<=0$//e "}}}
+			'j,'ks/\({{{\|}}}\)\@<=0$//e
 	" substract (1), visual
-		elseif a:level==1 "{{{
+		elseif a:level==1
 			call MappingMarker(0)
-			call ChangeFoldLevel(0) "}}}
+			call ChangeFoldLevel(0)
+		endif "}}}
+	" fold level exceeds 20
+		'j,'ks/\(\({{{\|}}}\)[2-9][0-9]$\)/\1/e
+		if substitute(getline("."),'\(\({{{\|}}}\)[2-9][0-9]$\)','','')!=getline(".") "{{{
+			echo 'ERROR: Fold level exceeds 20!'
+			return
+		endif "}}}
 	" add (2), normal
-		elseif a:level==2 "{{{
-			" if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')!=getline('.') "{{{
-			'j,'ks/\({{{\|}}}\)\@<=\d\{0,2\}$/\=submatch(0)+1/e "}}}
+		if a:level==2 "{{{
+			'j,'ks/\({{{\|}}}\)\@<=\d\{0,2\}$/\=submatch(0)+1/e
 	" add (3), visual
-		elseif a:level==3 "{{{
+		elseif a:level==3
 			call MappingMarker(0)
 			call ChangeFoldLevel(2)
 		endif "}}}
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " delete lines "{{{3
 function! EmptyLines(line) "{{{
@@ -219,7 +225,7 @@ function! EmptyLines(line) "{{{
 		g/^$/delete
 	endif
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " current time {{{3
 " there should be at least 5 lines in a file
@@ -236,7 +242,7 @@ function! CurrentTime(time) "{{{
 			s/^/\=strftime('%b %d | %a | %Y')/
 		endif
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " creat page number "{{{3
 function! PageNumber() "{{{
@@ -256,16 +262,18 @@ function! PageNumber() "{{{
 		1s/^\(.*\)$/\1\r\1/
 		1s/2$/1/|$s/2$/1/
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " Scratch buffer "{{{3
 " switch to Scratch
 function! SwitchToScratch() "{{{
-	if bufwinnr(2)==-1
-		buffer 2
-	else
-		execute bufwinnr(2) . 'wincmd w'
-	endif
+	" not loaded
+		if bufwinnr(2)==-1
+			buffer 2
+	" loaded, switch to Scratch
+		elseif bufwinnr(2)!=bufwinnr('%')
+			execute bufwinnr(2) . 'wincmd w'
+		endif
 endfunction "}}}
 " creat (0) and edit (1)
 " substitute (2), insert (3) and append (4)
@@ -322,7 +330,7 @@ function! ScratchBuffer(scratch) "{{{
 				1g/^$/d
 				set foldenable
 				'H
-			" }}}
+			 "}}}
 			endif "}}}
 	" visual mode
 		elseif a:scratch==6 "{{{
@@ -330,7 +338,7 @@ function! ScratchBuffer(scratch) "{{{
 			call ScratchBuffer(5) "}}}
 		endif
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " GTD "{{{3
 
@@ -352,7 +360,7 @@ endfunction "}}}
 function! F1_GTD() "{{{
 	call F1_Normal_GTD()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F2> "{{{4
 function! AnotherDay_GTD() "{{{
@@ -382,7 +390,7 @@ endfunction "}}}
 function! F2_GTD() "{{{
 	call F2_Normal_GTD()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F3> "{{{4
 " weekly check
@@ -406,14 +414,14 @@ endfunction "}}}
 function! F3_GTD() "{{{
 	call F3_Normal_GTD()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 function! GetThingsDone() "{{{
 	call F1_GTD()
 	call F2_GTD()
 	call F3_GTD()
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " English vocabulary "{{{3
 
@@ -434,7 +442,7 @@ function! F1_Vocab() "{{{
 	call F1_Shift_Normal_Vocab()
 	call F1_Visual_Vocab()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F2> "{{{4
 " search word
@@ -445,7 +453,7 @@ endfunction "}}}
 function! F2_Vocab() "{{{
 	call F2_Normal_Vocab()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F3> "{{{4
 " insert brackets
@@ -465,7 +473,7 @@ function! F3_Vocab() "{{{
 	call F3_Shift_Normal_Vocab()
 	call F3_Visual_Vocab()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F4> "{{{4
 " update word list
@@ -473,7 +481,7 @@ endfunction "}}}
 " Word List {{{
 " [word 1]
 " [word 2]
-" }}}
+ "}}}
 function! UpdateWordList_Vocab() "{{{
 	" h: cursor line | l: last line
 		mark h|$mark l
@@ -505,7 +513,7 @@ function! F4_Vocab() "{{{
 	call F4_Normal_Vocab()
 	call F4_Shift_Normal_Vocab()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F5> "{{{4
 " collect word lists
@@ -531,7 +539,7 @@ endfunction "}}}
 function! F5_Vocab() "{{{
 	call F5_Normal_Vocab()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 function! Vocabulary() "{{{
 	call F1_Vocab()
@@ -540,7 +548,7 @@ function! Vocabulary() "{{{
 	call F4_Vocab()
 	call F5_Vocab()
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " Repository "{{{3
 
@@ -599,7 +607,7 @@ function! F1_Repo() "{{{
 	call F1_Visual_Repo()
 	call F1_Shift_Normal_Repo()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F2> "{{{4
 " put text into Scratch, append
@@ -614,7 +622,7 @@ function! F2_Repo() "{{{
 	call F2_Normal_Repo()
 	call F2_Visual_Repo()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F3> "{{{4
 " switch 'modifiable'
@@ -625,7 +633,7 @@ endfunction "}}}
 function! F3_Repo() "{{{
 	call F3_Normal_Repo()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 function! Repository(repo) "{{{
 	if a:repo==0
@@ -636,7 +644,7 @@ function! Repository(repo) "{{{
 		call Update_Repo()
 	endif
 endfunction "}}}
-" }}}3
+ "}}}3
 
 " Localization "{{{3
 
@@ -713,7 +721,7 @@ function! F1_Loc() "{{{
 	call F1_Visual_Loc()
 	call F1_Shift_Normal_Loc()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F2> "{{{4
 " search current buffer and put cursor after the first '\t'
@@ -749,7 +757,7 @@ function! F2_Loc() "{{{
 	call F2_Shift_Normal_Loc()
 	call F2_Shift_Visual_Loc()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F3> "{{{4
 " put '<c-r>/' text into tmp buffer
@@ -778,7 +786,7 @@ function! F3_Loc() "{{{
 	call F3_Normal_Loc()
 	call F3_Shift_Normal_Loc()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F4> "{{{4
 " substitute words
@@ -816,7 +824,7 @@ function! F4_Loc() "{{{
 	call F4_Visual_Loc()
 	call F4_Shift_Visual_Loc()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F5> "{{{4
 " search and complete missing lines
@@ -856,7 +864,7 @@ function! F5_Loc() "{{{
 	call F5_Visual_Loc()
 	call F5_Shift_Normal_Loc()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F6> "{{{4
 " add text to bug fix
@@ -880,7 +888,7 @@ function! F6_Loc() "{{{
 	call F6_Normal_Loc()
 	call F6_Shift_Normal_Loc()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F7> "{{{4
 " put text into the lower-right buffer
@@ -912,7 +920,7 @@ function! F7_Loc() "{{{
 	call F7_Shift_Normal_Loc()
 	call F7_Shift_Visual_Loc()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 " Function key: <F8> "{{{4
 " move cursor to Chinese in an Excel line
@@ -929,7 +937,7 @@ function! F8_Loc() "{{{
 	call F8_Normal_Loc()
 	call F8_Shift_Normal_Loc()
 endfunction "}}}
-" }}}4
+ "}}}4
 
 function! Localization() "{{{
 	call F1_Loc()
@@ -941,8 +949,8 @@ function! Localization() "{{{
 	call F7_Loc()
 	call F8_Loc()
 endfunction "}}}
-" }}}3
-" }}}2
+ "}}}3
+ "}}}2
 
 " Vim settings "{{{2
 
@@ -951,7 +959,7 @@ set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf-8,cp936,latin1
 set nobomb
-" }}}3
+ "}}}3
 
 " Display "{{{3
 " text line
@@ -1019,7 +1027,7 @@ if CheckOS()=='windows' "{{{
 elseif CheckOS()=='linux'
 	set guifont=DejaVu\ Sans\ \Mono\ 14
 endif "}}}
-" }}}3
+ "}}}3
 
 " Editing "{{{3
 set modelines=1
@@ -1050,8 +1058,8 @@ if CheckOS()=='windows' "{{{
 elseif CheckOS()=='linux'
 	cd ~/documents/
 endif "}}}
-" }}}3
-" }}}2
+ "}}}3
+ "}}}2
 
 " Key mappings and abbreviations "{{{2
 
@@ -1059,27 +1067,27 @@ endif "}}}
 " see below: '; and :'
 set timeoutlen=0
 let mapleader='\'
-" }}}
+ "}}}
 " switch case "{{{
 nnoremap ` ~
 vnoremap ` ~
-" }}}
+ "}}}
 " search backward "{{{
 nnoremap , ?
 vnoremap , ?
-" }}}
+ "}}}
 " save "{{{
 nnoremap <silent> <cr> :wa<cr>
-" }}}
+ "}}}
 " open or close fold "{{{
 nnoremap <space> za
-" }}}
+ "}}}
 " move to mark "{{{
 nnoremap ' `
-" }}}
+ "}}}
 " modified 'Y' "{{{
 nnoremap Y y$
-" }}}
+ "}}}
 " ';', ',' and ':' "{{{
 nnoremap ; :
 nnoremap <c-n> ;
@@ -1087,13 +1095,13 @@ nnoremap <a-n> ,
 vnoremap ; :
 vnoremap <c-n> ;
 vnoremap <a-n> ,
-" }}}
+ "}}}
 " gj and  gk "{{{
 nnoremap <c-j> gj
 nnoremap <c-k> gk
 vnoremap <c-j> gj
 vnoremap <c-k> gk
-" }}}
+ "}}}
 " ^ and $ "{{{
 nnoremap 0 ^
 nnoremap - $
@@ -1104,27 +1112,27 @@ vnoremap ^ 0
 onoremap 0 ^
 onoremap - $
 onoremap ^ 0
-" }}}
+ "}}}
 " jump between brackets "{{{
 nnoremap q %
 vnoremap q %
 onoremap q %
-" }}}
+ "}}}
 " A-B substitute "{{{
 nnoremap <silent> <a-q> :%s/<c-r>a/<c-r>b/gc<cr>
 vnoremap <silent> <a-q> "by:%s/<c-r>a/<c-r>b/gc<cr>
-" }}}
+ "}}}
 " switch settings "{{{
 nnoremap <silent> <c-\> :SwHlsearch<cr>
 nnoremap <silent> <a-\> :SwLinebreak<cr>
 nnoremap <silent> \ :SwBackground<cr>
-" }}}
+ "}}}
 " change fold level "{{{
 nnoremap <silent> <a-=> :FlAdd<cr>
 vnoremap <silent> <a-=> <esc>:FlVAdd<cr>
 nnoremap <silent> <a--> :FlSub<cr>
 vnoremap <silent> <a--> <esc>:FlVSub<cr>
-" }}}
+ "}}}
 " append, insert and creat fold marker "{{{
 nnoremap <silent> <tab> :FmAfter<cr>
 nnoremap <silent> <s-tab> :FmBefore<cr>
@@ -1132,13 +1140,13 @@ nnoremap <silent> <c-tab> :FmInside<cr>
 nnoremap <silent> ~ :FmCreat<cr>
 nnoremap <silent> Q :FmWrap<cr>
 vnoremap <silent> Q <esc>:FmVWrap<cr>
-" }}}
+ "}}}
 " search visual selection "{{{
 " forward, backward and yank match pattern
 vnoremap <silent> <tab> y:%s/<c-r>"\c//gn<cr>/<c-r>/<cr>''
 vnoremap <silent> <s-tab> y:%s/<c-r>"\c//gn<cr>?<c-r>/<cr>''
 vnoremap <silent> <c-tab> y:%s/<c-r>"\c//gn\|let @a=''\|g/<c-r>"\c/y A\|let @"=@a<cr>
-" }}}
+ "}}}
 " Scratch buffer "{{{
 " edit
 nnoremap <silent> <c-q> :ScrEdit<cr>
@@ -1154,28 +1162,28 @@ vnoremap <silent> <c-backspace> y:ScrBefore<cr>
 " move
 nnoremap <silent> <a-backspace> :ScrMove<cr>
 vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
-" }}}
-" }}}2
+ "}}}
+ "}}}2
 
 " User defined commands "{{{2
 
 " insert bullet points "{{{
 command! Bullet call BulletPoint()
-" }}}
+ "}}}
 " creat page number "{{{
 command! Page call PageNumber()
-" }}}
+ "}}}
 " update current time "{{{
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
 command! TimeStamp call CurrentTime(0)|normal ''zz
 command! Date call CurrentTime(1)
-" }}}
+ "}}}
 " delete empty lines "{{{
 command! DelEmpty call EmptyLines(1)
 command! DelAdd call EmptyLines(0)
-" }}}
+ "}}}
 " Scratch buffer "{{{
 " put text to Scratch
 command! ScrAfter call ScratchBuffer(4)
@@ -1188,7 +1196,7 @@ command! ScrEdit call ScratchBuffer(1)
 " move text between Scratch and other buffers
 command! ScrMove call ScratchBuffer(5)
 command! ScrVMove call ScratchBuffer(6)
-" }}}
+ "}}}
 " folds "{{{
 " change fold level
 command! FlSub call ChangeFoldLevel(0)
@@ -1202,27 +1210,27 @@ command! FmBefore call MoveFoldMarker(2)
 command! FmInside call MoveFoldMarker(3)
 command! FmWrap call MoveFoldMarker(4)
 command! FmVWrap call MoveFoldMarker(5)
-" }}}
+ "}}}
 " switch settings "{{{
 command! SwHlsearch call SwitchSettings('hlsearch')
 command! SwLinebreak call SwitchSettings('linebreak')
 command! SwBackground call SwitchSettings('background')
-" }}}
+ "}}}
 " Chines word count "{{{
 command! Word %s/[^\x00-\xff]//gn
-" }}}
+ "}}}
 " load key mappings "{{{
 command! KeVocab call Vocabulary()
 command! KeLocal call Localization()
 command! KeGTD call GetThingsDone()
 command! KeRepo call Repository(0)
-" }}}
+ "}}}
 " localization "{{{
 command! LoFormat call FileFormat_Loc()
-" }}}
+ "}}}
 " edit .vimrc "{{{
 command! EdVimrc e $MYVIMRC
-" }}}
+ "}}}
 " autocommands "{{{
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
@@ -1230,6 +1238,6 @@ autocmd BufRead *.vocab call Vocabulary()
 autocmd BufRead *.repo call Repository(0)
 autocmd BufWrite *.repo call Repository(1)
 autocmd VimEnter * call ScratchBuffer(0)
-" }}}
-" }}}2
+ "}}}
+ "}}}2
 " vim: set nolinebreak number foldlevel=20: "}}}1
