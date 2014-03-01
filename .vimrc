@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 01, Sat | 03:37:57 | 2014
+" Last Update: Mar 01, Sat | 13:44:33 | 2014
 
 " Plugins "{{{2
 
@@ -78,22 +78,14 @@ endfunction "}}}
 
 " fold marker "{{{3
 " creat new fold marker
+" DO NOT call 'CreatFoldMarker()' alone
+" call 'MoveFoldMarker()' instead
+" which has fail-safe 'substitute()'
 function! CreatFoldMarker(level) "{{{
 	" level one
 		if a:level==0 "{{{
 			s/$/\rFOLDMARKER {{{\r }}}/
 			.-1,.s/$/1/
-		endif "}}}
-	" detect fold
-		mark h "{{{
-		normal [z
-		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')==getline('.')
-			" fold dose not exsist
-			echo "ERROR: Fold '[z' not found! (CreatFoldMarker)"
-			'h
-			return
-		else
-			'h
 		endif "}}}
 	" detect cursor position
 		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')!=getline('.') "{{{
@@ -130,7 +122,7 @@ function! MoveFoldMarker(position) "{{{
 		normal [z
 		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')==getline('.')
 			" fold dose not exsist
-			echo "ERROR: Fold '[z' not found! (MoveFoldMarker)"
+			echo "ERROR: Fold '[z' not found!"
 			'h
 			return
 		else
@@ -198,21 +190,22 @@ endfunction "}}}
 " change fold level "{{{3
 function! ChangeFoldLevel(level)  "{{{
 	" substract (0), normal
-		if a:level==0
+		if a:level==0 "{{{
 			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)-1/e
-			'j,'ks/\({{{\|}}}\)\@<=0$//e
+			'j,'ks/\({{{\|}}}\)\@<=0$//e "}}}
 	" substract (1), visual
-		elseif a:level==1
+		elseif a:level==1 "{{{
 			call MappingMarker(0)
-			call ChangeFoldLevel(0)
+			call ChangeFoldLevel(0) "}}}
 	" add (2), normal
-		elseif a:level==2
-			'j,'ks/\({{{\|}}}\)\@<=\d\{0,2\}$/\=submatch(0)+1/e
+		elseif a:level==2 "{{{
+			" if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')!=getline('.') "{{{
+			'j,'ks/\({{{\|}}}\)\@<=\d\{0,2\}$/\=submatch(0)+1/e "}}}
 	" add (3), visual
-		elseif a:level==3
+		elseif a:level==3 "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(2)
-		endif
+		endif "}}}
 endfunction "}}}
 " }}}3
 
@@ -1118,8 +1111,8 @@ vnoremap q %
 onoremap q %
 " }}}
 " A-B substitute "{{{
-nnoremap <a-q> :%s/<c-r>a/<c-r>b/gc<cr>
-vnoremap <a-q> "by:%s/<c-r>a/<c-r>b/gc<cr>
+nnoremap <silent> <a-q> :%s/<c-r>a/<c-r>b/gc<cr>
+vnoremap <silent> <a-q> "by:%s/<c-r>a/<c-r>b/gc<cr>
 " }}}
 " switch settings "{{{
 nnoremap <silent> <c-\> :SwHlsearch<cr>
@@ -1133,12 +1126,12 @@ nnoremap <silent> <a--> :FlSub<cr>
 vnoremap <silent> <a--> <esc>:FlVSub<cr>
 " }}}
 " append, insert and creat fold marker "{{{
-nnoremap <tab> :FmAfter<cr>
-nnoremap <s-tab> :FmBefore<cr>
-nnoremap <c-tab> :FmInside<cr>
-nnoremap ~ :FmCreat<cr>
-nnoremap Q :FmWrap<cr>
-vnoremap Q <esc>:FmVWrap<cr>
+nnoremap <silent> <tab> :FmAfter<cr>
+nnoremap <silent> <s-tab> :FmBefore<cr>
+nnoremap <silent> <c-tab> :FmInside<cr>
+nnoremap <silent> ~ :FmCreat<cr>
+nnoremap <silent> Q :FmWrap<cr>
+vnoremap <silent> Q <esc>:FmVWrap<cr>
 " }}}
 " search visual selection "{{{
 " forward, backward and yank match pattern
