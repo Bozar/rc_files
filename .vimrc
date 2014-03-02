@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 02, Sun | 23:32:34 | 2014
+" Last Update: Mar 03, Mon | 00:45:47 | 2014
 
 " Plugins "{{{2
 
@@ -394,7 +394,7 @@ function! AnotherDay_GTD() "{{{
 	" insert new lines for another day
 		call MoveFoldMarker(2)
 		'h-2mark z
-		'h,'lyank
+		'h,'l-1yank
 		'zput
 	" change date
 		'z+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1/
