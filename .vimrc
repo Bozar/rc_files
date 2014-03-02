@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 02, Sun | 19:58:45 | 2014
+" Last Update: Mar 02, Sun | 23:32:34 | 2014
 
 " Plugins "{{{2
 
@@ -58,15 +58,15 @@ function! SearchPattern(pattern) "{{{
 	" yank all matched pattern
 		elseif a:pattern==2 "{{{
 			let @x=''
-			execute substitute('g/0/yank X','0',@",'')
+			execute 'g/'.@".'/yank X'
 			let @"=@x
 			'' "}}}
 		endif
 	" count matches 2
-		execute substitute('%s/0//gn','0',@z,'')
+		execute '%s/'.@z.'//gn'
 	" vim grep
 		if a:pattern==3 "{{{
-			execute substitute('vim /0/ %','0',@",'') 
+			execute 'vim /'.@".'/ %'
 		endif "}}}
 endfunction "}}}
  "}}}3
@@ -1248,4 +1248,4 @@ autocmd BufWrite *.repo call Repository(1)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
  "}}}2
-" vim: set nolinebreak number foldlevel=20: "}}}1
+" vim: set nolinebreak number foldlevel=20: "}}}1f
