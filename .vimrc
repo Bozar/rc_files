@@ -1248,4 +1248,4 @@ autocmd BufWrite *.repo call Repository(1)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
  "}}}2
-" vim: set nolinebreak number foldlevel=20: "}}}1f
+" vim: set nolinebreak number foldlevel=20: "}}}1
