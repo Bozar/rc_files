@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 03, Mon | 22:25:26 | 2014
+" Last Update: Mar 04, Tue | 00:19:08 | 2014
 
 " Plugins "{{{2
 
@@ -103,6 +103,14 @@ function! MappingMarker(marker) "{{{
 endfunction "}}}
  "}}}3
 
+" detect cursor position "{{{3
+function! CursorAtFoldBegin() "{{{
+	if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')!=getline('.')
+		+1
+	endif
+endfunction "}}}
+ "}}}3
+
 " fold marker "{{{3
 " creat new fold marker
 " DO NOT call 'CreatFoldMarker()' alone
@@ -114,10 +122,8 @@ function! CreatFoldMarker(level) "{{{
 			s/$/\rFOLDMARKER {{{\r }}}/
 			.-1,.s/$/1/
 		endif "}}}
-	" detect cursor position
-		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')!=getline('.') "{{{
-			+1
-		endif "}}}
+	" move cursor
+		call CursorAtFoldBegin()
 	" same level
 		if a:level==1 "{{{
 			normal [zmh]zml
@@ -377,15 +383,34 @@ endfunction "}}}
 " GTD "{{{3
 
 " Function key: <F1> "{{{4
-" to-do (*) and finished (~)
 function! Finished_GTD() "{{{
-	" substitute '*' with '~'
-		if substitute(getline('.'),'^\t\*','','')!=getline('.')
-			s/^\t\*/\t\~/
-	" substitute '~' with '*'
-		elseif substitute(getline('.'),'^\t\~','','')!=getline('.')
-			s/^\t\~/\t\*/
-		endif
+	mark h
+	call CursorAtFoldBegin()
+	normal [z
+	if substitute(getline('.'),'^两周计划','','')!=getline('.') "{{{
+		" weekly check
+			'h
+		" finished to unfinished
+			if substitute(getline('.'),'（完成）$','','')!=getline('.')
+				s/（完成）$/（未完成）/
+		" unfinished to blank
+			elseif substitute(getline('.'),'（未完成）$','','')!=getline('.')
+				s/（未完成）$//
+		" blank to finished
+			else
+				s/$/（完成）/
+			endif "}}}
+	else "{{{
+		" daily marks: to-do (*) and finished (~)
+			'h
+		" substitute '*' with '~'
+			if substitute(getline('.'),'^\t\*','','')!=getline('.')
+				s/^\t\*/\t\~/
+		" substitute '~' with '*'
+			elseif substitute(getline('.'),'^\t\~','','')!=getline('.')
+				s/^\t\~/\t\*/
+			endif "}}}
+	endif
 endfunction "}}}
 function! F1_Normal_GTD() "{{{
 	nnoremap <buffer> <silent> <f1> :call Finished_GTD()<cr>
@@ -397,6 +422,21 @@ endfunction "}}}
  "}}}4
 
 " Function key: <F2> "{{{4
+" progress bar: substitute 'page 2-5' with 'page 6-'
+function! Numbers_GTD() "{{{
+	s/\(\d\+-\)\@<=\(\d\+\)/\=submatch(0)+1/e
+	s/\d\+-\(\d\)\+/\1-/e
+endfunction "}}}
+function! F2_Normal_GTD() "{{{
+	nnoremap <buffer> <silent> <f2> :call Numbers_GTD()<cr>
+endfunction "}}}
+
+function! F2_GTD() "{{{
+	call F2_Normal_GTD()
+endfunction "}}}
+ "}}}4
+
+" Function key: <F3> "{{{4
 function! AnotherDay_GTD() "{{{
 	" insert new lines for another day
 		call MoveFoldMarker(2)
@@ -417,32 +457,8 @@ function! AnotherDay_GTD() "{{{
 		+2
 		normal wma
 endfunction "}}}
-function! F2_Normal_GTD() "{{{
-	nnoremap <buffer> <silent> <f2> :call AnotherDay_GTD()<cr>
-endfunction "}}}
-
-function! F2_GTD() "{{{
-	call F2_Normal_GTD()
-endfunction "}}}
- "}}}4
-
-" Function key: <F3> "{{{4
-" weekly check
-" switch between 'blank', 'finished' and 'unfinished'
-function! WeeklyCheck_GTD(week) "{{{
-	" 'finished' to 'unfinished'
-		if substitute(getline('.'),'（完成）$','','')!=getline('.')
-			s/（完成）$/（未完成）/
-	" 'unfinished' to 'blank'
-		elseif substitute(getline('.'),'（未完成）$','','')!=getline('.')
-			s/（未完成）$//
-	" 'blank' to 'finished'
-		else
-			s/$/（完成）/
-		endif
-endfunction "}}}
 function! F3_Normal_GTD() "{{{
-	nnoremap <buffer> <silent> <f3> :call WeeklyCheck_GTD(0)<cr>
+	nnoremap <buffer> <silent> <f3> :call AnotherDay_GTD()<cr>
 endfunction "}}}
 
 function! F3_GTD() "{{{
