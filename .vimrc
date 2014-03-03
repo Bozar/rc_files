@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 03, Mon | 00:45:47 | 2014
+" Last Update: Mar 03, Mon | 22:10:32 | 2014
 
 " Plugins "{{{2
 
@@ -302,9 +302,10 @@ function! SwitchToScratch() "{{{
 			execute bufwinnr(2) . 'wincmd w'
 		endif
 endfunction "}}}
-" creat (0) and edit (1)
+" creat the first Scratch (0), edit (1)
 " substitute (2), insert (3) and append (4)
 " move (5,6) text between buffers
+" creat more Scratches (7)
 function! ScratchBuffer(scratch) "{{{
 	" creat Scratch
 		if a:scratch==0 "{{{
@@ -314,13 +315,15 @@ function! ScratchBuffer(scratch) "{{{
 			setlocal noswapfile
 			setlocal nobuflisted
 			s/^/SCRATCH_BUFFER\r/
-			close "}}}
+			close
+		endif "}}}
 	" detect if Scratch exsists
-		elseif bufexists(2)==0 "{{{
-			echo 'ERROR: No Scratch Buffer 2!'
-			return "}}}
+		if bufexists(2)==0 "{{{
+			echo 'ERROR: Scratch Buffer 2 not found!'
+			return
+		endif "}}}
 	" edit Scratch
-		elseif a:scratch==1 "{{{
+		if a:scratch==1 "{{{
 			call SwitchToScratch() "}}}
 	" substitute whole Scratch
 		elseif a:scratch==2 "{{{
@@ -356,13 +359,17 @@ function! ScratchBuffer(scratch) "{{{
 				'Hput
 				1g/^$/d
 				set foldenable
-				'H
-			 "}}}
+				'H "}}}
 			endif "}}}
 	" visual mode
 		elseif a:scratch==6 "{{{
 			call MappingMarker(0)
 			call ScratchBuffer(5) "}}}
+	" creat more Scratches
+		elseif a:scratch==7 "{{{
+			call ScratchBuffer(0)
+			echo 'Scratch buffer' bufnr('$') 'created!'
+			"}}}
 		endif
 endfunction "}}}
  "}}}3
@@ -1198,7 +1205,7 @@ command! ScrAfter call ScratchBuffer(4)
 command! ScrBefore call ScratchBuffer(3)
 command! ScrSubs call ScratchBuffer(2)
 " creat new Scratch
-command! ScrCreat call ScratchBuffer(0)|ls!
+command! ScrCreat call ScratchBuffer(7)
 " edit Scratch
 command! ScrEdit call ScratchBuffer(1)
 " move text between Scratch and other buffers
