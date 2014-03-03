@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 03, Mon | 22:10:32 | 2014
+" Last Update: Mar 03, Mon | 22:25:26 | 2014
 
 " Plugins "{{{2
 
@@ -430,15 +430,15 @@ endfunction "}}}
 " weekly check
 " switch between 'blank', 'finished' and 'unfinished'
 function! WeeklyCheck_GTD(week) "{{{
-	" 'blank' to 'finished'
-		if substitute(getline('.'),'完成）$','','')==getline('.')
-			s/$/（完成）/
 	" 'finished' to 'unfinished'
-		elseif substitute(getline('.'),'（完成）$','','')!=getline('.')
+		if substitute(getline('.'),'（完成）$','','')!=getline('.')
 			s/（完成）$/（未完成）/
 	" 'unfinished' to 'blank'
 		elseif substitute(getline('.'),'（未完成）$','','')!=getline('.')
 			s/（未完成）$//
+	" 'blank' to 'finished'
+		else
+			s/$/（完成）/
 		endif
 endfunction "}}}
 function! F3_Normal_GTD() "{{{
