@@ -1,11 +1,11 @@
-" ellesime/trow post style "{{{1
-" Last Update: Feb 16, Sun | 20:20:48 | 2014
+" ellesime/trow post format "{{{1
+" Last Update: Mar 03, Mon | 21:40:28 | 2014
 
 " substitution "{{{2
 
 " title "{{{3
 function! Title_ET(forum) "{{{
-	" ellesime style
+	" ellesime format
 		if a:forum==0
 			" markdown bracket
 				1g/^\[markdown\]$/delete
@@ -19,7 +19,7 @@ function! Title_ET(forum) "{{{
 			" sub title 2
 				g/^#\{4\}\s/s/$/[\/size]/e
 				%s/^#\{4\}\s/[size=12pt]/e
-	" trow style
+	" trow format
 		elseif a:forum==1
 			" markdown bracket
 				1s/^/[markdown]\r
@@ -40,7 +40,7 @@ endfunction "}}}
 
 " paragraph "{{{3
 function! Paragraph_ET(forum) "{{{
-	" ellesime style
+	" ellesime format
 		if a:forum==0
 			" seperation line
 				%s/^_\{3,\}$/[hr]/e
@@ -58,7 +58,7 @@ function! Paragraph_ET(forum) "{{{
 				g/^\[list\]\[list\]\(\[li\]\)\@!/s/$/[\/list][\/list]/e
 				g/^\(\[list\]\)\@<!\[list\]\[li\]/s/$/[\/li][\/list]/e
 				g/^\(\[list\]\)\@<!\[list\]\(\[li\]\|\[list\]\)\@!/s/$/[\/list]/e
-	" trow style
+	" trow format
 		elseif a:forum==1
 			" seperation line
 				%s/^\[hr\]$/__________/e
@@ -77,7 +77,7 @@ endfunction "}}}
 
 " character "{{{3
 function! Character_ET(forum) "{{{
-	" ellesime style
+	" ellesime format
 		if a:forum==0
 			" hyper-link, [text](url) <--> [url=]text[/url]
 			" cut brackets '[]'
@@ -90,7 +90,7 @@ function! Character_ET(forum) "{{{
 				g/(http/s/^\((http.\{-\})\)/\1\r/e
 			" join [text] and (url)
 				g/^(http/.-1,.join!
-			" change style
+			" change format
 				g/(http/s/^\[\(.\{-\}\)\](\(http.\{-}\))$/[url=\2]\1[\/url]/e
 			" join lines begin/end with brackets '[]'
 				g/\]$/.-1,.+1join!
@@ -98,7 +98,7 @@ function! Character_ET(forum) "{{{
 				%s/\*\{2\}\(.\{-\}\)\*\{2\}/[b]\1[\/b]/ge
 			" italic
 				%s/\*\([^\s].\{-\}\)\*/[i]\1[\/i]/ge
-	" trow style
+	" trow format
 		elseif a:forum==1
 			" hyper-link
 				%s/\(\[url=.\{-\}\/url]\)/\r\1\r/ge
@@ -126,9 +126,15 @@ endfunction "}}}
 " }}}3
 " }}}2
 
+" key mapping "{{{2
+
+nnoremap <buffer> <silent> <f1> :call ZEllesime<cr>
+nnoremap <buffer> <silent> <f2> :call ZTrow<cr>
+ "}}}2
+
 " command "{{{2
 
-command! PoEllesime call Ellesime_ET()
-command! PoTrow call Trow_ET()
+command! ZEllesime call Ellesime_ET()
+command! ZTrow call Trow_ET()
 " }}}2
 " vim: set nolinebreak number foldlevel=20: "}}}1
