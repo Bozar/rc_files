@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 04, Tue | 00:19:08 | 2014
+" Last Update: Mar 04, Tue | 01:19:18 | 2014
 
 " Plugins "{{{2
 
@@ -425,7 +425,7 @@ endfunction "}}}
 " progress bar: substitute 'page 2-5' with 'page 6-'
 function! Numbers_GTD() "{{{
 	s/\(\d\+-\)\@<=\(\d\+\)/\=submatch(0)+1/e
-	s/\d\+-\(\d\)\+/\1-/e
+	s/\d\+-\(\d\+\)/\1-/e
 endfunction "}}}
 function! F2_Normal_GTD() "{{{
 	nnoremap <buffer> <silent> <f2> :call Numbers_GTD()<cr>
