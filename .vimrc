@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 04, Tue | 01:19:18 | 2014
+" Last Update: Mar 04, Tue | 09:22:05 | 2014
 
 " Plugins "{{{2
 
@@ -116,16 +116,16 @@ endfunction "}}}
 " DO NOT call 'CreatFoldMarker()' alone
 " call 'MoveFoldMarker()' instead
 " which has fail-safe protocol 'substitute()'
-function! CreatFoldMarker(level) "{{{
+function! CreatFoldMarker(creat) "{{{
 	" level one
-		if a:level==0 "{{{
+		if a:creat==0 "{{{
 			s/$/\rFOLDMARKER {{{\r }}}/
 			.-1,.s/$/1/
 		endif "}}}
 	" move cursor
 		call CursorAtFoldBegin()
 	" same level
-		if a:level==1 "{{{
+		if a:creat==1 "{{{
 			normal [zmh]zml
 			'hyank
 			'hput
@@ -134,16 +134,16 @@ function! CreatFoldMarker(level) "{{{
 			'h+2s/{{{/}}}/
 			'h+1s/^/FOLDMARKER/ "}}}
 	" higher level
-		elseif a:level==2 "{{{
+		elseif a:creat==2 "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2s/\(\d\{1,2\}\)$/\=submatch(0)+1/e "}}}
 		endif
 endfunction "}}}
 " new (0), after (1), before (2)
 " inside (3), wrap text (4,5)
-function! MoveFoldMarker(position) "{{{
+function! MoveFoldMarker(move) "{{{
 	" creat level one marker
-		if a:position==0 "{{{
+		if a:move==0 "{{{
 			call CreatFoldMarker(0)
 			mark k
 			-1mark j
@@ -162,19 +162,19 @@ function! MoveFoldMarker(position) "{{{
 			'h
 		endif "}}}
 	" after
-		if a:position==1 "{{{
+		if a:move==1 "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2delete
 			'lput
 			-1 "}}}
 	" before
-		elseif a:position==2 "{{{
+		elseif a:move==2 "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2delete
 			'hput!
 			-1 "}}}
 	" inside
-		elseif a:position==3 "{{{
+		elseif a:move==3 "{{{
 			mark z
 			call CreatFoldMarker(2)
 			'h+1,'h+2delete
@@ -182,7 +182,7 @@ function! MoveFoldMarker(position) "{{{
 			-1 "}}}
 	" wrap text
 	" normal
-		elseif a:position==4 "{{{
+		elseif a:move==4 "{{{
 			call CreatFoldMarker(2)
 			'h+1,'h+2s/\d\{0,2\}$//
 			'h+1,'h+2delete
@@ -195,7 +195,7 @@ function! MoveFoldMarker(position) "{{{
 			normal [z
 		 "}}}
 	" visual
-		elseif a:position==5 "{{{
+		elseif a:move==5 "{{{
 			call MappingMarker(0)
 			call MoveFoldMarker(4) "}}}
 		endif
