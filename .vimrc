@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 04, Tue | 20:58:34 | 2014
+" Last Update: Mar 05, Wed | 00:25:41 | 2014
 
 " Plugins "{{{2
 
@@ -533,21 +533,28 @@ endfunction "}}}
 " [word 2]
  "}}}
 function! UpdateWordList_Vocab() "{{{
-	" h: cursor line | l: last line
-		mark h|$mark l
-	" clear old list
-		?^Word List {{{$?+1;/^ }}}$/-1delete
-	" put whole text to the end
-		1,$yank|$put
-	" delete non-bracket text
-		'l+1,$s/\[/\r[/g
-		'l+1,$s/\]/]\r/g
-		'l+1,$g!/\[/delete
-	" move words back to list
-		'l+1,$delete
+	" h: cursor line
+	" move cursor out of word list
+		mark h
+		normal [z
+		if substitute(getline('.'),'^Word\sList\s{\{3\}$','','')!=getline('.')
+			mark h
+		endif
 		1
-		/^Word List {\{3\}$/put
-		?^Word List {\{3\}?s/$/\r/
+	" clear old list
+		/^Word List {{{$/+2;/^ }}}$/-1delete
+	" put whole text into Scratch
+		1,$yank
+		call ScratchBuffer(2)
+	" delete non-bracket text
+		%s/\[/\r[/ge
+		%s/\]/]\r/ge
+		g!/\[/delete
+	" move words back to list
+		1,$yank
+		buffer #
+		1
+		/^Word List {\{3\}$/+1put
 	" back to cursor line
 		'h
 endfunction "}}}
