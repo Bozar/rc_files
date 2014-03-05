@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 05, Wed | 00:25:41 | 2014
+" Last Update: Mar 05, Wed | 13:28:44 | 2014
 
 " Plugins "{{{2
 
@@ -27,19 +27,22 @@ endfunction "}}}
 
 " switch settings "{{{3
 function! SwitchSettings(setting) "{{{
-	if a:setting=='hlsearch'
+	if a:setting=='0' "{{{
 		set hlsearch!
-		set hlsearch?
-	elseif a:setting=='linebreak'
+		set hlsearch? "}}}
+	elseif a:setting=='1' "{{{
 		set linebreak!
-		set linebreak?
+		set linebreak? "}}}
 	" :h expr-option
-	elseif a:setting=='background'
+	elseif a:setting=='2' "{{{
 		if &background=='dark'
 			set background=light
 		else
 			set background=dark
-		endif
+		endif "}}}
+	elseif a:setting=='3' "{{{
+		set modifiable!
+		set modifiable? "}}}
 	endif
 endfunction "}}}
  "}}}3
@@ -149,7 +152,7 @@ function! MoveFoldMarker(move) "{{{
 			-1mark j
 			-1
 		endif "}}}
-	" in related to current marker
+	" in related to marker
 	" detect fold
 		mark h
 		normal [z
@@ -260,20 +263,44 @@ function! EmptyLines(line) "{{{
 endfunction "}}}
  "}}}3
 
-" current time "{{{3
-" there should be at least 5 lines in a file
+" time stamp "{{{3
+" 'Date:' and 'Last Update:'
+" there should be at least 3 lines in a file
 " year (%Y) | month (%b) | day (%d) | weekday (%a)
 " hour (%H) | miniute (%M) | second (%S)
-function! CurrentTime(time) "{{{
-	" update time
-		if a:time==0
-			1,5s/\(Last\sUpdate:\s\|最后更新：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
-			$-4,$s/\(Last\sUpdate:\s\|最后更新：\)\@<=.*$/\=strftime('%b %d, %a | %H:%M:%S | %Y')/e
-	" append time
-		elseif a:time==1
-			s/$/\r/
-			s/^/\=strftime('%b %d | %a | %Y')/
+function! TimeStamp(time) "{{{
+	" check lines
+		mark h "{{{
+		if line('$')<3
+			echo 'ERROR: There should be at least 3 lines!'
+			'h
+			return
 		endif
+		let @z="s/\\(Date:\\s\\)\\@<=.*$/\\=strftime('%b %d | %a | %Y')/e"
+		let @x="s/\\(Last\\sUpdate:\\s\\)\\@<=.*$/\\=strftime('%b %d, %a | %H:%M:%S | %Y')/e"
+		 "}}}
+	" creat new date
+		if a:time==0 "{{{
+			s/$/\rDate: /
+			execute @z
+			s/$/\rLast Update: /
+			execute @x
+			return
+		endif "}}}
+	" update time
+	" detect time stamp
+		" if begins "{{{
+		if substitute(string(getline(1,3)),'Last\sUpdate:\s','','')==string(getline(1,3))
+			\ && substitute(string(getline(line('$')-2,'$')),'Last\sUpdate:\s','','')==string(getline(line('$')-2,'$'))
+			echo 'ERROR: Time marker not found!'
+			'h
+			return
+		endif "}}}
+		if a:time==1 "{{{
+			execute '1,3'.@x
+			execute '$-2,$'.@x
+			'h
+		endif "}}}
 endfunction "}}}
  "}}}3
 
@@ -609,99 +636,27 @@ endfunction "}}}
 
 " Repository "{{{3
 
-" new date
-function! Update_Repo() "{{{
-	mark h
-	1s/^\(Last Update:\).*$/\1/
-	call CurrentTime(1)
-	1,2join
-	'h
-endfunction "}}}
-" put repository text to Scratch
-function! PutIntoScratch_Repo(put) "{{{
-	" normal, substitute
-		if a:put==0 "{{{
-			yank
-			call ScratchBuffer(0) "}}}
-	" visual, substitute
-		elseif a:put==1 "{{{
-			'<,'>yank
-			call ScratchBuffer(0) "}}}
-	" normal, append
-		elseif a:put==2 "{{{
-			yank
-			call ScratchBuffer(2) "}}}
-	" visual, append
-		elseif a:put==3 "{{{
-			'<,'>yank
-			call ScratchBuffer(2) "}}}
-		endif
-endfunction "}}}
 " move whole Scratch to repository
-function! TakeOutScratch_Repo() "{{{
+function! TakeOutScratch_Repo(take) "{{{
 	mark h
 	buffer 2
 	1,$yank
 	buffer #
 	set nofoldenable
 	set modifiable
-	'hput
+	if a:take==0
+		" put before
+		'hput!
+	elseif a:take==1
+		" put after
+		'hput
+	endif
+	'h
 	set foldenable
 endfunction "}}}
-
-" Function key: <F1> "{{{4
-" put text into Scratch, substitute
-function! F1_Normal_Repo() "{{{
-	nnoremap <buffer> <silent> <f1> :call PutIntoScratch_Repo(0)<cr>
-endfunction "}}}
-function! F1_Visual_Repo() "{{{
-	vnoremap <buffer> <silent> <f1> <esc>:call PutIntoScratch_Repo(1)<cr>
-endfunction "}}}
-function! F1_Shift_Normal_Repo() "{{{
-	nnoremap <buffer> <silent> <s-f1> :call TakeOutScratch_Repo()<cr>
-endfunction "}}}
-
-function! F1_Repo() "{{{
-	call F1_Normal_Repo()
-	call F1_Visual_Repo()
-	call F1_Shift_Normal_Repo()
-endfunction "}}}
- "}}}4
-
-" Function key: <F2> "{{{4
-" put text into Scratch, append
-function! F2_Normal_Repo() "{{{
-	nnoremap <buffer> <silent> <f2> :call PutIntoScratch_Repo(2)<cr>
-endfunction "}}}
-function! F2_Visual_Repo() "{{{
-	vnoremap <buffer> <silent> <f2> <esc>:call PutIntoScratch_Repo(3)<cr>
-endfunction "}}}
-
-function! F2_Repo() "{{{
-	call F2_Normal_Repo()
-	call F2_Visual_Repo()
-endfunction "}}}
- "}}}4
-
-" Function key: <F3> "{{{4
-" switch 'modifiable'
-function! F3_Normal_Repo() "{{{
-	nnoremap <buffer> <silent> <f3> :set modifiable!<cr>
-endfunction "}}}
-
-function! F3_Repo() "{{{
-	call F3_Normal_Repo()
-endfunction "}}}
- "}}}4
-
-function! Repository(repo) "{{{
-	if a:repo==0
-		call F1_Repo()
-		call F2_Repo()
-		call F3_Repo()
-	elseif a:repo==1
-		call Update_Repo()
-	endif
+function! Repository() "{{{
+	nnoremap <buffer> <silent> <f1> :call TakeOutScratch_Repo(0)<cr>
+	nnoremap <buffer> <silent> <f2> :call TakeOutScratch_Repo(1)<cr>
 endfunction "}}}
  "}}}3
 
@@ -756,7 +711,7 @@ endfunction "}}}
  "}}}4
 
 " Function key: <F2> "{{{4
-" search current buffer and put cursor after the first '\t'
+" search buffer and put cursor after the first '\t'
 function! F2_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f2> 
 		\ ^yt	gg
@@ -1155,9 +1110,10 @@ nnoremap <silent> <a-q> :ABSubs<cr>
 vnoremap <silent> <a-q> "by:ABSubs<cr>
  "}}}
 " switch settings "{{{
-nnoremap <silent> <c-\> :SwHlsearch<cr>
-nnoremap <silent> <a-\> :SwLinebreak<cr>
 nnoremap <silent> \ :SwBackground<cr>
+nnoremap <silent> <c-\> :SwHlsearch<cr>
+nnoremap <silent> \| :SwModifiable<cr>
+nnoremap <silent> <a-\> :SwLinebreak<cr>
  "}}}
 " change fold level "{{{
 nnoremap <silent> <a-=> :FlAdd<cr>
@@ -1209,8 +1165,8 @@ command! Page call PageNumber()
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
-command! TimeStamp call CurrentTime(0)|normal ''zz
-command! Date call CurrentTime(1)
+command! Time call TimeStamp(1)
+command! Date call TimeStamp(0)
  "}}}
 " delete empty lines "{{{
 command! DelEmpty call EmptyLines(1)
@@ -1252,9 +1208,10 @@ command! FmWrap call MoveFoldMarker(4)
 command! FmVWrap call MoveFoldMarker(5)
  "}}}
 " switch settings "{{{
-command! SwHlsearch call SwitchSettings('hlsearch')
-command! SwLinebreak call SwitchSettings('linebreak')
-command! SwBackground call SwitchSettings('background')
+command! SwHlsearch call SwitchSettings(0)
+command! SwLinebreak call SwitchSettings(1)
+command! SwBackground call SwitchSettings(2)
+command! SwModifiable call SwitchSettings(3)
  "}}}
 " Chines word count "{{{
 command! Word %s/[^\x00-\xff]//gn
@@ -1263,7 +1220,7 @@ command! Word %s/[^\x00-\xff]//gn
 command! KeVocab call Vocabulary()
 command! KeLocal call Localization()
 command! KeGTD call GetThingsDone()
-command! KeRepo call Repository(0)
+command! KeRepo call Repository()
  "}}}
 " localization "{{{
 command! LoFormat call FileFormat_Loc()
@@ -1275,8 +1232,7 @@ command! EdVimrc e $MYVIMRC
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
-autocmd BufRead *.repo call Repository(0)
-autocmd BufWrite *.repo call Repository(1)
+autocmd BufRead *.repo call Repository()
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
  "}}}2
