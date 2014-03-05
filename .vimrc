@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 05, Wed | 21:57:38 | 2014
+" Last Update: Mar 06, Thu | 00:25:20 | 2014
 
 " Plugins "{{{2
 
@@ -562,68 +562,42 @@ endfunction "}}}
 " [word 2]
  "}}}
 function! UpdateWordList_Vocab() "{{{
-	" h: cursor line
+	" cursor position and register
+		mark h "{{{
+		let @z='^Word List {{{$' "}}}
+	" detect word list in the first five lines
+		execute substitute('1,5g/#/','#',@z,'')
+		if substitute(getline('.'),@z,'','')==getline('.')
+			'h
+			return
 	" move cursor out of word list
-		mark h
-		normal [z
-		if substitute(getline('.'),'^Word\sList\s{\{3\}$','','')!=getline('.')
+		elseif line("'h")<=5
+			normal [z
 			mark h
-		endif
-		1
-	" clear old list
-		/^Word List {{{$/+2;/^ }}}$/-1delete
+		endif "}}}
+	" clear old list "{{{
+		execute substitute('/#/+2;/^ }\{3\}$/-1delete','#',@z,'')
 	" put whole text into Scratch
 		1,$yank
-		call ScratchBuffer(2)
+		call ScratchBuffer(2) "}}}
 	" delete non-bracket text
-		%s/\[/\r[/ge
+		%s/\[/\r[/ge "{{{
 		%s/\]/]\r/ge
 		g!/\[/delete
 	" move words back to list
 		1,$yank
 		buffer #
 		1
-		/^Word List {\{3\}$/+1put
+		execute substitute('/#/+1put','#',@z,'')
 	" back to cursor line
-		'h
+		'h "}}}
 endfunction "}}}
 function! F4_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
 endfunction "}}}
-" creat blank word list
-function! F4_Shift_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <s-f4> :?{{{?+1s/^/\rWord List {{{\r\r }}}\r<cr>
-endfunction "}}}
 
 function! F4_Vocab() "{{{
 	call F4_Normal_Vocab()
-	call F4_Shift_Normal_Vocab()
-endfunction "}}}
- "}}}4
-
-" Function key: <F5> "{{{4
-" collect word lists
-" j: cursor line
-function! ColletWordList_Vocab() "{{{
-	" clear register, mark position
-		let @a=''
-		mark h
-	" yank word list
-		1
-		/^Word List {{{$/;/ }}}$/y A
-		let @"=@a
-	" back to cursor line
-		'h
-	" put list into Scratch buffer
-		call ScratchBuffer(2)
-		g/^$/d
-endfunction "}}}
-function! F5_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <f5> :call ColletWordList_Vocab()<cr>
-endfunction "}}}
-
-function! F5_Vocab() "{{{
-	call F5_Normal_Vocab()
 endfunction "}}}
  "}}}4
 
@@ -632,7 +606,6 @@ function! Vocabulary() "{{{
 	call F2_Vocab()
 	call F3_Vocab()
 	call F4_Vocab()
-	call F5_Vocab()
 endfunction "}}}
  "}}}3
 
