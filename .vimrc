@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 06, Thu | 00:25:20 | 2014
+" Last Update: Mar 06, Thu | 01:22:35 | 2014
 
 " Plugins "{{{2
 
@@ -507,26 +507,22 @@ endfunction "}}}
 " Function key: <F1> "{{{4
 " search bracket '['
 function! F1_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <f1> /\[<cr>"+yi[
+	nnoremap <buffer> <silent> <f1> /[<cr>"+yi[
 endfunction "}}}
 function! F1_Shift_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <s-f1> b?\[<cr>"+yi[
-endfunction "}}}
-function! F1_Visual_Vocab() "{{{
-	vnoremap <buffer> <silent> <f1> :s/\[//gn<cr>
+	nnoremap <buffer> <silent> <s-f1> 2?[<cr>"+yi[
 endfunction "}}}
 
 function! F1_Vocab() "{{{
 	call F1_Normal_Vocab()
 	call F1_Shift_Normal_Vocab()
-	call F1_Visual_Vocab()
 endfunction "}}}
  "}}}4
 
 " Function key: <F2> "{{{4
 " search word
 function! F2_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <f2> "+yi[/\[<c-r>+\]<cr>zz
+	nnoremap <buffer> <silent> <f2> "+yi[/\[<c-r>"\]<cr>zz
 endfunction "}}}
 
 function! F2_Vocab() "{{{
@@ -620,10 +616,8 @@ function! TakeOutScratch_Repo(take) "{{{
 	set nofoldenable
 	set modifiable
 	if a:take==0
-		" put before
 		'hput!
 	elseif a:take==1
-		" put after
 		'hput
 	endif
 	'h
