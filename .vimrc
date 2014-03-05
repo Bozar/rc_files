@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 05, Wed | 13:28:44 | 2014
+" Last Update: Mar 05, Wed | 21:57:38 | 2014
 
 " Plugins "{{{2
 
@@ -207,18 +207,20 @@ endfunction "}}}
 
 " insert bullets: special characters at the beginning of a line "{{{3
 function! BulletPoint() "{{{
+	" register
+		let @z="'j,'kg/^\\t\\{0,2\\}"
 	" title
 	" do not indent title '-'
-		'j,'kg/^\(\t\{1,2\}\|\s\{4,8\}\)\-/left 0
+		execute @z.'-/left 0'
 		'j,'ks/^-//e
 	" paragraph
 	" '==' will be replaced with '+'
-	"		indent 2 tabs (8 spaces)
-		'j,'kg/^\(\|\t\|\s\{4\}\)==/left 8
+	" indent 2 tabs
+		execute @z.'==/left 8'
 		'j,'ks/^\(\t\t\)==/\1+ /e
 	" '=' will be replaced with '*'
-	"	indent 1 tab (4 spaces)
-		'j,'kg/^\(\|\s\{4\}\)=/left 4
+	" indent 1 tab
+		execute @z.'=/left 4'
 		'j,'ks/^\(\t\)=/\1* /e
 endfunction "}}}
  "}}}3
