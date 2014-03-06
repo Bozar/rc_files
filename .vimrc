@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 06, Thu | 15:08:30 | 2014
+" Last Update: Mar 06, Thu | 16:07:33 | 2014
 
 " Plugins "{{{2
 
@@ -304,7 +304,7 @@ function! TimeStamp(time) "{{{
 			execute '1,3'.@x
 			execute '$-2,$'.@x
 			'h
-		echo 'Note: Time stamp updated!'
+		echo 'NOTE: Time stamp updated!'
 		endif "}}}
 endfunction "}}}
  "}}}3
@@ -1208,7 +1208,7 @@ command! EdVimrc e $MYVIMRC
 " autocommands "{{{
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
-autocmd BufRead *.voca call Vocabulary()
+autocmd BufRead *.vocab call Vocabulary()
 autocmd BufRead *.repo call Repository()
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
