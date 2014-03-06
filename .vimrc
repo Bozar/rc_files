@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 06, Thu | 14:46:43 | 2014
+" Last Update: Mar 06, Thu | 15:08:30 | 2014
 
 " Plugins "{{{2
 
@@ -290,11 +290,13 @@ function! TimeStamp(time) "{{{
 			execute @x
 			return
 		endif "}}}
-	" update time "{{{
+	" update time
+	" detect time stamp "{{{
 		execute substitute('1,3g/0//',0,@v,'')
 		if substitute(getline('.'),@v,'','')==getline('.')
 			execute substitute('$-2,$g/0//',0,@v,'')
 				if substitute(getline('.'),@v,'','')==getline('.')
+					echo 'ERROR: Time stamp not found!'
 					return
 				endif
 		endif "}}}
@@ -302,6 +304,7 @@ function! TimeStamp(time) "{{{
 			execute '1,3'.@x
 			execute '$-2,$'.@x
 			'h
+		echo 'Note: Time stamp updated!'
 		endif "}}}
 endfunction "}}}
  "}}}3
@@ -569,6 +572,7 @@ function! UpdateWordList_Vocab() "{{{
 		execute substitute('1,5g/0//',0,@z,'')
 		if substitute(getline('.'),@z,'','')==getline('.')
 			'h
+			echo substitute("ERROR: '0' not found!",0,@z,"")
 			return
 	" move cursor out of word list
 		elseif line("'h")<=5
