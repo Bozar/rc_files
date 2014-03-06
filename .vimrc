@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 06, Thu | 16:07:33 | 2014
+" Last Update: Mar 06, Thu | 22:56:23 | 2014
 
 " Plugins "{{{2
 
@@ -238,7 +238,7 @@ function! ChangeFoldLevel(level)  "{{{
 		endif "}}}
 	" fold level exceeds 20
 		'j,'ks/\(\({{{\|}}}\)[2-9][0-9]$\)/\1/e
-		if substitute(getline("."),'\(\({{{\|}}}\)[2-9][0-9]$\)','','')!=getline(".") "{{{
+		if substitute(getline("."),'\(\({{{\|}}}\)[2-9][0-9]$\)','','')!=getline('.') "{{{
 			echo 'ERROR: Fold level exceeds 20!'
 			return
 		endif "}}}
@@ -470,6 +470,16 @@ endfunction "}}}
 
 " Function key: <F3> "{{{4
 function! AnotherDay_GTD() "{{{
+	" detect cursor position
+		mark h
+		normal [z
+		if substitute(getline("."),'^\d\{1,2\}月\d\{1,2\}日 {\{3\}\d$','','')==getline('.')
+			'h
+			echo 'ERROR: Date not found!'
+			return
+		else
+			'h
+		endif
 	" insert new lines for another day
 		call MoveFoldMarker(2)
 		'h-2mark z
