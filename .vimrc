@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 06, Thu | 22:56:23 | 2014
+" Last Update: Mar 06, Thu | 23:41:33 | 2014
 
 " Plugins "{{{2
 
@@ -415,34 +415,15 @@ endfunction "}}}
 " GTD "{{{3
 
 " Function key: <F1> "{{{4
+" to-do (*) and finished (~)
 function! Finished_GTD() "{{{
-	mark h
-	call CursorAtFoldBegin()
-	normal [z
-	if substitute(getline('.'),'^两周计划','','')!=getline('.') "{{{
-		" weekly check
-			'h
-		" finished to unfinished
-			if substitute(getline('.'),'（完成）$','','')!=getline('.')
-				s/（完成）$/（未完成）/
-		" unfinished to blank
-			elseif substitute(getline('.'),'（未完成）$','','')!=getline('.')
-				s/（未完成）$//
-		" blank to finished
-			else
-				s/$/（完成）/
-			endif "}}}
-	else "{{{
-		" daily marks: to-do (*) and finished (~)
-			'h
-		" substitute '*' with '~'
-			if substitute(getline('.'),'^\t\*','','')!=getline('.')
-				s/^\t\*/\t\~/
-		" substitute '~' with '*'
-			elseif substitute(getline('.'),'^\t\~','','')!=getline('.')
-				s/^\t\~/\t\*/
-			endif "}}}
-	endif
+	" substitute '*' with '~'
+		if substitute(getline("."),'^\t\*','','')!=getline('.')
+			s/^\t\*/\t\~/
+	" substitute '~' with '+'
+		elseif substitute(getline("."),'^\t\~','','')!=getline('.')
+			s/^\t\~/\t\*/
+		endif "}}}
 endfunction "}}}
 function! F1_Normal_GTD() "{{{
 	nnoremap <buffer> <silent> <f1> :call Finished_GTD()<cr>
