@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 06, Thu | 23:41:33 | 2014
+" Last Update: Mar 07, Fri | 00:43:57 | 2014
 
 " Plugins "{{{2
 
@@ -155,6 +155,7 @@ function! MoveFoldMarker(move) "{{{
 	" in related to marker
 	" detect fold
 		mark h
+		call CursorAtFoldBegin()
 		normal [z
 		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')==getline('.') "{{{
 			" fold dose not exsist
@@ -425,34 +426,17 @@ function! Finished_GTD() "{{{
 			s/^\t\~/\t\*/
 		endif "}}}
 endfunction "}}}
-function! F1_Normal_GTD() "{{{
-	nnoremap <buffer> <silent> <f1> :call Finished_GTD()<cr>
-endfunction "}}}
 
 function! F1_GTD() "{{{
-	call F1_Normal_GTD()
+	nnoremap <buffer> <silent> <f1> :call Finished_GTD()<cr>
 endfunction "}}}
  "}}}4
 
 " Function key: <F2> "{{{4
-" progress bar: substitute 'page 2-5' with 'page 6-'
-function! Numbers_GTD() "{{{
-	s/\(\d\+-\)\@<=\(\d\+\)/\=submatch(0)+1/e
-	s/\d\+-\(\d\+\)/\1-/e
-endfunction "}}}
-function! F2_Normal_GTD() "{{{
-	nnoremap <buffer> <silent> <f2> :call Numbers_GTD()<cr>
-endfunction "}}}
-
-function! F2_GTD() "{{{
-	call F2_Normal_GTD()
-endfunction "}}}
- "}}}4
-
-" Function key: <F3> "{{{4
 function! AnotherDay_GTD() "{{{
 	" detect cursor position
-		mark h
+		mark h "{{{
+		call CursorAtFoldBegin()
 		normal [z
 		if substitute(getline("."),'^\d\{1,2\}月\d\{1,2\}日 {\{3\}\d$','','')==getline('.')
 			'h
@@ -460,9 +444,9 @@ function! AnotherDay_GTD() "{{{
 			return
 		else
 			'h
-		endif
+		endif "}}}
 	" insert new lines for another day
-		call MoveFoldMarker(2)
+		call MoveFoldMarker(2) "{{{
 		'h-2mark z
 		'h,'l-1yank
 		'zput
@@ -474,25 +458,30 @@ function! AnotherDay_GTD() "{{{
 	" fix substitution errors on rare occasions:
 	" the second day in a month
 	" in which case both }2 will be changed
-		g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12/
+		g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12/e
 	" delete additional lines
-		'zdelete
-		+2
+		'zdelete "}}}
+	" clear old markers "{{{
+		normal mh]zml
+	" progress bar: substitute 'page 2-5' with 'page 6-'
+		'h,'ls/\(\d\+-\)\@<=\(\d\+\)/\=submatch(0)+1/e
+		'h,'ls/\d\+-\(\d\+\)/\1-/e
+	" substitute finished (~) with unfinished (*)
+		'h,'ls/\t\~/\t\*/e
+	" new marker
+		'h+2
 		normal wma
-endfunction "}}}
-function! F3_Normal_GTD() "{{{
-	nnoremap <buffer> <silent> <f3> :call AnotherDay_GTD()<cr>
+		 "}}}
 endfunction "}}}
 
-function! F3_GTD() "{{{
-	call F3_Normal_GTD()
+function! F2_GTD() "{{{
+	nnoremap <buffer> <silent> <f2> :call AnotherDay_GTD()<cr>
 endfunction "}}}
  "}}}4
 
 function! GetThingsDone() "{{{
 	call F1_GTD()
 	call F2_GTD()
-	call F3_GTD()
 endfunction "}}}
  "}}}3
 
