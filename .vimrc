@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 06, Thu | 01:22:35 | 2014
+" Last Update: Mar 06, Thu | 14:41:50 | 2014
 
 " Plugins "{{{2
 
@@ -133,7 +133,7 @@ function! CreatFoldMarker(creat) "{{{
 			'hyank
 			'hput
 			'hput
-			'h+1,'h+2s/^.*\(\s.\{0,1\}{\{3\}\d\{0,2\}\)$/\1/
+			'h+1,'h+2s/^.*\( .\{0,1\}{\{3\}\d\{0,2\}\)$/\1/
 			'h+2s/{{{/}}}/
 			'h+1s/^/FOLDMARKER/ "}}}
 	" higher level
@@ -278,8 +278,9 @@ function! TimeStamp(time) "{{{
 			'h
 			return
 		endif
-		let @z="s/\\(Date:\\s\\)\\@<=.*$/\\=strftime('%b %d | %a | %Y')/e"
-		let @x="s/\\(Last\\sUpdate:\\s\\)\\@<=.*$/\\=strftime('%b %d, %a | %H:%M:%S | %Y')/e"
+		let @z="s/\\(Date: \\)\\@<=.*$/\\=strftime('%b %d | %a | %Y')/e"
+		let @x="s/\\(Last Update: \\)\\@<=.*$/\\=strftime('%b %d, %a | %H:%M:%S | %Y')/e"
+		let @v='Last Update: '
 		 "}}}
 	" creat new date
 		if a:time==0 "{{{
@@ -290,13 +291,12 @@ function! TimeStamp(time) "{{{
 			return
 		endif "}}}
 	" update time
-	" detect time stamp
-		" if begins "{{{
-		if substitute(string(getline(1,3)),'Last\sUpdate:\s','','')==string(getline(1,3))
-			\ && substitute(string(getline(line('$')-2,'$')),'Last\sUpdate:\s','','')==string(getline(line('$')-2,'$'))
-			echo 'ERROR: Time marker not found!'
-			'h
-			return
+		execute substitute('1,3g/0//',0,@v,'')
+		if substitute(getline('.'),@v,'','')==getline('.')
+			execute substitute('$-2,$g/0//',0,@v,'')
+				if substitute(getline('.'),@v,'','')==getline('.')
+					return
+				endif
 		endif "}}}
 		if a:time==1 "{{{
 			execute '1,3'.@x
@@ -562,7 +562,11 @@ function! UpdateWordList_Vocab() "{{{
 		mark h "{{{
 		let @z='^Word List {{{$' "}}}
 	" detect word list in the first five lines
-		execute substitute('1,5g/#/','#',@z,'')
+		if line('$')<5
+			echo 'ERROR: There should be at least 5 lines!'
+			return
+		endif
+		execute substitute('1,5g/0//',0,@z,'')
 		if substitute(getline('.'),@z,'','')==getline('.')
 			'h
 			return
@@ -572,7 +576,7 @@ function! UpdateWordList_Vocab() "{{{
 			mark h
 		endif "}}}
 	" clear old list "{{{
-		execute substitute('/#/+2;/^ }\{3\}$/-1delete','#',@z,'')
+		execute substitute('/0/+2;/^ }\{3\}$/-1delete',0,@z,'')
 	" put whole text into Scratch
 		1,$yank
 		call ScratchBuffer(2) "}}}
@@ -584,7 +588,7 @@ function! UpdateWordList_Vocab() "{{{
 		1,$yank
 		buffer #
 		1
-		execute substitute('/#/+1put','#',@z,'')
+		execute substitute('/0/+1put',0,@z,'')
 	" back to cursor line
 		'h "}}}
 endfunction "}}}
@@ -1200,7 +1204,7 @@ command! EdVimrc e $MYVIMRC
 " autocommands "{{{
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
-autocmd BufRead *.vocab call Vocabulary()
+autocmd BufRead *.voca call Vocabulary()
 autocmd BufRead *.repo call Repository()
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
