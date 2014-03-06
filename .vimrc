@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 06, Thu | 14:41:50 | 2014
+" Last Update: Mar 06, Thu | 14:46:43 | 2014
 
 " Plugins "{{{2
 
@@ -290,7 +290,7 @@ function! TimeStamp(time) "{{{
 			execute @x
 			return
 		endif "}}}
-	" update time
+	" update time "{{{
 		execute substitute('1,3g/0//',0,@v,'')
 		if substitute(getline('.'),@v,'','')==getline('.')
 			execute substitute('$-2,$g/0//',0,@v,'')
