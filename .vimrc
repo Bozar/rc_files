@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 07, Fri | 14:23:12 | 2014
+" Last Update: Mar 08, Sat | 02:23:03 | 2014
 
 " Plugins "{{{2
 
@@ -40,9 +40,6 @@ function! SwitchSettings(setting) "{{{
 		else
 			set background=dark
 		endif "}}}
-	elseif a:setting=='3' "{{{
-		set modifiable!
-		set modifiable? "}}}
 	endif
 endfunction "}}}
  "}}}3
@@ -94,7 +91,7 @@ endfunction "}}}
 
 " mapping markers "{{{3
 function! MappingMarker(marker) "{{{
-	" visual
+	" visual mode to j,k
 		if a:marker==0
 			'<mark j
 			'>mark k
@@ -108,7 +105,7 @@ endfunction "}}}
 
 " detect cursor position "{{{3
 function! CursorAtFoldBegin() "{{{
-	if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')!=getline('.')
+	if substitute(getline('.'),'{\{3}\d\{0,2}$','','')!=getline('.')
 		+1
 	endif
 endfunction "}}}
@@ -133,13 +130,13 @@ function! CreatFoldMarker(creat) "{{{
 			'hyank
 			'hput
 			'hput
-			'h+1,'h+2s/^.*\( .\{0,1\}{\{3\}\d\{0,2\}\)$/\1/
+			'h+1,'h+2s/^.*\( .\{0,1}{\{3}\d\{0,2}\)$/\1/
 			'h+2s/{{{/}}}/
 			'h+1s/^/FOLDMARKER/ "}}}
 	" higher level
 		elseif a:creat==2 "{{{
 			call CreatFoldMarker(1)
-			'h+1,'h+2s/\(\d\{1,2\}\)$/\=submatch(0)+1/e "}}}
+			'h+1,'h+2s/\(\d\{1,2}\)$/\=submatch(0)+1/e "}}}
 		endif
 endfunction "}}}
 " new (0), after (1), before (2)
@@ -156,7 +153,7 @@ function! MoveFoldMarker(move) "{{{
 		mark h
 		call CursorAtFoldBegin()
 		normal [z
-		if substitute(getline('.'),'{\{3\}\d\{0,2\}$','','')==getline('.') "{{{
+		if substitute(getline('.'),'{\{3}\d\{0,2}$','','')==getline('.') "{{{
 			" fold dose not exsist
 			echo "ERROR: Fold '[z' not found!"
 			'h
@@ -187,7 +184,7 @@ function! MoveFoldMarker(move) "{{{
 	" normal
 		elseif a:move==4 "{{{
 			call CreatFoldMarker(2)
-			'h+1,'h+2s/\d\{0,2\}$//
+			'h+1,'h+2s/\d\{0,2}$//
 			'h+1,'h+2delete
 			'jput
 			'j+1s/^FOLDMARKER//
@@ -206,22 +203,29 @@ endfunction "}}}
  "}}}3
 
 " insert bullets: special characters at the beginning of a line "{{{3
-function! BulletPoint() "{{{
-	" register
-		let @z="'j,'kg/^\\t\\{0,2\\}"
-	" title
-	" do not indent title '-'
-		execute @z.'-/left 0'
-		'j,'ks/^-//e
-	" paragraph
-	" '==' will be replaced with '+'
-	" indent 2 tabs
-		execute @z.'==/left 8'
-		'j,'ks/^\(\t\t\)==/\1+ /e
-	" '=' will be replaced with '*'
-	" indent 1 tab
-		execute @z.'=/left 4'
-		'j,'ks/^\(\t\)=/\1* /e
+function! BulletPoint(bullet) "{{{
+	" normal mode
+		if a:bullet==0 "{{{
+			" register
+				let @z="'j,'kg/^\\t\\{0,2}"
+			" title
+			" do not indent title '-'
+				execute @z.'-/left 0'
+				'j,'ks/^-//e
+			" paragraph
+			" '==' will be replaced with '+'
+			" indent 2 tabs
+				execute @z.'==/left 8'
+				'j,'ks/^\(\t\t\)==/\1+ /e
+			" '=' will be replaced with '*'
+			" indent 1 tab
+				execute @z.'=/left 4'
+				'j,'ks/^\(\t\)=/\1* /e "}}}
+	" visual mode
+		elseif a:bullet==1 "{{{
+				call MappingMarker(0)
+				call BulletPoint(0) "}}}
+		endif
 endfunction "}}}
  "}}}3
 
@@ -229,27 +233,32 @@ endfunction "}}}
 function! ChangeFoldLevel(level)  "{{{
 	" substract (0), normal
 		if a:level==0 "{{{
-			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2\}$/\=submatch(0)-1/e
-			'j,'ks/\({{{\|}}}\)\@<=0$//e
+			" detect level one marker
+				'j,'ks/\({{{\|}}}\)\@<=1$/1/e
+				if substitute(getline("."),'\({{{\|}}}\)1$','','')!=getline('.')
+					echo 'NOTE: Level one marker detected!'
+					return
+				endif
+				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)-1/e "}}}
 	" substract (1), visual
-		elseif a:level==1
+		elseif a:level==1 "{{{
 			call MappingMarker(0)
-			call ChangeFoldLevel(0)
-		endif "}}}
-	" fold level exceeds 20
-		'j,'ks/\(\({{{\|}}}\)[2-9][0-9]$\)/\1/e
-		if substitute(getline("."),'\(\({{{\|}}}\)[2-9][0-9]$\)','','')!=getline('.') "{{{
-			echo 'ERROR: Fold level exceeds 20!'
-			return
-		endif "}}}
+			call ChangeFoldLevel(0) "}}}
+		endif
 	" add (2), normal
 		if a:level==2 "{{{
-			'j,'ks/\({{{\|}}}\)\@<=\d\{0,2\}$/\=submatch(0)+1/e
+			" fold level exceeds 20
+				'j,'ks/\(\({{{\|}}}\)[2-9][0-9]$\)/\1/e
+				if substitute(getline("."),'\({{{\|}}}\)[2-9][0-9]$','','')!=getline('.')
+					echo 'ERROR: Fold level exceeds 20!'
+					return
+				endif
+				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)+1/e "}}}
 	" add (3), visual
-		elseif a:level==3
+		elseif a:level==3 "{{{
 			call MappingMarker(0)
-			call ChangeFoldLevel(2)
-		endif "}}}
+			call ChangeFoldLevel(2) "}}}
+		endif
 endfunction "}}}
  "}}}3
 
@@ -272,6 +281,7 @@ endfunction "}}}
 " hour (%H) | miniute (%M) | second (%S)
 function! TimeStamp(time) "{{{
 	" check lines
+		set nofoldenable
 		mark h "{{{
 		if line('$')<3
 			echo 'ERROR: There should be at least 3 lines!'
@@ -306,6 +316,7 @@ function! TimeStamp(time) "{{{
 			'h
 		echo 'NOTE: Time stamp updated!'
 		endif "}}}
+		set foldenable
 endfunction "}}}
  "}}}3
 
@@ -322,7 +333,7 @@ function! PageNumber() "{{{
 		%s/$/ {{{/|%s/$/\r\r }}}/
 		%s/\({\|}\)$/\12/
 	" delete additional lines
-		g/^ {\{3\}2$/.,.+1delete
+		g/^ {\{3}2$/.,.+1delete
 	" insert title
 		1s/^\(.*\)$/\1\r\1/
 		1s/2$/1/|$s/2$/1/
@@ -437,7 +448,7 @@ function! AnotherDay_GTD() "{{{
 		mark h "{{{
 		call CursorAtFoldBegin()
 		normal [z
-		if substitute(getline("."),'^\d\{1,2\}月\d\{1,2\}日 {\{3\}\d$','','')==getline('.')
+		if substitute(getline("."),'^\d\{1,2}月\d\{1,2}日 {\{3}\d$','','')==getline('.')
 			'h
 			echo 'ERROR: Date not found!'
 			return
@@ -450,14 +461,14 @@ function! AnotherDay_GTD() "{{{
 		'h,'l-1yank
 		'zput
 	" change date
-		'z+1s/\d\{1,2\}\(日\)\@=/\=submatch(0)+1/
+		'z+1s/\d\{1,2}\(日\)\@=/\=submatch(0)+1/
 	" change foldlevel
 		call MappingMarker(1)
 		call ChangeFoldLevel(2)
 	" fix substitution errors on rare occasions:
 	" the second day in a month
 	" in which case both }2 will be changed
-		g/^ }\{3\}3$/.+1s/^\( }\{3\}\)3$/\12/e
+		g/^ }\{3}3$/.+1s/^\( }\{3}\)3$/\12/e
 	" delete additional lines
 		'zdelete "}}}
 	" clear old markers "{{{
@@ -559,7 +570,7 @@ function! UpdateWordList_Vocab() "{{{
 			mark h
 		endif "}}}
 	" clear old list "{{{
-		execute substitute('/0/+2;/^ }\{3\}$/-1delete',0,@z,'')
+		execute substitute('/0/+2;/^ }\{3}$/-1delete',0,@z,'')
 	" put whole text into Scratch
 		1,$yank
 		call ScratchBuffer(2) "}}}
@@ -589,30 +600,6 @@ function! Vocabulary() "{{{
 	call F2_Vocab()
 	call F3_Vocab()
 	call F4_Vocab()
-endfunction "}}}
- "}}}3
-
-" Repository "{{{3
-
-" move whole Scratch to repository
-function! TakeOutScratch_Repo(take) "{{{
-	mark h
-	buffer 2
-	1,$yank
-	buffer #
-	set nofoldenable
-	set modifiable
-	if a:take==0
-		'hput!
-	elseif a:take==1
-		'hput
-	endif
-	'h
-	set foldenable
-endfunction "}}}
-function! Repository() "{{{
-	nnoremap <buffer> <silent> <f1> :call TakeOutScratch_Repo(0)<cr>
-	nnoremap <buffer> <silent> <f2> :call TakeOutScratch_Repo(1)<cr>
 endfunction "}}}
  "}}}3
 
@@ -1065,10 +1052,13 @@ onoremap q %
 nnoremap <silent> <a-q> :ABSubs<cr>
 vnoremap <silent> <a-q> "by:ABSubs<cr>
  "}}}
+" bullet points "{{{
+nnoremap <silent> <a-b> :Bullet<cr>
+vnoremap <silent> <a-b> <esc>:BulletV<cr>
+ "}}}
 " switch settings "{{{
 nnoremap <silent> \ :SwBackground<cr>
 nnoremap <silent> <c-\> :SwHlsearch<cr>
-nnoremap <silent> \| :SwModifiable<cr>
 nnoremap <silent> <a-\> :SwLinebreak<cr>
  "}}}
 " change fold level "{{{
@@ -1112,7 +1102,8 @@ vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
 " User defined commands "{{{2
 
 " insert bullet points "{{{
-command! Bullet call BulletPoint()
+command! Bullet call BulletPoint(0)
+command! BulletV call BulletPoint(1)
  "}}}
 " creat page number "{{{
 command! Page call PageNumber()
@@ -1167,7 +1158,6 @@ command! FmVWrap call MoveFoldMarker(5)
 command! SwHlsearch call SwitchSettings(0)
 command! SwLinebreak call SwitchSettings(1)
 command! SwBackground call SwitchSettings(2)
-command! SwModifiable call SwitchSettings(3)
  "}}}
 " Chines word count "{{{
 command! Word %s/[^\x00-\xff]//gn
@@ -1176,7 +1166,6 @@ command! Word %s/[^\x00-\xff]//gn
 command! KeVocab call Vocabulary()
 command! KeLocal call Localization()
 command! KeGTD call GetThingsDone()
-command! KeRepo call Repository()
  "}}}
 " localization "{{{
 command! LoFormat call FileFormat_Loc()
@@ -1188,7 +1177,6 @@ command! EdVimrc e $MYVIMRC
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
-autocmd BufRead *.repo call Repository()
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
  "}}}2
