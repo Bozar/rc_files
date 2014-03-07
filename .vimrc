@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 07, Fri | 00:43:57 | 2014
+" Last Update: Mar 07, Fri | 14:23:12 | 2014
 
 " Plugins "{{{2
 
@@ -152,7 +152,6 @@ function! MoveFoldMarker(move) "{{{
 			-1mark j
 			-1
 		endif "}}}
-	" in related to marker
 	" detect fold
 		mark h
 		call CursorAtFoldBegin()
@@ -816,7 +815,7 @@ function! F6_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f6>
 		\ :1,$yank<cr>:1wincmd w<cr>
 		\ :b chinese.loc<cr>
-		\ :$put! "<cr>'a
+		\ :$-1put! "<cr>'a
 		\ :4wincmd w<cr>
 endfunction "}}}
 " search GUID (long line) in English buffer
