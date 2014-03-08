@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 08, Sat | 02:23:03 | 2014
+" Last Update: Mar 08, Sat | 20:49:03 | 2014
 
 " Plugins "{{{2
 
@@ -202,30 +202,26 @@ function! MoveFoldMarker(move) "{{{
 endfunction "}}}
  "}}}3
 
-" insert bullets: special characters at the beginning of a line "{{{3
+" bullets: '*' and '+' "{{{3
 function! BulletPoint(bullet) "{{{
-	" normal mode
-		if a:bullet==0 "{{{
-			" register
-				let @z="'j,'kg/^\\t\\{0,2}"
-			" title
-			" do not indent title '-'
-				execute @z.'-/left 0'
-				'j,'ks/^-//e
-			" paragraph
-			" '==' will be replaced with '+'
-			" indent 2 tabs
-				execute @z.'==/left 8'
-				'j,'ks/^\(\t\t\)==/\1+ /e
-			" '=' will be replaced with '*'
-			" indent 1 tab
-				execute @z.'=/left 4'
-				'j,'ks/^\(\t\)=/\1* /e "}}}
-	" visual mode
-		elseif a:bullet==1 "{{{
-				call MappingMarker(0)
-				call BulletPoint(0) "}}}
-		endif
+	if a:bullet==0 "{{{
+		" title
+		" do not indent title '-'
+			'j,'kg/^\t\{0,2}-/left 0
+			'j,'ks/^-//e
+		" paragraph
+		" '==' will be replaced with '+'
+		" indent 2 tabs
+			'j,'kg/^\t\{0,2}==/left 8
+			'j,'ks/^\(\t\t\)==/\1+ /e
+		" '=' will be replaced with '*'
+		" indent 1 tab
+			'j,'kg/^\t\{0,2}=/left 4
+			'j,'ks/^\(\t\)=/\1* /e "}}}
+	elseif a:bullet==1 "{{{
+			call MappingMarker(0)
+			call BulletPoint(0) "}}}
+	endif
 endfunction "}}}
  "}}}3
 
@@ -236,7 +232,7 @@ function! ChangeFoldLevel(level)  "{{{
 			" detect level one marker
 				'j,'ks/\({{{\|}}}\)\@<=1$/1/e
 				if substitute(getline("."),'\({{{\|}}}\)1$','','')!=getline('.')
-					echo 'NOTE: Level one marker detected!'
+					echo 'ERROR: Fold level 1 detected!'
 					return
 				endif
 				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)-1/e "}}}
@@ -288,31 +284,30 @@ function! TimeStamp(time) "{{{
 			'h
 			return
 		endif
-		let @z="s/\\(Date: \\)\\@<=.*$/\\=strftime('%b %d | %a | %Y')/e"
-		let @x="s/\\(Last Update: \\)\\@<=.*$/\\=strftime('%b %d, %a | %H:%M:%S | %Y')/e"
-		let @v='Last Update: '
+		let Date_Time="s/\\(Date: \\)\\@<=.*$/\\=strftime('%b %d | %a | %Y')/e"
+		let Update_Time="s/\\(Last Update: \\)\\@<=.*$/\\=strftime('%b %d, %a | %H:%M:%S | %Y')/e"
 		 "}}}
 	" creat new date
 		if a:time==0 "{{{
 			s/$/\rDate: /
-			execute @z
+			execute Date_Time
 			s/$/\rLast Update: /
-			execute @x
+			execute Update_Time
 			return
 		endif "}}}
 	" update time
 	" detect time stamp "{{{
-		execute substitute('1,3g/0//',0,@v,'')
-		if substitute(getline('.'),@v,'','')==getline('.')
-			execute substitute('$-2,$g/0//',0,@v,'')
-				if substitute(getline('.'),@v,'','')==getline('.')
+		1,3s/\(Last Update: \)/\1/e
+		if substitute(getline('.'),'Last Update: ','','')==getline('.')
+			$-2,$s/\(Last Update: \)/\1/e
+				if substitute(getline('.'),'Last Update: ','','')==getline('.')
 					echo 'ERROR: Time stamp not found!'
 					return
 				endif
 		endif "}}}
 		if a:time==1 "{{{
-			execute '1,3'.@x
-			execute '$-2,$'.@x
+			execute '1,3'.Update_Time
+			execute '$-2,$'.Update_Time
 			'h
 		echo 'NOTE: Time stamp updated!'
 		endif "}}}
@@ -551,18 +546,16 @@ endfunction "}}}
 " [word 2]
  "}}}
 function! UpdateWordList_Vocab() "{{{
-	" cursor position and register
-		mark h "{{{
-		let @z='^Word List {{{$' "}}}
+		mark h
 	" detect word list in the first five lines
 		if line('$')<5
 			echo 'ERROR: There should be at least 5 lines!'
 			return
 		endif
-		execute substitute('1,5g/0//',0,@z,'')
-		if substitute(getline('.'),@z,'','')==getline('.')
+		1,5s/^\(Word List {{{\)$/\1/e
+		if substitute(getline('.'),'^Word List {{{$','','')==getline('.')
 			'h
-			echo substitute("ERROR: '0' not found!",0,@z,"")
+			echo "ERROR: '^Word List {{{$' not found!"
 			return
 	" move cursor out of word list
 		elseif line("'h")<=5
@@ -570,7 +563,7 @@ function! UpdateWordList_Vocab() "{{{
 			mark h
 		endif "}}}
 	" clear old list "{{{
-		execute substitute('/0/+2;/^ }\{3}$/-1delete',0,@z,'')
+		/^Word List {{{$/+2;/^ }\{3}$/-1delete
 	" put whole text into Scratch
 		1,$yank
 		call ScratchBuffer(2) "}}}
@@ -582,9 +575,8 @@ function! UpdateWordList_Vocab() "{{{
 		1,$yank
 		buffer #
 		1
-		execute substitute('/0/+1put',0,@z,'')
-	" back to cursor line
-		'h "}}}
+		/^Word List {{{$/+1put "}}}
+		'h
 endfunction "}}}
 function! F4_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
