@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 08, Sat | 20:49:03 | 2014
+" Last Update: Mar 09, Sun | 23:30:32 | 2014
 
 " Plugins "{{{2
 
@@ -615,6 +615,20 @@ function! FileFormat_Loc() "{{{
 	set fileformat=unix
 	%s/\r//ge
 endfunction "}}}
+function! LineBreak_Loc() "{{{
+	1s/$/\r
+	1
+	while line('.')<line('$')
+		/#MARK#
+		if substitute(getline('.'),'#MARK#.*#END#','','')==getline('.')
+			mark j
+			/#END#/mark k
+			'j,'k-1s/$/<br10>/
+			'j,'kjoin!
+		endif
+	endwhile
+endfunction
+ "}}}
 
 " Function key: <F1> "{{{4
 " put cursor after the first \t
@@ -1160,7 +1174,8 @@ command! KeLocal call Localization()
 command! KeGTD call GetThingsDone()
  "}}}
 " localization "{{{
-command! LoFormat call FileFormat_Loc()
+command! LocFormat call FileFormat_Loc()
+command! LocLine call LineBreak_Loc()
  "}}}
 " edit .vimrc "{{{
 command! EdVimrc e $MYVIMRC
