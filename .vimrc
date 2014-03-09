@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 09, Sun | 23:30:32 | 2014
+" Last Update: Mar 10, Mon | 00:54:26 | 2014
 
 " Plugins "{{{2
 
@@ -464,6 +464,8 @@ function! AnotherDay_GTD() "{{{
 	" the second day in a month
 	" in which case both }2 will be changed
 		g/^ }\{3}3$/.+1s/^\( }\{3}\)3$/\12/e
+		g/^ }\{3}2$/.+1s/^\( }\{3}\)2$/###TO_BE_DELETED###/e
+		g/###TO_BE_DELETED###/delete
 	" delete additional lines
 		'zdelete "}}}
 	" clear old markers "{{{
