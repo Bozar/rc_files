@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 10, Mon | 00:54:26 | 2014
+" Last Update: Mar 10, Mon | 22:35:09 | 2014
 
 " Plugins "{{{2
 
@@ -597,6 +597,25 @@ function! Vocabulary() "{{{
 endfunction "}}}
  "}}}3
 
+" translation "{{{3
+function! Glossary_Trans() "{{{
+	execute bufwinnr('glossary').'wincmd w'
+	let @/=@"
+	execute '/'.@"
+endfunction "}}}
+function! F1_Visual_Trans() "{{{
+	vnoremap <buffer> <silent> <f1> y:call Glossary_Trans()<cr>
+endfunction "}}}
+function! F2_Normal_Trans() "{{{
+	nnoremap <buffer> <silent> <f2> <c-w>w
+endfunction "}}}
+
+function! Translation() "{{{
+	call F1_Visual_Trans()
+	call F2_Normal_Trans()
+endfunction "}}}
+ "}}}3
+
 " Localization "{{{3
 
 " need to tweak the Excel table first
@@ -1186,6 +1205,7 @@ command! EdVimrc e $MYVIMRC
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
+autocmd BufRead *toc.write call Translation()
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
  "}}}2
