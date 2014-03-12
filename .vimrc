@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 10, Mon | 22:35:09 | 2014
+" Last Update: Mar 13, Thu | 00:28:21 | 2014
 
 " Plugins "{{{2
 
@@ -601,17 +601,37 @@ endfunction "}}}
 function! Glossary_Trans() "{{{
 	execute bufwinnr('glossary').'wincmd w'
 	let @/=@"
-	execute '/'.@"
+	execute '%s/\('.@".'\)/\1/ge'
+	if substitute(getline('.'),@",'','')==getline('.')
+		echo substitute("ERROR: '0' not found!",0,@","")
+		return
+	else
+		execute '%s/\('.@".'\)/\1/gn'
+	endif
 endfunction "}}}
 function! F1_Visual_Trans() "{{{
 	vnoremap <buffer> <silent> <f1> y:call Glossary_Trans()<cr>
 endfunction "}}}
+function! F1_Normal_Trans() "{{{
+	nnoremap <buffer> <silent> <f1> <c-w>w
+endfunction "}}}
+
+function! Buffer_Trans() "{{{
+	if bufname('%')=='chinese_toc.write'
+		execute 'buffer english_toc.write'
+	elseif bufname('%')=='english_toc.write'
+		execute 'buffer glossary_toc.write'
+	else
+		execute 'buffer chinese_toc.write'
+	endif
+endfunction "}}}
 function! F2_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f2> <c-w>w
+	nnoremap <buffer> <silent> <f2> :call Buffer_Trans()<cr>
 endfunction "}}}
 
 function! Translation() "{{{
 	call F1_Visual_Trans()
+	call F1_Normal_Trans()
 	call F2_Normal_Trans()
 endfunction "}}}
  "}}}3
@@ -1193,6 +1213,7 @@ command! Word %s/[^\x00-\xff]//gn
 command! KeVocab call Vocabulary()
 command! KeLocal call Localization()
 command! KeGTD call GetThingsDone()
+command! KeTranslation call Translation()
  "}}}
 " localization "{{{
 command! LocFormat call FileFormat_Loc()
