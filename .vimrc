@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 13, Thu | 00:28:21 | 2014
+" Last Update: Mar 13, Thu | 14:01:53 | 2014
 
 " Plugins "{{{2
 
@@ -670,6 +670,15 @@ function! LineBreak_Loc() "{{{
 	endwhile
 endfunction
  "}}}
+function! SwitchBuffer_Loc() "{{{
+	if bufname('%')=='chinese.loc'
+		execute 'buffer tmp.loc'
+	elseif bufname('%')=='tmp.loc'
+		execute 'buffer 2'
+	elseif bufname('%')==''
+		execute 'buffer chinese.loc'
+	endif
+endfunction "}}}
 
 " Function key: <F1> "{{{4
 " put cursor after the first \t
@@ -766,40 +775,18 @@ endfunction "}}}
  "}}}4
 
 " Function key: <F4> "{{{4
-" substitute words
-" let @c='English'
-" let @b='Chinese correction'
-" let @a='wrong translation'
+" switch buffer
 function! F4_Normal_Loc() "{{{
-	nnoremap <buffer> <silent> <f4>
-		\ :%s/\(<c-r>c.\{-\}\t.\{-\}\)\@<=<c-r>a\c//n<cr>
-		\ :%s/<c-r>//<c-r>b/gc<cr>
+	nnoremap <buffer> <silent> <f4> <c-w>w
 endfunction "}}}
-" substitute the whole line
-" mark s: substituted line
-" mark a: previous line
 function! F4_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f4>
-		\ ms^"ayt	f	l"byt	
-		\ :%s/^\(<c-r>a\t\).\{-\}\(\t\)/\1<c-r>b\2/gc<cr>
-endfunction "}}}
-" a-b substitution
-function! F4_Visual_Loc() "{{{
-	vnoremap <buffer> <silent> <f4>
-		\ "by
-		\ :%s/<c-r>a/<c-r>b/gc<cr>
-endfunction "}}}
-function! F4_Shift_Visual_Loc() "{{{
-	vnoremap <buffer> <silent> <s-f4>
-		\ "ay
-		\ :%s/<c-r>a//gc<cr>
+		\ :call SwitchBuffer_Loc()<cr>
 endfunction "}}}
 
 function! F4_Loc() "{{{
 	call F4_Normal_Loc()
 	call F4_Shift_Normal_Loc()
-	call F4_Visual_Loc()
-	call F4_Shift_Visual_Loc()
 endfunction "}}}
  "}}}4
 
