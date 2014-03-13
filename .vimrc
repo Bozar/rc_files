@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 13, Thu | 14:01:53 | 2014
+" Last Update: Mar 13, Thu | 23:30:01 | 2014
 
 " Plugins "{{{2
 
@@ -230,7 +230,8 @@ function! ChangeFoldLevel(level)  "{{{
 	" substract (0), normal
 		if a:level==0 "{{{
 			" detect level one marker
-				'j,'ks/\({{{\|}}}\)\@<=1$/1/e
+				'j
+				call search("{{{\|}}}","c","'k")
 				if substitute(getline("."),'\({{{\|}}}\)1$','','')!=getline('.')
 					echo 'ERROR: Fold level 1 detected!'
 					return
@@ -244,7 +245,8 @@ function! ChangeFoldLevel(level)  "{{{
 	" add (2), normal
 		if a:level==2 "{{{
 			" fold level exceeds 20
-				'j,'ks/\(\({{{\|}}}\)[2-9][0-9]$\)/\1/e
+				'j
+				call search("\({{{\|}}}\)[2-9][0-9]$","c","'k")
 				if substitute(getline("."),'\({{{\|}}}\)[2-9][0-9]$','','')!=getline('.')
 					echo 'ERROR: Fold level exceeds 20!'
 					return
@@ -297,13 +299,15 @@ function! TimeStamp(time) "{{{
 		endif "}}}
 	" update time
 	" detect time stamp "{{{
-		1,3s/\(Last Update: \)/\1/e
+		1
+		call search("Last Update: ","c",3)
 		if substitute(getline('.'),'Last Update: ','','')==getline('.')
-			$-2,$s/\(Last Update: \)/\1/e
-				if substitute(getline('.'),'Last Update: ','','')==getline('.')
-					echo 'ERROR: Time stamp not found!'
-					return
-				endif
+			$-2
+			call search("Last Update: ","c","$")
+			if substitute(getline('.'),'Last Update: ','','')==getline('.')
+				echo 'ERROR: Time stamp not found!'
+				return
+			endif
 		endif "}}}
 		if a:time==1 "{{{
 			execute '1,3'.Update_Time
@@ -554,7 +558,8 @@ function! UpdateWordList_Vocab() "{{{
 			echo 'ERROR: There should be at least 5 lines!'
 			return
 		endif
-		1,5s/^\(Word List {{{\)$/\1/e
+		1
+		call search("Word List {{{$","c",5) "}}}
 		if substitute(getline('.'),'^Word List {{{$','','')==getline('.')
 			'h
 			echo "ERROR: '^Word List {{{$' not found!"
@@ -601,7 +606,7 @@ endfunction "}}}
 function! Glossary_Trans() "{{{
 	execute bufwinnr('glossary').'wincmd w'
 	let @/=@"
-	execute '%s/\('.@".'\)/\1/ge'
+	call search(@",'c')
 	if substitute(getline('.'),@",'','')==getline('.')
 		echo substitute("ERROR: '0' not found!",0,@","")
 		return
@@ -609,13 +614,6 @@ function! Glossary_Trans() "{{{
 		execute '%s/\('.@".'\)/\1/gn'
 	endif
 endfunction "}}}
-function! F1_Visual_Trans() "{{{
-	vnoremap <buffer> <silent> <f1> y:call Glossary_Trans()<cr>
-endfunction "}}}
-function! F1_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f1> <c-w>w
-endfunction "}}}
-
 function! Buffer_Trans() "{{{
 	if bufname('%')=='chinese_toc.write'
 		execute 'buffer english_toc.write'
@@ -625,14 +623,41 @@ function! Buffer_Trans() "{{{
 		execute 'buffer chinese_toc.write'
 	endif
 endfunction "}}}
+function! PageNumber_Trans() "{{{
+	3,$s/\(\d\+\),/（见第\1页）/gec
+endfunction "}}}
+
+" Function key: <F1> "{{{4
+function! F1_Normal_Trans() "{{{
+	nnoremap <buffer> <silent> <f1> <c-w>w
+endfunction "}}}
+function! F1_Shift_Normal_Trans() "{{{
+	nnoremap <buffer> <silent> <s-f1> :call PageNumber_Trans()<cr>
+endfunction "}}}
+function! F1_Visual_Trans() "{{{
+	vnoremap <buffer> <silent> <f1> y:call Glossary_Trans()<cr>
+endfunction "}}}
+
+function! F1_Trans() "{{{
+	call F1_Normal_Trans()
+	call F1_Shift_Normal_Trans()
+	call F1_Visual_Trans()
+endfunction "}}}
+ "}}}4
+
+" Function key: <F2> "{{{4
 function! F2_Normal_Trans() "{{{
 	nnoremap <buffer> <silent> <f2> :call Buffer_Trans()<cr>
 endfunction "}}}
 
-function! Translation() "{{{
-	call F1_Visual_Trans()
-	call F1_Normal_Trans()
+function! F2_Trans() "{{{
 	call F2_Normal_Trans()
+endfunction "}}}
+ "}}}4
+
+function! Translation() "{{{
+	call F1_Trans()
+	call F2_Trans()
 endfunction "}}}
  "}}}3
 
@@ -660,7 +685,7 @@ function! LineBreak_Loc() "{{{
 	1s/$/\r
 	1
 	while line('.')<line('$')
-		/#MARK#
+		call search('/#MARK#')
 		if substitute(getline('.'),'#MARK#.*#END#','','')==getline('.')
 			mark j
 			/#END#/mark k
@@ -1039,6 +1064,10 @@ vnoremap ` ~
 " search backward "{{{
 nnoremap , ?
 vnoremap , ?
+ "}}}
+" next/previous buffer "{{{
+nnoremap <silent> ? :bn<cr>
+nnoremap <silent> <a-/> :bp<cr>
  "}}}
 " save "{{{
 nnoremap <silent> <cr> :wa<cr>
