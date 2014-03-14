@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 15, Sat | 00:44:50 | 2014
+" Last Update: Mar 15, Sat | 01:31:40 | 2014
 
 " Plugins "{{{2
 
@@ -226,8 +226,10 @@ endfunction "}}}
  "}}}3
 
 " change fold level "{{{3
+" substract (0,1); add (2,3)
+" delete number (4,5); append number (6,7)
 function! ChangeFoldLevel(level)  "{{{
-	" substract (0), normal
+	" substract, normal
 		if a:level==0 "{{{
 			" detect level one marker
 				'j
@@ -237,13 +239,12 @@ function! ChangeFoldLevel(level)  "{{{
 					return
 				endif
 				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)-1/e "}}}
-	" substract (1), visual
+	" substract, visual
 		elseif a:level==1 "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(0) "}}}
-		endif
-	" add (2), normal
-		if a:level==2 "{{{
+	" add, normal
+		elseif a:level==2 "{{{
 			" fold level exceeds 20
 				'j
 				call search("\({{{\|}}}\)[2-9][0-9]$","c","'k")
@@ -252,26 +253,29 @@ function! ChangeFoldLevel(level)  "{{{
 					return
 				endif
 				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)+1/e "}}}
-	" add (3), visual
+	" add, visual
 		elseif a:level==3 "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(2) "}}}
-	" delete number (4), normal
+	" delete number, normal
 		elseif a:level==4 "{{{
 			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$//e "}}}
-	" delete number (5), visual
+	" delete number, visual
 		elseif a:level==5 "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(4) "}}}
-	" append number (6), normal
+	" append number, normal
 		elseif a:level==6 "{{{
 			'j
-			while line(".")<line("'k")+1
+			while line(".")<=line("'k")
+				if search('\({{{\|}}}\)$','c')==0
+					return
+				endif
 				call search('\({{{\|}}}\)$','c')
 				s/\({{{\|}}}\)\@<=$/\=foldlevel(line('.'))/e
 				+1
 			endwhile "}}}
-	" append number (7), visual
+	" append number, visual
 		elseif a:level==7 "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(6) "}}}
