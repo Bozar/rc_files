@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 14, Fri | 10:21:07 | 2014
+" Last Update: Mar 15, Sat | 00:44:50 | 2014
 
 " Plugins "{{{2
 
@@ -256,6 +256,25 @@ function! ChangeFoldLevel(level)  "{{{
 		elseif a:level==3 "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(2) "}}}
+	" delete number (4), normal
+		elseif a:level==4 "{{{
+			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$//e "}}}
+	" delete number (5), visual
+		elseif a:level==5 "{{{
+			call MappingMarker(0)
+			call ChangeFoldLevel(4) "}}}
+	" append number (6), normal
+		elseif a:level==6 "{{{
+			'j
+			while line(".")<line("'k")+1
+				call search('\({{{\|}}}\)$','c')
+				s/\({{{\|}}}\)\@<=$/\=foldlevel(line('.'))/e
+				+1
+			endwhile "}}}
+	" append number (7), visual
+		elseif a:level==7 "{{{
+			call MappingMarker(0)
+			call ChangeFoldLevel(6) "}}}
 		endif
 endfunction "}}}
  "}}}3
@@ -1129,6 +1148,10 @@ nnoremap <silent> <a-=> :FlAdd<cr>
 vnoremap <silent> <a-=> <esc>:FlVAdd<cr>
 nnoremap <silent> <a--> :FlSub<cr>
 vnoremap <silent> <a--> <esc>:FlVSub<cr>
+nnoremap <silent> _ :FlDelNum<cr>
+vnoremap <silent> _ <esc>:FlVDelNum<cr>
+nnoremap <silent> + :FlAppNum<cr>
+vnoremap <silent> + <esc>:FlVAppNum<cr>
  "}}}
 " append, insert and creat fold marker "{{{
 nnoremap <silent> <tab> :FmAfter<cr>
@@ -1209,6 +1232,10 @@ command! FlSub call ChangeFoldLevel(0)
 command! FlVSub call ChangeFoldLevel(1)
 command! FlAdd call ChangeFoldLevel(2)
 command! FlVAdd call ChangeFoldLevel(3)
+command! FlDelNum call ChangeFoldLevel(4)
+command! FlVDelNum call ChangeFoldLevel(5)
+command! FlAppNum call ChangeFoldLevel(6)
+command! FlVAppNum call ChangeFoldLevel(7)
 " append, insert and creat fold marker
 command! FmCreat call MoveFoldMarker(0)
 command! FmAfter call MoveFoldMarker(1)
