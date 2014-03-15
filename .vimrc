@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 15, Sat | 21:21:56 | 2014
+" Last Update: Mar 15, Sat | 21:52:29 | 2014
 
 " Plugins "{{{2
 
@@ -646,17 +646,13 @@ function! SwitchORSearch_Trans(mode) "{{{
 			endif "}}}
 	elseif a:mode==1 "{{{
 		" switch window
-			if bufwinnr(BufferC)==-1
-				wincmd w
-			elseif bufwinnr(BufferC)>0
-				if bufname('%')==BufferG
-					let @"=substitute(getline('.'),'^.*\t','','')
-				endif
-				if bufname('%')!=BufferC
-					execute bufwinnr(BufferC).'wincmd w'
-				elseif bufname('%')==BufferC
-					execute bufwinnr(BufferE).'wincmd w'
-				endif
+			if bufname('%')==BufferG
+				let @"=substitute(getline('.'),'^.*\t','','')
+			endif
+			if bufwinnr('%')==2
+				1wincmd w
+			else
+				2wincmd w
 			endif "}}}
 	elseif a:mode==2 "{{{
 		" search glossary
@@ -1125,6 +1121,7 @@ nnoremap <silent> <a-/> :bp<cr>
  "}}}
 " switch between windows "{{{
 nnoremap <silent> <a-.> <c-w>w
+nnoremap <silent> <a-,> <c-w>W
  "}}}
 " save "{{{
 nnoremap <silent> <cr> :wa<cr>
