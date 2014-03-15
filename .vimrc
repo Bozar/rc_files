@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 15, Sat | 19:13:36 | 2014
+" Last Update: Mar 15, Sat | 21:21:56 | 2014
 
 " Plugins "{{{2
 
@@ -75,16 +75,14 @@ endfunction "}}}
 function! PutText(put) "{{{
 	" overwrite (0)
 		if a:put==0 "{{{
-			$mark h|$put
-			1,'hdelete "}}}
+			1put!
+			+1,$delete "}}}
 	" before (1)
 		elseif a:put==1 "{{{
-			1put! "
-			1 "}}}
+			1put! "}}}
 	" after (2)
 		elseif a:put==2 "{{{
-			$mark h|$put
-			'h+1 "}}}
+			$put "}}}
 		endif
 endfunction "}}}
  "}}}3
@@ -576,36 +574,39 @@ endfunction "}}}
  "}}}
 function! UpdateWordList_Vocab() "{{{
 		mark h
+		let List_Vocab='^Word List {{{$' "}}}
 	" detect word list in the first five lines
 		if line('$')<5
 			echo 'ERROR: There should be at least 5 lines!'
 			return
 		endif
 		1
-		call search("Word List {{{$","c",5) "}}}
-		if substitute(getline('.'),'^Word List {{{$','','')==getline('.')
+		call search(List_Vocab,'c',5)
+		if substitute(getline('.'),List_Vocab,'','')==getline('.')
 			'h
-			echo "ERROR: '^Word List {{{$' not found!"
+			echo substitute("ERROR: '0' not found!",0,List_Vocab,"")
 			return
+		endif
 	" move cursor out of word list
-		elseif line("'h")<=5
+		if line("'h")<=5
 			normal [z
 			mark h
-		endif "}}}
-	" clear old list "{{{
-		/^Word List {{{$/+2;/^ }\{3}$/-1delete
-	" put whole text into Scratch
+		endif
+	" clear old list
+		execute '/'.List_Vocab.'/+2;/^ }\{3}$/-1delete'
+	" put whole text to the end
+		$mark z
 		1,$yank
-		call ScratchBuffer(2) "}}}
+		'zput
+		$mark x
 	" delete non-bracket text
-		%s/\[/\r[/ge "{{{
-		%s/\]/]\r/ge
-		g!/\[/delete
+		'z+1,'xs/\[/\r[/ge
+		'z+1,'xs/\]/]\r/ge
+		'z+1,'xg!/\[/delete
 	" move words back to list
-		1,$yank
-		buffer #
+		'z+1,$delete
 		1
-		/^Word List {{{$/+1put "}}}
+		execute '/'.List_Vocab.'/+1put'
 		'h
 endfunction "}}}
 function! F4_Normal_Vocab() "{{{
@@ -1121,6 +1122,9 @@ vnoremap , ?
 " next/previous buffer "{{{
 nnoremap <silent> ? :bn<cr>
 nnoremap <silent> <a-/> :bp<cr>
+ "}}}
+" switch between windows "{{{
+nnoremap <silent> <a-.> <c-w>w
  "}}}
 " save "{{{
 nnoremap <silent> <cr> :wa<cr>
