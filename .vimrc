@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 15, Sat | 15:59:55 | 2014
+" Last Update: Mar 15, Sat | 17:41:56 | 2014
 
 " Plugins "{{{2
 
@@ -626,30 +626,43 @@ endfunction "}}}
  "}}}3
 
 " translation "{{{3
-function! Glossary_Trans() "{{{
-	if bufname('%')!='glossary_toc.write'
-		wincmd j
-		execute 'buffer glossary_toc.write'
-		let @/=@"
-		call search(@",'c')
-		if substitute(getline('.'),@",'','')==getline('.')
-			echo substitute("ERROR: '0' not found!",0,@","")
-			return
-		else
-			execute '%s/\('.@".'\)/\1/gn'
-		endif
-	elseif bufname('%')=='glossary_toc.write'
-		let @"=substitute(getline('.'),'^.*\t','','')
-		buffer #
-	endif
-endfunction "}}}
-function! Buffer_Trans() "{{{
-	if bufname('%')=='chinese_toc.write'
-		execute 'buffer english_toc.write'
-	elseif bufname('%')=='english_toc.write'
-		execute 'buffer glossary_toc.write'
-	else
-		execute 'buffer chinese_toc.write'
+" switch buffer (0)
+" switch window (1)
+" search glossary (2)
+function! SwitchORSearch_Trans(mode) "{{{
+	let BufferG='glossary_toc.write'
+	let BufferC='chinese_toc.write'
+	let BufferE='english_toc.write'
+	if a:mode==0 "{{{
+		" switch buffer
+			if bufname('%')==BufferG
+				let @"=substitute(getline('.'),'^.*\t','','')
+				execute 'buffer' BufferC
+			elseif bufname('%')==BufferC
+				execute 'buffer' BufferE
+			elseif bufname('%')==BufferE
+				execute 'buffer' BufferG
+			endif "}}}
+	elseif a:mode==1 "{{{
+		" switch window
+			if bufname('%')==BufferG
+				let @"=substitute(getline('.'),'^.*\t','','')
+			endif
+			wincmd w "}}}
+	elseif a:mode==2 "{{{
+		" search glossary
+			wincmd b
+			execute 'buffer' BufferG
+			let @/=@"
+			3
+			call search(@",'c')
+			if substitute(getline('.'),@",'','')==getline('.')
+				echo substitute("ERROR: '0' not found!",0,@","")
+				return
+			else
+				execute '%s/\('.@".'\)/\1/gne'
+			endif
+			"}}}
 	endif
 endfunction "}}}
 function! PageNumber_Trans() "{{{
@@ -657,22 +670,30 @@ function! PageNumber_Trans() "{{{
 endfunction "}}}
 
 " Function key: <F1> "{{{4
+" switch window
 function! F1_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f1> <c-w>w
+	nnoremap <buffer> <silent> <f1> :call SwitchORSearch_Trans(1)<cr>
 endfunction "}}}
+" search glossary
+function! F1_Visual_Trans() "{{{
+	vnoremap <buffer> <silent> <f1> y:call SwitchORSearch_Trans(2)<cr>
+endfunction "}}}
+" page number
 function! F1_Shift_Normal_Trans() "{{{
 	nnoremap <buffer> <silent> <s-f1> :call PageNumber_Trans()<cr>
 endfunction "}}}
 
 function! F1_Trans() "{{{
 	call F1_Normal_Trans()
+	call F1_Visual_Trans()
 	call F1_Shift_Normal_Trans()
 endfunction "}}}
  "}}}4
 
 " Function key: <F2> "{{{4
+" switch buffer
 function! F2_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f2> :call Buffer_Trans()<cr>
+	nnoremap <buffer> <silent> <f2> :call SwitchORSearch_Trans(0)<cr>
 endfunction "}}}
 
 function! F2_Trans() "{{{
@@ -680,24 +701,9 @@ function! F2_Trans() "{{{
 endfunction "}}}
  "}}}4
 
-" Function key: <F3> "{{{4
-function! F3_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f3> :call Glossary_Trans()<cr>
-endfunction "}}}
-function! F3_Visual_Trans() "{{{
-	vnoremap <buffer> <silent> <f3> y:call Glossary_Trans()<cr>
-endfunction "}}}
-
-function! F3_Trans() "{{{
-	call F3_Normal_Trans()
-	call F3_Visual_Trans()
-endfunction "}}}
- "}}}4
-
 function! Translation() "{{{
 	call F1_Trans()
 	call F2_Trans()
-	call F3_Trans()
 endfunction "}}}
  "}}}3
 
