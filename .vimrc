@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 15, Sat | 01:31:40 | 2014
+" Last Update: Mar 15, Sat | 15:59:55 | 2014
 
 " Plugins "{{{2
 
@@ -627,14 +627,20 @@ endfunction "}}}
 
 " translation "{{{3
 function! Glossary_Trans() "{{{
-	execute bufwinnr('glossary').'wincmd w'
-	let @/=@"
-	call search(@",'c')
-	if substitute(getline('.'),@",'','')==getline('.')
-		echo substitute("ERROR: '0' not found!",0,@","")
-		return
-	else
-		execute '%s/\('.@".'\)/\1/gn'
+	if bufname('%')!='glossary_toc.write'
+		wincmd j
+		execute 'buffer glossary_toc.write'
+		let @/=@"
+		call search(@",'c')
+		if substitute(getline('.'),@",'','')==getline('.')
+			echo substitute("ERROR: '0' not found!",0,@","")
+			return
+		else
+			execute '%s/\('.@".'\)/\1/gn'
+		endif
+	elseif bufname('%')=='glossary_toc.write'
+		let @"=substitute(getline('.'),'^.*\t','','')
+		buffer #
 	endif
 endfunction "}}}
 function! Buffer_Trans() "{{{
@@ -657,14 +663,10 @@ endfunction "}}}
 function! F1_Shift_Normal_Trans() "{{{
 	nnoremap <buffer> <silent> <s-f1> :call PageNumber_Trans()<cr>
 endfunction "}}}
-function! F1_Visual_Trans() "{{{
-	vnoremap <buffer> <silent> <f1> y:call Glossary_Trans()<cr>
-endfunction "}}}
 
 function! F1_Trans() "{{{
 	call F1_Normal_Trans()
 	call F1_Shift_Normal_Trans()
-	call F1_Visual_Trans()
 endfunction "}}}
  "}}}4
 
@@ -678,9 +680,24 @@ function! F2_Trans() "{{{
 endfunction "}}}
  "}}}4
 
+" Function key: <F3> "{{{4
+function! F3_Normal_Trans() "{{{
+	nnoremap <buffer> <silent> <f3> :call Glossary_Trans()<cr>
+endfunction "}}}
+function! F3_Visual_Trans() "{{{
+	vnoremap <buffer> <silent> <f3> y:call Glossary_Trans()<cr>
+endfunction "}}}
+
+function! F3_Trans() "{{{
+	call F3_Normal_Trans()
+	call F3_Visual_Trans()
+endfunction "}}}
+ "}}}4
+
 function! Translation() "{{{
 	call F1_Trans()
 	call F2_Trans()
+	call F3_Trans()
 endfunction "}}}
  "}}}3
 
