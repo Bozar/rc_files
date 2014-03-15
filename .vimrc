@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 15, Sat | 21:52:29 | 2014
+" Last Update: Mar 16, Sun | 02:26:50 | 2014
 
 " Plugins "{{{2
 
@@ -27,33 +27,32 @@ endfunction "}}}
 
 " switch settings "{{{3
 function! SwitchSettings(setting) "{{{
-	if a:setting=='0' "{{{
-		set hlsearch!
-		set hlsearch? "}}}
-	elseif a:setting=='1' "{{{
-		set linebreak!
-		set linebreak? "}}}
+		if a:setting=='0' "{{{
+			set hlsearch!
+			set hlsearch? "}}}
+		elseif a:setting=='1' "{{{
+			set linebreak!
+			set linebreak? "}}}
 	" :h expr-option
-	elseif a:setting=='2' "{{{
-		if &background=='dark'
-			set background=light
-		else
-			set background=dark
-		endif "}}}
-	endif
+		elseif a:setting=='2' "{{{
+			if &background=='dark'
+				set background=light
+			else
+				set background=dark
+			endif "}}}
+		endif
 endfunction "}}}
  "}}}3
 
 " search pattern "{{{3
 function! SearchPattern(pattern) "{{{
+		let @z=@"
 	" a-b substitution
 		if a:pattern==0 "{{{
 			execute '%s/'.@a.'/'.@b.'/gc'
-		endif "}}}
-	" count matches 1
-		let @z=@"
+			"}}}
 	" search
-		if a:pattern==1 "{{{
+		elseif a:pattern==1 "{{{
 			let @/=@" "}}}
 	" yank all matched pattern
 		elseif a:pattern==2 "{{{
@@ -61,26 +60,26 @@ function! SearchPattern(pattern) "{{{
 			execute 'g/'.@".'/yank X'
 			let @"=@x
 			'' "}}}
-		endif
-	" count matches 2
-		execute '%s/'.@z.'//gn'
 	" vim grep
-		if a:pattern==3 "{{{
+		elseif a:pattern==3 "{{{
 			execute 'vim /'.@".'/ %'
-		endif "}}}
+			"}}}
+		endif
+	" count matches
+		execute '%s/'.@z.'//gn'
 endfunction "}}}
  "}}}3
 
-" put text to another file "{{{3
+" put text somewhere else "{{{3
 function! PutText(put) "{{{
-	" overwrite (0)
+	" overwrite
 		if a:put==0 "{{{
 			1put!
 			+1,$delete "}}}
-	" before (1)
+	" before
 		elseif a:put==1 "{{{
 			1put! "}}}
-	" after (2)
+	" after
 		elseif a:put==2 "{{{
 			$put "}}}
 		endif
@@ -110,7 +109,6 @@ endfunction "}}}
  "}}}3
 
 " fold marker "{{{3
-" creat new fold marker
 " DO NOT call 'CreatFoldMarker()' alone
 " call 'MoveFoldMarker()' instead
 " which has fail-safe protocol 'substitute()'
@@ -148,11 +146,10 @@ function! MoveFoldMarker(move) "{{{
 			-1
 		endif "}}}
 	" detect fold
-		mark h
+		mark h "{{{
 		call CursorAtFoldBegin()
 		normal [z
-		if substitute(getline('.'),'{\{3}\d\{0,2}$','','')==getline('.') "{{{
-			" fold dose not exsist
+		if substitute(getline('.'),'{\{3}\d\{0,2}$','','')==getline('.')
 			echo "ERROR: Fold '[z' not found!"
 			'h
 			return
@@ -178,8 +175,7 @@ function! MoveFoldMarker(move) "{{{
 			'h+1,'h+2delete
 			'zput
 			-1 "}}}
-	" wrap text
-	" normal
+	" wrap text, normal
 		elseif a:move==4 "{{{
 			call CreatFoldMarker(2)
 			'h+1,'h+2s/\d\{0,2}$//
@@ -192,7 +188,7 @@ function! MoveFoldMarker(move) "{{{
 			'k,'k+1join!
 			normal [z
 		 "}}}
-	" visual
+	" wrap text, visual
 		elseif a:move==5 "{{{
 			call MappingMarker(0)
 			call MoveFoldMarker(4) "}}}
@@ -204,16 +200,13 @@ endfunction "}}}
 function! BulletPoint(bullet) "{{{
 	if a:bullet==0 "{{{
 		" title
-		" do not indent title '-'
 			'j,'kg/^\t\{0,2}-/left 0
 			'j,'ks/^-//e
 		" paragraph
-		" '==' will be replaced with '+'
-		" indent 2 tabs
+		" == will be replaced with +
 			'j,'kg/^\t\{0,2}==/left 8
 			'j,'ks/^\(\t\t\)==/\1+ /e
-		" '=' will be replaced with '*'
-		" indent 1 tab
+		" = will be replaced with *
 			'j,'kg/^\t\{0,2}=/left 4
 			'j,'ks/^\(\t\)=/\1* /e "}}}
 	elseif a:bullet==1 "{{{
@@ -224,34 +217,37 @@ endfunction "}}}
  "}}}3
 
 " change fold level "{{{3
-" substract (0,1); add (2,3)
+" minus (0,1); plus (2,3)
 " delete number (4,5); append number (6,7)
 function! ChangeFoldLevel(level)  "{{{
-	" substract, normal
+		mark h
+	" minus, normal
 		if a:level==0 "{{{
 			" detect level one marker
-				'j
+				'j "{{{
 				call search("{{{\|}}}","c","'k")
-				if substitute(getline("."),'\({{{\|}}}\)1$','','')!=getline('.')
+				if substitute(getline('.'),'\({{{\|}}}\)1$','','')!=getline('.')
+					'h
 					echo 'ERROR: Fold level 1 detected!'
 					return
-				endif
+				endif "}}}
 				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)-1/e "}}}
-	" substract, visual
+	" minus, visual
 		elseif a:level==1 "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(0) "}}}
-	" add, normal
+	" plus, normal
 		elseif a:level==2 "{{{
 			" fold level exceeds 20
-				'j
+				'j "{{{
 				call search("\({{{\|}}}\)[2-9][0-9]$","c","'k")
 				if substitute(getline("."),'\({{{\|}}}\)[2-9][0-9]$','','')!=getline('.')
+					'h
 					echo 'ERROR: Fold level exceeds 20!'
 					return
-				endif
+				endif "}}}
 				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)+1/e "}}}
-	" add, visual
+	" plus, visual
 		elseif a:level==3 "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(2) "}}}
@@ -278,6 +274,7 @@ function! ChangeFoldLevel(level)  "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(6) "}}}
 		endif
+		'h
 endfunction "}}}
  "}}}3
 
@@ -295,21 +292,21 @@ endfunction "}}}
 
 " time stamp "{{{3
 " 'Date:' and 'Last Update:'
-" there should be at least 3 lines in a file
 " year (%Y) | month (%b) | day (%d) | weekday (%a)
 " hour (%H) | miniute (%M) | second (%S)
 function! TimeStamp(time) "{{{
-	" check lines
-		set nofoldenable
-		mark h "{{{
-		if line('$')<3
-			echo 'ERROR: There should be at least 3 lines!'
-			'h
-			return
-		endif
 		let Date_Time="s/\\(Date: \\)\\@<=.*$/\\=strftime('%b %d | %a | %Y')/e"
 		let Update_Time="s/\\(Last Update: \\)\\@<=.*$/\\=strftime('%b %d, %a | %H:%M:%S | %Y')/e"
-		 "}}}
+		let String_Time='Last Update: '
+		mark h
+		set nofoldenable
+	" check lines
+		if line('$')<3 "{{{
+			'h
+			set foldenable
+			echo 'ERROR: There should be at least 3 lines!'
+			return
+		endif "}}}
 	" creat new date
 		if a:time==0 "{{{
 			s/$/\rDate: /
@@ -319,13 +316,15 @@ function! TimeStamp(time) "{{{
 			return
 		endif "}}}
 	" update time
-	" detect time stamp "{{{
-		1
-		call search("Last Update: ","c",3)
-		if substitute(getline('.'),'Last Update: ','','')==getline('.')
-			$-2
+	" detect time stamp
+		call cursor(1,1) "{{{
+		call search(String_Time,'c',3)
+		if substitute(getline('.'),String_Time,'','')==getline('.')
+			call cursor(line('$')-2,1)
 			call search("Last Update: ","c","$")
-			if substitute(getline('.'),'Last Update: ','','')==getline('.')
+			if substitute(getline('.'),String_Time,'','')==getline('.')
+				'h
+				set foldenable
 				echo 'ERROR: Time stamp not found!'
 				return
 			endif
@@ -334,7 +333,7 @@ function! TimeStamp(time) "{{{
 			execute '1,3'.Update_Time
 			execute '$-2,$'.Update_Time
 			'h
-		echo 'NOTE: Time stamp updated!'
+			echo 'NOTE: Time stamp updated!'
 		endif "}}}
 		set foldenable
 endfunction "}}}
@@ -361,15 +360,12 @@ endfunction "}}}
  "}}}3
 
 " Scratch buffer "{{{3
-" switch to Scratch
 function! SwitchToScratch() "{{{
-	" not loaded
-		if bufwinnr(2)==-1
-			buffer 2
-	" loaded, switch to Scratch
-		elseif bufwinnr(2)!=bufwinnr('%')
-			execute bufwinnr(2).'wincmd w'
-		endif
+	if bufwinnr(2)==-1
+		buffer 2
+	elseif bufwinnr(2)!=bufwinnr('%')
+		execute bufwinnr(2).'wincmd w'
+	endif
 endfunction "}}}
 " creat the first Scratch (0), edit (1)
 " substitute (2), insert (3) and append (4)
@@ -448,13 +444,11 @@ endfunction "}}}
 " Function key: <F1> "{{{4
 " to-do (*) and finished (~)
 function! Finished_GTD() "{{{
-	" substitute '*' with '~'
-		if substitute(getline("."),'^\t\*','','')!=getline('.')
-			s/^\t\*/\t\~/
-	" substitute '~' with '+'
-		elseif substitute(getline("."),'^\t\~','','')!=getline('.')
-			s/^\t\~/\t\*/
-		endif "}}}
+	if substitute(getline('.'),'^\t\*','','')!=getline('.')
+		s/^\t\*/\t\~/
+	elseif substitute(getline('.'),'^\t\~','','')!=getline('.')
+		s/^\t\~/\t\*/
+	endif
 endfunction "}}}
 
 function! F1_GTD() "{{{
@@ -464,9 +458,9 @@ endfunction "}}}
 
 " Function key: <F2> "{{{4
 function! AnotherDay_GTD() "{{{
+		mark h
 	" detect cursor position
-		mark h "{{{
-		call CursorAtFoldBegin()
+		call CursorAtFoldBegin() "{{{
 		normal [z
 		if substitute(getline("."),'^\d\{1,2}月\d\{1,2}日 {\{3}\d$','','')==getline('.')
 			'h
@@ -479,31 +473,31 @@ function! AnotherDay_GTD() "{{{
 		call MoveFoldMarker(2) "{{{
 		'h-2mark z
 		'h,'l-1yank
-		'zput
-	" change date
-		'z+1s/\d\{1,2}\(日\)\@=/\=submatch(0)+1/
-	" change foldlevel
+		'zput "}}}
+	" change date and foldlevel
+		'z+1s/\d\{1,2}\(日\)\@=/\=submatch(0)+1/ "{{{
 		call MappingMarker(1)
-		call ChangeFoldLevel(2)
+		call ChangeFoldLevel(2) "}}}
 	" fix substitution errors on rare occasions:
 	" the second day in a month
 	" in which case both }2 will be changed
-		g/^ }\{3}3$/.+1s/^\( }\{3}\)3$/\12/e
+		g/^ }\{3}3$/.+1s/^\( }\{3}\)3$/\12/e "{{{
 		g/^ }\{3}2$/.+1s/^\( }\{3}\)2$/###TO_BE_DELETED###/e
-		g/###TO_BE_DELETED###/delete
+		g/###TO_BE_DELETED###/delete "}}}
 	" delete additional lines
-		'zdelete "}}}
-	" clear old markers "{{{
+	" refresh markers
+		'zdelete "{{{
 		normal mh]zml
+		"}}}
 	" progress bar: substitute 'page 2-5' with 'page 6-'
-		'h,'ls/\(\d\+-\)\@<=\(\d\+\)/\=submatch(0)+1/e
-		'h,'ls/\d\+-\(\d\+\)/\1-/e
 	" substitute finished (~) with unfinished (*)
-		'h,'ls/\t\~/\t\*/e
+		'h,'ls/\(\d\+-\)\@<=\(\d\+\)/\=submatch(0)+1/e "{{{
+		'h,'ls/\d\+-\(\d\+\)/\1-/e
+		'h,'ls/\t\~/\t\*/e "}}}
 	" new marker
-		'h+2
+		'h+2 "{{{
 		normal wma
-		 "}}}
+		"}}}
 endfunction "}}}
 
 function! F2_GTD() "{{{
@@ -576,38 +570,39 @@ function! UpdateWordList_Vocab() "{{{
 		mark h
 		let List_Vocab='^Word List {{{$' "}}}
 	" detect word list in the first five lines
-		if line('$')<5
+		if line('$')<5 "{{{
 			echo 'ERROR: There should be at least 5 lines!'
 			return
 		endif
-		1
+		call cursor(1,1)
 		call search(List_Vocab,'c',5)
 		if substitute(getline('.'),List_Vocab,'','')==getline('.')
 			'h
 			echo substitute("ERROR: '0' not found!",0,List_Vocab,"")
 			return
-		endif
+		endif "}}}
 	" move cursor out of word list
-		if line("'h")<=5
+		if line("'h")<=5 "{{{
 			normal [z
 			mark h
-		endif
+		endif "}}}
 	" clear old list
-		execute '/'.List_Vocab.'/+2;/^ }\{3}$/-1delete'
 	" put whole text to the end
+		call cursor(1,1) "{{{
+		execute '/'.List_Vocab.'/+2;/^ }\{3}$/-1delete'
 		$mark z
 		1,$yank
 		'zput
-		$mark x
-	" delete non-bracket text
-		'z+1,'xs/\[/\r[/ge
+		$mark x "}}}
+	" delete text outside brackets
+		'z+1,'xs/\[/\r[/ge "{{{
 		'z+1,'xs/\]/]\r/ge
-		'z+1,'xg!/\[/delete
+		'z+1,'xg!/\[/delete "}}}
 	" move words back to list
-		'z+1,$delete
-		1
+		'z+1,$delete "{{{
+		call cursor(1,1)
 		execute '/'.List_Vocab.'/+1put'
-		'h
+		'h "}}}
 endfunction "}}}
 function! F4_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
@@ -627,15 +622,14 @@ endfunction "}}}
  "}}}3
 
 " translation "{{{3
-" switch buffer (0)
-" switch window (1)
-" search glossary (2)
+" 3 rows: english = chinese = glossary
+" switch buffer (0), switch window (1), search glossary (2)
 function! SwitchORSearch_Trans(mode) "{{{
-	let BufferG='glossary_toc.write'
-	let BufferC='chinese_toc.write'
-	let BufferE='english_toc.write'
-	if a:mode==0 "{{{
-		" switch buffer
+		let BufferG='glossary_toc.write'
+		let BufferC='chinese_toc.write'
+		let BufferE='english_toc.write'
+	" switch buffer
+		if a:mode==0 "{{{
 			if bufname('%')==BufferG
 				let @"=substitute(getline('.'),'^.*\t','','')
 				execute 'buffer' BufferC
@@ -644,8 +638,8 @@ function! SwitchORSearch_Trans(mode) "{{{
 			elseif bufname('%')==BufferE
 				execute 'buffer' BufferG
 			endif "}}}
-	elseif a:mode==1 "{{{
-		" switch window
+	" switch window
+		elseif a:mode==1 "{{{
 			if bufname('%')==BufferG
 				let @"=substitute(getline('.'),'^.*\t','','')
 			endif
@@ -654,12 +648,12 @@ function! SwitchORSearch_Trans(mode) "{{{
 			else
 				2wincmd w
 			endif "}}}
-	elseif a:mode==2 "{{{
-		" search glossary
+	" search glossary
+		elseif a:mode==2 "{{{
 			wincmd b
 			execute 'buffer' BufferG
 			let @/=@"
-			3
+			call cursor(3,1)
 			call search(@",'c')
 			if substitute(getline('.'),@",'','')==getline('.')
 				echo substitute("ERROR: '0' not found!",0,@","")
@@ -667,7 +661,7 @@ function! SwitchORSearch_Trans(mode) "{{{
 			else
 				execute '%s/\('.@".'\)/\1/gne'
 			endif "}}}
-	endif
+		endif
 endfunction "}}}
 function! PageNumber_Trans() "{{{
 	3,$s/\(\d\+\),/（见第\1页）/gec
@@ -733,7 +727,7 @@ function! FileFormat_Loc() "{{{
 endfunction "}}}
 function! LineBreak_Loc() "{{{
 	1s/$/\r
-	1
+	call current(1,1)
 	while line('.')<line('$')
 		call search('#MARK#')
 		if substitute(getline('.'),'#MARK#.*#END#','','')==getline('.')
@@ -1179,10 +1173,10 @@ nnoremap <silent> <c-\> :SwHlsearch<cr>
 nnoremap <silent> <a-\> :SwLinebreak<cr>
  "}}}
 " change fold level "{{{
-nnoremap <silent> <a-=> :FlAdd<cr>
-vnoremap <silent> <a-=> <esc>:FlVAdd<cr>
-nnoremap <silent> <a--> :FlSub<cr>
-vnoremap <silent> <a--> <esc>:FlVSub<cr>
+nnoremap <silent> <a-=> :FlPlus<cr>
+vnoremap <silent> <a-=> <esc>:FlVPlus<cr>
+nnoremap <silent> <a--> :FlMinus<cr>
+vnoremap <silent> <a--> <esc>:FlVMinus<cr>
 nnoremap <silent> _ :FlDelNum<cr>
 vnoremap <silent> _ <esc>:FlVDelNum<cr>
 nnoremap <silent> + :FlAppNum<cr>
@@ -1263,10 +1257,10 @@ command! ScrVMove call ScratchBuffer(6)
  "}}}
 " folds "{{{
 " change fold level
-command! FlSub call ChangeFoldLevel(0)
-command! FlVSub call ChangeFoldLevel(1)
-command! FlAdd call ChangeFoldLevel(2)
-command! FlVAdd call ChangeFoldLevel(3)
+command! FlMinus call ChangeFoldLevel(0)
+command! FlVMinus call ChangeFoldLevel(1)
+command! FlPlus call ChangeFoldLevel(2)
+command! FlVPlus call ChangeFoldLevel(3)
 command! FlDelNum call ChangeFoldLevel(4)
 command! FlVDelNum call ChangeFoldLevel(5)
 command! FlAppNum call ChangeFoldLevel(6)
