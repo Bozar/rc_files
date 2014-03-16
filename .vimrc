@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 16, Sun | 15:03:41 | 2014
+" Last Update: Mar 16, Sun | 18:15:06 | 2014
 
 " Plugins "{{{2
 
@@ -178,7 +178,8 @@ function! MoveFoldMarker(move) "{{{
 			'kput
 			'j,'j+1join!
 			'k,'k+1join!
-			execute 'normal [z' "}}}
+			execute 'normal [z'
+			"}}}
 	" wrap text, visual
 		elseif a:move==5 "{{{
 			call MappingMarker(0)
@@ -479,7 +480,8 @@ function! AnotherDay_GTD() "{{{
 	" delete additional lines
 	" refresh markers
 		'zdelete "{{{
-		execute 'normal mh]zml' "}}}
+		execute 'normal mh]zml'
+		"}}}
 	" progress bar: substitute 'page 2-5' with 'page 6-'
 	" substitute finished (~) with unfinished (*)
 		'h,'ls/\(\d\+-\)\@<=\(\d\+\)/\=submatch(0)+1/e "{{{
@@ -487,7 +489,8 @@ function! AnotherDay_GTD() "{{{
 		'h,'ls/\t\~/\t\*/e "}}}
 	" new marker
 		'h+2 "{{{
-		execute 'normal wma' "}}}
+		execute 'normal wma'
+		"}}}
 endfunction "}}}
 
 function! F2_GTD() "{{{
@@ -683,9 +686,14 @@ endfunction "}}}
 function! F2_Normal_Trans() "{{{
 	nnoremap <buffer> <silent> <f2> :call SwitchORSearch_Trans(0)<cr>
 endfunction "}}}
+" mksession
+function! F2_Shift_Normal_Trans() "{{{
+	nnoremap <buffer> <s-f2> :mks! trail_of_cthulhu.vim<cr>
+endfunction "}}}
 
 function! F2_Trans() "{{{
 	call F2_Normal_Trans()
+	call F2_Shift_Normal_Trans()
 endfunction "}}}
  "}}}4
 
@@ -1289,7 +1297,6 @@ autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd BufRead *_toc.write call Translation()
-autocmd BufEnter *_toc.write execute "normal 'azt"
 autocmd BufWrite * call TimeStamp(1)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
