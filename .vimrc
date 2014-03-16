@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 16, Sun | 14:49:18 | 2014
+" Last Update: Mar 16, Sun | 15:03:41 | 2014
 
 " Plugins "{{{2
 
@@ -1289,6 +1289,7 @@ autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd BufRead *_toc.write call Translation()
+autocmd BufEnter *_toc.write execute "normal 'azt"
 autocmd BufWrite * call TimeStamp(1)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
