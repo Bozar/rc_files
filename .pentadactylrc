@@ -1,6 +1,7 @@
+" pentadactyl {{{1
+" Last Update: Mar 16, Sun | 13:25:38 | 2014
 loadplugins '\.(js|penta)$'
 group user
-" Last Update: Sat, Oct 19 | 14:26:36 | 2013
 
 " colorscheme
 colo royalblue
@@ -16,8 +17,8 @@ nm -b h <C-p>
 nm -b j <C-f>
 nm -b k <C-b>
 nm -b l <C-n>
-nm -b J j
-nm -b K k
+nm -b <c-j> j
+nm -b <c-k> k
 nm -b <leader>, :
 nm -b -s -e <leader>qa qa
 nm -b -s -e <leader>rs res
@@ -59,4 +60,4 @@ se! browser.newtabpage.enabled=false
 se! general.smoothScroll=false
 
 
-" vim: set ft=pentadactyl fdm=marker:
+" vim: set ft=pentadactyl: }}}1
