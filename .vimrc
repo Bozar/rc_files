@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 16, Sun | 11:50:58 | 2014
+" Last Update: Mar 16, Sun | 14:49:18 | 2014
 
 " Plugins "{{{2
 
@@ -56,10 +56,11 @@ function! SearchPattern(pattern) "{{{
 			let @/=@" "}}}
 	" yank all matched pattern
 		elseif a:pattern==2 "{{{
+			let SaveCursor=getpos('.')
 			let @x=''
 			execute 'g/'.@".'/yank X'
 			let @"=@x
-			'' "}}}
+			call setpos('.', SaveCursor) "}}}
 	" vim grep
 		elseif a:pattern==3 "{{{
 			execute 'vim /'.@".'/ %'
@@ -137,15 +138,15 @@ function! MoveFoldMarker(move) "{{{
 			-1
 		endif "}}}
 	" detect fold
-		mark h "{{{
+		let SaveCursor=getpos('.') "{{{
 		call CursorAtFoldBegin()
 		execute 'normal [z'
 		if substitute(getline('.'),'{\{3}\d\{0,2}$','','')==getline('.')
 			echo "ERROR: Fold '[z' not found!"
-			'h
+			call setpos('.', SaveCursor)
 			return
 		else
-			'h
+			call setpos('.', SaveCursor)
 		endif "}}}
 	" after
 		if a:move==1 "{{{
@@ -210,14 +211,14 @@ endfunction "}}}
 " minus (0,1); plus (2,3)
 " delete number (4,5); append number (6,7)
 function! ChangeFoldLevel(level)  "{{{
-		mark h
+		let SaveCursor=getpos('.')
 	" minus, normal
 		if a:level==0 "{{{
 			" detect level one marker
 				'j "{{{
 				call search("{{{\|}}}","c","'k")
 				if substitute(getline('.'),'\({{{\|}}}\)1$','','')!=getline('.')
-					'h
+					call setpos('.', SaveCursor)
 					echo 'ERROR: Fold level 1 detected!'
 					return
 				endif "}}}
@@ -232,7 +233,7 @@ function! ChangeFoldLevel(level)  "{{{
 				'j "{{{
 				call search("\({{{\|}}}\)[2-9][0-9]$","c","'k")
 				if substitute(getline("."),'\({{{\|}}}\)[2-9][0-9]$','','')!=getline('.')
-					'h
+					call setpos('.', SaveCursor)
 					echo 'ERROR: Fold level exceeds 20!'
 					return
 				endif "}}}
@@ -253,7 +254,7 @@ function! ChangeFoldLevel(level)  "{{{
 			'j
 			while line(".")<=line("'k")
 				if search('\({{{\|}}}\)$','c',line("'k"))==0
-					'h
+					call setpos('.', SaveCursor)
 					return
 				endif
 				call search('\({{{\|}}}\)$','c',line("'k"))
@@ -265,7 +266,7 @@ function! ChangeFoldLevel(level)  "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(6) "}}}
 		endif
-		'h
+		call setpos('.', SaveCursor)
 endfunction "}}}
  "}}}3
 
@@ -289,11 +290,11 @@ function! TimeStamp(time) "{{{
 		let Date_Time="s/\\(Date: \\)\\@<=.*$/\\=strftime('%b %d | %a | %Y')/e"
 		let Update_Time="s/\\(Last Update: \\)\\@<=.*$/\\=strftime('%b %d, %a | %H:%M:%S | %Y')/e"
 		let String_Time='Last Update: '
-		mark h
+		let SaveCursor=getpos('.')
 		set nofoldenable
 	" check lines
 		if line('$')<3 "{{{
-			'h
+			call setpos('.', SaveCursor)
 			set foldenable
 			echo 'ERROR: There should be at least 3 lines!'
 			return
@@ -314,7 +315,7 @@ function! TimeStamp(time) "{{{
 			$-2
 			call search("Last Update: ","c","$")
 			if substitute(getline('.'),String_Time,'','')==getline('.')
-				'h
+				call setpos('.', SaveCursor)
 				set foldenable
 				echo 'ERROR: Time stamp not found!'
 				return
@@ -323,7 +324,7 @@ function! TimeStamp(time) "{{{
 		if a:time==1 "{{{
 			execute '1,3'.Update_Time
 			execute '$-2,$'.Update_Time
-			'h
+			call setpos('.', SaveCursor)
 			echo 'NOTE: Time stamp updated!'
 		endif "}}}
 		set foldenable
@@ -449,16 +450,16 @@ endfunction "}}}
 
 " Function key: <F2> "{{{4
 function! AnotherDay_GTD() "{{{
-		mark h
+		let SaveCursor=getpos('.')
 	" detect cursor position
 		call CursorAtFoldBegin() "{{{
 		execute 'normal [z'
 		if substitute(getline("."),'^\d\{1,2}月\d\{1,2}日 {\{3}\d$','','')==getline('.')
-			'h
+			call setpos('.', SaveCursor)
 			echo 'ERROR: Date not found!'
 			return
 		else
-			'h
+			call setpos('.', SaveCursor)
 		endif "}}}
 	" insert new lines for another day
 		call MoveFoldMarker(2) "{{{
@@ -556,7 +557,7 @@ endfunction "}}}
 " [word 2]
  "}}}
 function! UpdateWordList_Vocab() "{{{
-		mark h
+		let SaveCursor=getpos('.')
 		let List_Vocab='^Word List {{{$' "}}}
 	" detect word list in the first five lines
 		if line('$')<5 "{{{
@@ -566,14 +567,14 @@ function! UpdateWordList_Vocab() "{{{
 		1
 		call search(List_Vocab,'c',5)
 		if substitute(getline('.'),List_Vocab,'','')==getline('.')
-			'h
+			call setpos('.', SaveCursor)
 			echo substitute("ERROR: '0' not found!",0,List_Vocab,"")
 			return
 		endif "}}}
 	" move cursor out of word list
 		if line("'h")<=5 "{{{
 			execute 'normal [z'
-			mark h
+			let SaveCursor=getpos('.')
 		endif "}}}
 	" clear old list
 	" put whole text to the end
@@ -591,7 +592,7 @@ function! UpdateWordList_Vocab() "{{{
 		'z+1,$delete "{{{
 		1
 		execute '/'.List_Vocab.'/+1put'
-		'h "}}}
+		call setpos('.', SaveCursor) "}}}
 endfunction "}}}
 function! F4_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
@@ -1287,7 +1288,8 @@ command! EdVimrc e $MYVIMRC
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
-autocmd BufRead *toc.write call Translation()
+autocmd BufRead *_toc.write call Translation()
+autocmd BufWrite * call TimeStamp(1)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
  "}}}2
