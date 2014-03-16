@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 16, Sun | 02:26:50 | 2014
+" Last Update: Mar 16, Sun | 11:50:58 | 2014
 
 " Plugins "{{{2
 
@@ -70,25 +70,16 @@ function! SearchPattern(pattern) "{{{
 endfunction "}}}
  "}}}3
 
-" put text somewhere else "{{{3
-function! PutText(put) "{{{
-	" overwrite
-		if a:put==0 "{{{
-			1put!
-			+1,$delete "}}}
-	" before
-		elseif a:put==1 "{{{
-			1put! "}}}
-	" after
-		elseif a:put==2 "{{{
-			$put "}}}
-		endif
+" overwrite whole buffer with @" text "{{{3
+function! OverwriteBuffer() "{{{
+	1put!
+	+1,$delete
 endfunction "}}}
  "}}}3
 
 " mapping markers "{{{3
 function! MappingMarker(marker) "{{{
-	" visual mode to j,k
+	" visual markers to j,k
 		if a:marker==0
 			'<mark j
 			'>mark k
@@ -122,7 +113,7 @@ function! CreatFoldMarker(creat) "{{{
 		call CursorAtFoldBegin()
 	" same level
 		if a:creat==1 "{{{
-			normal [zmh]zml
+			execute 'normal [zmh]zml'
 			'hyank
 			'hput
 			'hput
@@ -148,7 +139,7 @@ function! MoveFoldMarker(move) "{{{
 	" detect fold
 		mark h "{{{
 		call CursorAtFoldBegin()
-		normal [z
+		execute 'normal [z'
 		if substitute(getline('.'),'{\{3}\d\{0,2}$','','')==getline('.')
 			echo "ERROR: Fold '[z' not found!"
 			'h
@@ -186,8 +177,7 @@ function! MoveFoldMarker(move) "{{{
 			'kput
 			'j,'j+1join!
 			'k,'k+1join!
-			normal [z
-		 "}}}
+			execute 'normal [z' "}}}
 	" wrap text, visual
 		elseif a:move==5 "{{{
 			call MappingMarker(0)
@@ -200,8 +190,8 @@ endfunction "}}}
 function! BulletPoint(bullet) "{{{
 	if a:bullet==0 "{{{
 		" title
-			'j,'kg/^\t\{0,2}-/left 0
-			'j,'ks/^-//e
+			'j,'kg/^\t\{0,2}-\(-\|=\)\@!/left 0
+			'j,'ks/^-\(-\|=\)\@!//e
 		" paragraph
 		" == will be replaced with +
 			'j,'kg/^\t\{0,2}==/left 8
@@ -262,10 +252,11 @@ function! ChangeFoldLevel(level)  "{{{
 		elseif a:level==6 "{{{
 			'j
 			while line(".")<=line("'k")
-				if search('\({{{\|}}}\)$','c')==0
+				if search('\({{{\|}}}\)$','c',line("'k"))==0
+					'h
 					return
 				endif
-				call search('\({{{\|}}}\)$','c')
+				call search('\({{{\|}}}\)$','c',line("'k"))
 				s/\({{{\|}}}\)\@<=$/\=foldlevel(line('.'))/e
 				+1
 			endwhile "}}}
@@ -317,10 +308,10 @@ function! TimeStamp(time) "{{{
 		endif "}}}
 	" update time
 	" detect time stamp
-		call cursor(1,1) "{{{
+		1 "{{{
 		call search(String_Time,'c',3)
 		if substitute(getline('.'),String_Time,'','')==getline('.')
-			call cursor(line('$')-2,1)
+			$-2
 			call search("Last Update: ","c","$")
 			if substitute(getline('.'),String_Time,'','')==getline('.')
 				'h
@@ -393,15 +384,15 @@ function! ScratchBuffer(scratch) "{{{
 	" substitute whole Scratch
 		elseif a:scratch==2 "{{{
 			call SwitchToScratch()
-			call PutText(0) "}}}
+			call OverwriteBuffer() "}}}
 	" before
 		elseif a:scratch==3 "{{{
 			call SwitchToScratch()
-			call PutText(1) "}}}
+			1put! "}}}
 	" after
 		elseif a:scratch==4 "{{{
 			call SwitchToScratch()
-			call PutText(2) "}}}
+			$put "}}}
 	" move text between Scratch and other buffers
 	" normal mode
 		elseif a:scratch==5 "{{{
@@ -461,7 +452,7 @@ function! AnotherDay_GTD() "{{{
 		mark h
 	" detect cursor position
 		call CursorAtFoldBegin() "{{{
-		normal [z
+		execute 'normal [z'
 		if substitute(getline("."),'^\d\{1,2}月\d\{1,2}日 {\{3}\d$','','')==getline('.')
 			'h
 			echo 'ERROR: Date not found!'
@@ -487,8 +478,7 @@ function! AnotherDay_GTD() "{{{
 	" delete additional lines
 	" refresh markers
 		'zdelete "{{{
-		normal mh]zml
-		"}}}
+		execute 'normal mh]zml' "}}}
 	" progress bar: substitute 'page 2-5' with 'page 6-'
 	" substitute finished (~) with unfinished (*)
 		'h,'ls/\(\d\+-\)\@<=\(\d\+\)/\=submatch(0)+1/e "{{{
@@ -496,8 +486,7 @@ function! AnotherDay_GTD() "{{{
 		'h,'ls/\t\~/\t\*/e "}}}
 	" new marker
 		'h+2 "{{{
-		normal wma
-		"}}}
+		execute 'normal wma' "}}}
 endfunction "}}}
 
 function! F2_GTD() "{{{
@@ -574,7 +563,7 @@ function! UpdateWordList_Vocab() "{{{
 			echo 'ERROR: There should be at least 5 lines!'
 			return
 		endif
-		call cursor(1,1)
+		1
 		call search(List_Vocab,'c',5)
 		if substitute(getline('.'),List_Vocab,'','')==getline('.')
 			'h
@@ -583,12 +572,12 @@ function! UpdateWordList_Vocab() "{{{
 		endif "}}}
 	" move cursor out of word list
 		if line("'h")<=5 "{{{
-			normal [z
+			execute 'normal [z'
 			mark h
 		endif "}}}
 	" clear old list
 	" put whole text to the end
-		call cursor(1,1) "{{{
+		1 "{{{
 		execute '/'.List_Vocab.'/+2;/^ }\{3}$/-1delete'
 		$mark z
 		1,$yank
@@ -600,7 +589,7 @@ function! UpdateWordList_Vocab() "{{{
 		'z+1,'xg!/\[/delete "}}}
 	" move words back to list
 		'z+1,$delete "{{{
-		call cursor(1,1)
+		1
 		execute '/'.List_Vocab.'/+1put'
 		'h "}}}
 endfunction "}}}
@@ -624,12 +613,12 @@ endfunction "}}}
 " translation "{{{3
 " 3 rows: english = chinese = glossary
 " switch buffer (0), switch window (1), search glossary (2)
-function! SwitchORSearch_Trans(mode) "{{{
+function! SwitchORSearch_Trans(sos) "{{{
 		let BufferG='glossary_toc.write'
 		let BufferC='chinese_toc.write'
 		let BufferE='english_toc.write'
 	" switch buffer
-		if a:mode==0 "{{{
+		if a:sos==0 "{{{
 			if bufname('%')==BufferG
 				let @"=substitute(getline('.'),'^.*\t','','')
 				execute 'buffer' BufferC
@@ -639,7 +628,7 @@ function! SwitchORSearch_Trans(mode) "{{{
 				execute 'buffer' BufferG
 			endif "}}}
 	" switch window
-		elseif a:mode==1 "{{{
+		elseif a:sos==1 "{{{
 			if bufname('%')==BufferG
 				let @"=substitute(getline('.'),'^.*\t','','')
 			endif
@@ -649,11 +638,11 @@ function! SwitchORSearch_Trans(mode) "{{{
 				2wincmd w
 			endif "}}}
 	" search glossary
-		elseif a:mode==2 "{{{
+		elseif a:sos==2 "{{{
 			wincmd b
 			execute 'buffer' BufferG
 			let @/=@"
-			call cursor(3,1)
+			3
 			call search(@",'c')
 			if substitute(getline('.'),@",'','')==getline('.')
 				echo substitute("ERROR: '0' not found!",0,@","")
@@ -827,7 +816,7 @@ endfunction "}}}
 function! F3_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f3>
 		\ :let @d=''\|:g/<c-r>//y D<cr>:4wincmd w<cr>
-		\ :call PutText(0)<cr>
+		\ :call OverwriteBuffer()<cr>
 endfunction "}}}
 " search wrong translation
 " let @c='English'
@@ -889,7 +878,7 @@ function! F5_Shift_Normal_Loc() "{{{
 		\ :let @d=''<cr>
 		\ :g/\(#END#\)\@<!$/d D<cr>
 		\ :let @"=@d<cr>
-		\ :1wincmd w<cr>:b 2<cr>:call PutText(0)<cr>
+		\ :1wincmd w<cr>:b 2<cr>:call OverwriteBuffer()<cr>
 endfunction "}}}
 
 function! F5_Loc() "{{{
@@ -929,23 +918,23 @@ endfunction "}}}
 function! F7_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f7>
 		\ :y<cr>:4wincmd w<cr>
-		\ :call PutText(0)<cr>
+		\ :call OverwriteBuffer()<cr>
 endfunction "}}}
 function! F7_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f7>
 		\ :y<cr>:4wincmd w<cr>
-		\ :call PutText(0)<cr>
+		\ :call OverwriteBuffer()<cr>
 endfunction "}}}
 " append to buffer
 function! F7_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f7>
 		\ :y<cr>:4wincmd w<cr>
-		\ :call PutText(2)<cr>
+		\ :$put<cr>
 endfunction "}}}
 function! F7_Shift_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <s-f7>
 		\ :y<cr>:4wincmd w<cr>
-		\ :call PutText(2)<cr>
+		\ :$put<cr>
 endfunction "}}}
 function! F7_Loc() "{{{
 	call F7_Normal_Loc()
