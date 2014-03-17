@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 17, Mon | 18:11:08 | 2014
+" Last Update: Mar 17, Mon | 18:13:18 | 2014
 
 " Plugins "{{{2
 
@@ -709,7 +709,6 @@ endfunction "}}}
 " need to tweak the Excel table first
 " insert #MARK# before English column | #END# after the last column
 
-" Chinese | English = glossary = tmp
 " [tmp | English = glossary] = Chinese
 " [up-left | up-right-above = up-right-below] = down
 " split window equally between all buffers except for glossary
