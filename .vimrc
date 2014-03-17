@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 16, Sun | 18:15:06 | 2014
+" Last Update: Mar 17, Mon | 17:08:01 | 2014
 
 " Plugins "{{{2
 
@@ -50,6 +50,7 @@ function! SearchPattern(pattern) "{{{
 	" a-b substitution
 		if a:pattern==0 "{{{
 			execute '%s/'.@a.'/'.@b.'/gc'
+			return
 			"}}}
 	" search
 		elseif a:pattern==1 "{{{
