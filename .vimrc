@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 17, Mon | 18:13:18 | 2014
+" Last Update: Mar 17, Mon | 22:35:37 | 2014
 
 " Plugins "{{{2
 
@@ -629,7 +629,7 @@ function! SwitchORSearch_Trans(sos) "{{{
 				execute 'buffer' BufferC
 			elseif bufname('%')==BufferC
 				execute 'buffer' BufferE
-			elseif bufname('%')==BufferE
+			else
 				execute 'buffer' BufferG
 			endif "}}}
 	" switch window
@@ -988,14 +988,11 @@ endfunction "}}}
  "}}}4
 
 function! Localization() "{{{
-	call F1_Loc()
-	call F2_Loc()
-	call F3_Loc()
-	call F4_Loc()
-	call F5_Loc()
-	call F6_Loc()
-	call F7_Loc()
-	call F8_Loc()
+	let i=1
+	while i<9
+		execute substitute('call F0_Loc()',0,i,'')
+		let i=i+1
+	endwhile
 endfunction "}}}
  "}}}3
  "}}}2
@@ -1091,7 +1088,7 @@ set foldlevel=20
 " search
 set ignorecase
 set incsearch
-set smartcase
+set nosmartcase
 " tab
 set tabstop=4
 set softtabstop=4
@@ -1125,12 +1122,12 @@ nnoremap , ?
 vnoremap , ?
  "}}}
 " next/previous buffer "{{{
-nnoremap <silent> ? :bn<cr>
-nnoremap <silent> <a-/> :bp<cr>
+nnoremap <silent> <a-j> :bn<cr>
+nnoremap <silent> <a-k> :bp<cr>
  "}}}
 " switch between windows "{{{
-nnoremap <silent> <a-.> <c-w>w
-nnoremap <silent> <a-,> <c-w>W
+nnoremap <silent> <a-l> <c-w>w
+nnoremap <silent> <a-h> <c-w>W
  "}}}
 " save "{{{
 nnoremap <silent> <cr> :wa<cr>
