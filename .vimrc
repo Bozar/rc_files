@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 17, Mon | 22:35:37 | 2014
+" Last Update: Mar 18, Tue | 16:03:52 | 2014
 
 " Plugins "{{{2
 
@@ -500,8 +500,11 @@ endfunction "}}}
  "}}}4
 
 function! GetThingsDone() "{{{
-	call F1_GTD()
-	call F2_GTD()
+	let i=1
+	while i<3
+		execute substitute('call F0_GTD()',0,i,'')
+		let i=i+1
+	endwhile
 endfunction "}}}
  "}}}3
 
@@ -608,33 +611,37 @@ endfunction "}}}
  "}}}4
 
 function! Vocabulary() "{{{
-	call F1_Vocab()
-	call F2_Vocab()
-	call F3_Vocab()
-	call F4_Vocab()
+	let i=1
+	while i<5
+		execute substitute('call F0_Vocab()',0,i,'')
+		let i=i+1
+	endwhile
 endfunction "}}}
  "}}}3
 
 " translation "{{{3
 " 3 rows: english = chinese = glossary
+function! Var_Trans() "{{{
+		let s:BufferG_Trans='glossary_toc.write'
+		let s:BufferC_Trans='chinese_toc.write'
+		let s:BufferE_Trans='english_toc.write'
+endfunction
+call Var_Trans() "}}}
 " switch buffer (0), switch window (1), search glossary (2)
 function! SwitchORSearch_Trans(sos) "{{{
-		let BufferG='glossary_toc.write'
-		let BufferC='chinese_toc.write'
-		let BufferE='english_toc.write'
 	" switch buffer
 		if a:sos==0 "{{{
-			if bufname('%')==BufferG
+			if bufname('%')==s:BufferG_Trans
 				let @"=substitute(getline('.'),'^.*\t','','')
-				execute 'buffer' BufferC
-			elseif bufname('%')==BufferC
-				execute 'buffer' BufferE
+				execute 'buffer' s:BufferC_Trans
+			elseif bufname('%')==s:BufferC_Trans
+				execute 'buffer' s:BufferE_Trans
 			else
-				execute 'buffer' BufferG
+				execute 'buffer' s:BufferG_Trans
 			endif "}}}
 	" switch window
 		elseif a:sos==1 "{{{
-			if bufname('%')==BufferG
+			if bufname('%')==s:BufferG_Trans
 				let @"=substitute(getline('.'),'^.*\t','','')
 			endif
 			if bufwinnr('%')==2
@@ -645,7 +652,7 @@ function! SwitchORSearch_Trans(sos) "{{{
 	" search glossary
 		elseif a:sos==2 "{{{
 			wincmd b
-			execute 'buffer' BufferG
+			execute 'buffer' s:BufferG_Trans
 			let @/=@"
 			3
 			call search(@",'c')
@@ -655,6 +662,32 @@ function! SwitchORSearch_Trans(sos) "{{{
 			else
 				execute '%s/\('.@".'\)/\1/gne'
 			endif "}}}
+		endif
+endfunction "}}}
+function! ScrollBind_Trans() "{{{
+	" switch buffer
+		1wincmd w "{{{
+		execute 'buffer' s:BufferE_Trans
+		2wincmd w
+		execute 'buffer' s:BufferC_Trans
+		"}}}
+	" switch scrollbind
+		if &scrollbind==1 "{{{
+			set noscrollbind
+			1wincmd w
+			set noscrollbind
+			2wincmd w
+			echo 'NOTE: Noscrollbind!'
+			"}}}
+		elseif &scrollbind==0  "{{{
+			set scrollbind
+			let i=line('.')
+			1wincmd w
+			execute i
+			set scrollbind
+			2wincmd w
+			echo 'NOTE: Scrollbind!'
+			"}}}
 		endif
 endfunction "}}}
 function! PageNumber_Trans() "{{{
@@ -698,9 +731,23 @@ function! F2_Trans() "{{{
 endfunction "}}}
  "}}}4
 
+" Function key: <F3> "{{{4
+" set scrollbind
+function! F3_Normal_Trans() "{{{
+	nnoremap <buffer> <silent> <f3> :call ScrollBind_Trans()<cr>
+endfunction "}}}
+
+function! F3_Trans() "{{{
+	call F3_Normal_Trans()
+endfunction "}}}
+ "}}}4
+
 function! Translation() "{{{
-	call F1_Trans()
-	call F2_Trans()
+	let i=1
+	while i<4
+		execute substitute('call F0_Trans()',0,i,'')
+		let i=i+1
+	endwhile
 endfunction "}}}
  "}}}3
 
@@ -714,6 +761,13 @@ endfunction "}}}
 " split window equally between all buffers except for glossary
 " :resize 3
 
+function! Var_Loc() "{{{
+	let s:WinE_Loc='english.loc'
+	let s:WinC_Loc='chinese.loc'
+	let s:WinT_Loc='tmp.loc'
+	let s:WinG_Loc='glossary.loc'
+endfunction
+call Var_Loc() "}}}
 function! FileFormat_Loc() "{{{
 	set fileencoding=utf-8
 	set fileformat=unix
@@ -743,18 +797,14 @@ function! SwitchBuffer_Loc() "{{{
 	endif
 endfunction "}}}
 function! SwitchWindow_Loc(window) "{{{
-	let WinE_Loc='english.loc'
-	let WinC_Loc='chinese.loc'
-	let WinT_Loc='tmp.loc'
-	let WinG_Loc='glossary.loc'
 	if a:window=='e'
-		execute bufwinnr(WinE_Loc).'wincmd w'
+		execute bufwinnr(s:WinE_Loc).'wincmd w'
 	elseif a:window=='c'
-		execute bufwinnr(WinC_Loc).'wincmd w'
+		execute bufwinnr(s:WinC_Loc).'wincmd w'
 	elseif a:window=='t'
-		execute bufwinnr(WinT_Loc).'wincmd w'
+		execute bufwinnr(s:WinT_Loc).'wincmd w'
 	elseif a:window=='g'
-		execute bufwinnr(WinG_Loc).'wincmd w'
+		execute bufwinnr(s:WinG_Loc).'wincmd w'
 	endif
 endfunction "}}}
 
