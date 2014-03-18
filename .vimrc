@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 18, Tue | 17:00:20 | 2014
+" Last Update: Mar 18, Tue | 21:38:29 | 2014
 
 " Plugins "{{{2
 
@@ -675,7 +675,7 @@ function! SameLine_Loc() "{{{
 		let i=line('.')
 		1wincmd w
 		execute i
-		execute 'normal zt'
+		execute 'normal ztma'
 		2wincmd w "}}}
 endfunction "}}}
 function! PageNumber_Trans() "{{{
