@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 18, Tue | 16:38:19 | 2014
+" Last Update: Mar 18, Tue | 17:00:20 | 2014
 
 " Plugins "{{{2
 
@@ -664,6 +664,20 @@ function! SwitchORSearch_Trans(sos) "{{{
 			endif "}}}
 		endif
 endfunction "}}}
+function! SameLine_Loc() "{{{
+	" switch buffer
+		1wincmd w "{{{
+		execute 'buffer' s:BufferE_Trans
+		2wincmd w
+		execute 'buffer' s:BufferC_Trans
+		"}}}
+	" move cursor "{{{
+		let i=line('.')
+		1wincmd w
+		execute i
+		execute 'normal zt'
+		2wincmd w "}}}
+endfunction "}}}
 function! PageNumber_Trans() "{{{
 	3,$s/\(\d\+\),/（见第\1页）/gec
 endfunction "}}}
@@ -705,9 +719,19 @@ function! F2_Trans() "{{{
 endfunction "}}}
  "}}}4
 
+" Function key: <F3> "{{{4
+" same line
+function! F3_Normal_Trans() "{{{
+	nnoremap <buffer> <silent> <f3> :call SameLine_Loc()<cr>
+endfunction "}}}
+
+function! F3_Trans() "{{{
+	call F3_Normal_Trans()
+endfunction "}}}
+ "}}}4
 function! Translation() "{{{
 	let i=1
-	while i<3
+	while i<4
 		execute substitute('call F0_Trans()',0,i,'')
 		let i=i+1
 	endwhile
