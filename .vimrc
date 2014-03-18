@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 18, Tue | 16:03:52 | 2014
+" Last Update: Mar 18, Tue | 16:38:19 | 2014
 
 " Plugins "{{{2
 
@@ -664,32 +664,6 @@ function! SwitchORSearch_Trans(sos) "{{{
 			endif "}}}
 		endif
 endfunction "}}}
-function! ScrollBind_Trans() "{{{
-	" switch buffer
-		1wincmd w "{{{
-		execute 'buffer' s:BufferE_Trans
-		2wincmd w
-		execute 'buffer' s:BufferC_Trans
-		"}}}
-	" switch scrollbind
-		if &scrollbind==1 "{{{
-			set noscrollbind
-			1wincmd w
-			set noscrollbind
-			2wincmd w
-			echo 'NOTE: Noscrollbind!'
-			"}}}
-		elseif &scrollbind==0  "{{{
-			set scrollbind
-			let i=line('.')
-			1wincmd w
-			execute i
-			set scrollbind
-			2wincmd w
-			echo 'NOTE: Scrollbind!'
-			"}}}
-		endif
-endfunction "}}}
 function! PageNumber_Trans() "{{{
 	3,$s/\(\d\+\),/（见第\1页）/gec
 endfunction "}}}
@@ -731,20 +705,9 @@ function! F2_Trans() "{{{
 endfunction "}}}
  "}}}4
 
-" Function key: <F3> "{{{4
-" set scrollbind
-function! F3_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f3> :call ScrollBind_Trans()<cr>
-endfunction "}}}
-
-function! F3_Trans() "{{{
-	call F3_Normal_Trans()
-endfunction "}}}
- "}}}4
-
 function! Translation() "{{{
 	let i=1
-	while i<4
+	while i<3
 		execute substitute('call F0_Trans()',0,i,'')
 		let i=i+1
 	endwhile
