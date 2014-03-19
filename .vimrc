@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 18, Tue | 21:38:29 | 2014
+" Last Update: Mar 19, Wed | 16:13:50 | 2014
 
 " Plugins "{{{2
 
@@ -575,7 +575,7 @@ function! UpdateWordList_Vocab() "{{{
 		call search(List_Vocab,'c',5)
 		if substitute(getline('.'),List_Vocab,'','')==getline('.')
 			call setpos('.', SaveCursor)
-			echo substitute("ERROR: '0' not found!",0,List_Vocab,"")
+			echo "ERROR: '".List_Vocab."' not found!"
 			return
 		endif "}}}
 	" move cursor out of word list
@@ -621,121 +621,173 @@ endfunction "}}}
 
 " translation "{{{3
 " 3 rows: english = chinese = glossary
-function! Var_Trans() "{{{
-		let s:BufferG_Trans='glossary_toc.write'
-		let s:BufferC_Trans='chinese_toc.write'
-		let s:BufferE_Trans='english_toc.write'
-endfunction
-call Var_Trans() "}}}
-" switch buffer (0), switch window (1), search glossary (2)
-function! SwitchORSearch_Trans(sos) "{{{
-	" switch buffer
-		if a:sos==0 "{{{
-			if bufname('%')==s:BufferG_Trans
-				let @"=substitute(getline('.'),'^.*\t','','')
-				execute 'buffer' s:BufferC_Trans
-			elseif bufname('%')==s:BufferC_Trans
-				execute 'buffer' s:BufferE_Trans
-			else
-				execute 'buffer' s:BufferG_Trans
-			endif "}}}
-	" switch window
-		elseif a:sos==1 "{{{
-			if bufname('%')==s:BufferG_Trans
-				let @"=substitute(getline('.'),'^.*\t','','')
-			endif
-			if bufwinnr('%')==2
-				1wincmd w
-			else
-				2wincmd w
-			endif "}}}
-	" search glossary
-		elseif a:sos==2 "{{{
-			wincmd b
-			execute 'buffer' s:BufferG_Trans
-			let @/=@"
-			3
-			call search(@",'c')
-			if substitute(getline('.'),@",'','')==getline('.')
-				echo substitute("ERROR: '0' not found!",0,@","")
-				return
-			else
-				execute '%s/\('.@".'\)/\1/gne'
-			endif "}}}
-		endif
-endfunction "}}}
-function! SameLine_Loc() "{{{
-	" switch buffer
-		1wincmd w "{{{
-		execute 'buffer' s:BufferE_Trans
-		2wincmd w
-		execute 'buffer' s:BufferC_Trans
-		"}}}
-	" move cursor "{{{
+function! SameLine_Trans() "{{{
+	" detect number of windows
+		if winnr('$')!=3 "{{{
+			echo 'ERROR: There should be exact 3 windows for translation!'
+			return
+		endif "}}}
+	" move cursor
+		2wincmd w "{{{
 		let i=line('.')
 		1wincmd w
 		execute i
 		execute 'normal ztma'
 		2wincmd w "}}}
 endfunction "}}}
-function! PageNumber_Trans() "{{{
-	3,$s/\(\d\+\),/（见第\1页）/gec
+function! SwitchWindow_Trans() "{{{
+	" detect number of windows
+		if winnr('$')!=3 "{{{
+			echo 'ERROR: There should be exact 3 windows for translation!'
+			return
+		endif "}}}
+	" yank glossary
+		if bufwinnr('%')==3 "{{{
+			let @"=substitute(getline('.'),'^.\{-}\t\(.\{-}\)\t.*$','\1','')
+		endif "}}}
+	" switch between window 1 and 2
+		if bufwinnr('%')==2 "{{{
+			1wincmd w
+		else
+			2wincmd w
+		endif "}}}
+endfunction "}}}
+function! SearchGlossary_Trans() "{{{
+	" detect number of windows
+		if winnr('$')!=3 "{{{
+			echo 'ERROR: There should be exact 3 windows for translation!'
+			return
+		endif "}}}
+	" search
+		3wincmd w "{{{
+		let @/=@"
+		1
+		call search(@",'c')
+		if substitute(getline('.'),@",'','')==getline('.')
+			echo "ERROR: '".@"."' not found!"
+			return
+		else
+			execute '%s/\('.@".'\)/\1/gn'
+		endif "}}}
 endfunction "}}}
 
 " Function key: <F1> "{{{4
 " switch window
 function! F1_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f1> :call SwitchORSearch_Trans(1)<cr>
+	nnoremap <buffer> <silent> <f1> :call SwitchWindow_Trans()<cr>
 endfunction "}}}
 " search glossary
 function! F1_Visual_Trans() "{{{
-	vnoremap <buffer> <silent> <f1> y:call SwitchORSearch_Trans(2)<cr>
-endfunction "}}}
-" page number
-function! F1_Shift_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <s-f1> :call PageNumber_Trans()<cr>
+	vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans()<cr>
 endfunction "}}}
 
 function! F1_Trans() "{{{
 	call F1_Normal_Trans()
 	call F1_Visual_Trans()
-	call F1_Shift_Normal_Trans()
 endfunction "}}}
  "}}}4
 
 " Function key: <F2> "{{{4
-" switch buffer
+" same line
 function! F2_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f2> :call SwitchORSearch_Trans(0)<cr>
-endfunction "}}}
-" mksession
-function! F2_Shift_Normal_Trans() "{{{
-	nnoremap <buffer> <s-f2> :mks! trail_of_cthulhu.vim<cr>
+	nnoremap <buffer> <silent> <f2> :call SameLine_Trans()<cr>
 endfunction "}}}
 
 function! F2_Trans() "{{{
 	call F2_Normal_Trans()
-	call F2_Shift_Normal_Trans()
+endfunction "}}}
+ "}}}4
+
+function! Translation() "{{{4
+	let i=1
+	while i<3
+		execute substitute('call F0_Trans()',0,i,'')
+		let i=i+1
+	endwhile
+endfunction "}}}4
+ "}}}3
+
+" project: trail of cthulhu "{{{3
+function! Var_ProTrans() "{{{
+		let s:BufferG_ProTrans='glossary_toc.write'
+		let s:BufferC_ProTrans='chinese_toc.write'
+		let s:BufferE_ProTrans='english_toc.write'
+		let s:Session_ProTrans='trail_of_cthulhu.vim'
+endfunction
+call Var_ProTrans() "}}}
+" switch buffer
+function! SwitchBuffer_ProTrans() "{{{
+	" detect buffer
+		if bufexists(bufname(s:BufferG_ProTrans))==0 "{{{
+			echo "ERROR: Buffer '".s:BufferG_ProTrans."' not found!"
+			return
+		elseif bufexists(bufname(s:BufferC_ProTrans))==0
+			echo "ERROR: Buffer '".s:BufferC_ProTrans."' not found!"
+			return
+		elseif bufexists(bufname(s:BufferE_ProTrans))==0
+			echo "ERROR: Buffer '".s:BufferE_ProTrans."' not found!"
+			return
+		endif "}}}
+	" switch buffer
+		if bufname('%')==s:BufferG_ProTrans "{{{
+			execute 'buffer' s:BufferC_ProTrans
+		elseif bufname('%')==s:BufferC_ProTrans
+			execute 'buffer' s:BufferE_ProTrans
+		else
+			execute 'buffer' s:BufferG_ProTrans
+		endif "}}}
+endfunction "}}}
+function! QuickFix_ProTrans() "{{{
+	3,$s/\(\d\+\),/（见第\1页）/gec
+endfunction "}}}
+function! MakeSession_ProTrans() "{{{
+	execute 'mksession!' s:Session_ProTrans
+	echo "NOTE: '".s:Session_ProTrans."' updated!"
+endfunction "}}}
+
+" Function key: <F1> "{{{4
+" Translation() mappings: normal, visual
+" make session
+function! F1_Shift_Normal_ProTrans() "{{{
+	nnoremap <buffer> <silent> <s-f1> :call MakeSession_ProTrans()<cr>
+endfunction "}}}
+
+function! F1_ProTrans() "{{{
+	call F1_Shift_Normal_ProTrans()
+endfunction "}}}
+ "}}}4
+
+" Function key: <F2> "{{{4
+" Translation() mappings: normal
+" quick fix
+function! F2_Shift_Normal_ProTrans() "{{{
+	nnoremap <buffer> <silent> <s-f2> :call QuickFix_ProTrans()<cr>
+endfunction "}}}
+
+function! F2_ProTrans() "{{{
+	call F2_Shift_Normal_ProTrans()
 endfunction "}}}
  "}}}4
 
 " Function key: <F3> "{{{4
-" same line
-function! F3_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f3> :call SameLine_Loc()<cr>
+" switch buffer
+function! F3_Normal_ProTrans() "{{{
+	nnoremap <buffer> <silent> <f3> :call SwitchBuffer_ProTrans()<cr>
 endfunction "}}}
 
-function! F3_Trans() "{{{
-	call F3_Normal_Trans()
+function! F3_ProTrans() "{{{
+	call F3_Normal_ProTrans()
 endfunction "}}}
  "}}}4
-function! Translation() "{{{
+ 
+function! Cthulhu() "{{{4
+	call Translation()
 	let i=1
 	while i<4
-		execute substitute('call F0_Trans()',0,i,'')
+		execute substitute('call F0_ProTrans()',0,i,'')
 		let i=i+1
 	endwhile
-endfunction "}}}
+endfunction "}}}4
  "}}}3
 
 " Localization "{{{3
@@ -1335,6 +1387,7 @@ command! KeVocab call Vocabulary()
 command! KeLocal call Localization()
 command! KeGTD call GetThingsDone()
 command! KeTranslation call Translation()
+command! KeCthulhu call Cthulhu()
  "}}}
 " localization "{{{
 command! LocFormat call FileFormat_Loc()
@@ -1347,7 +1400,7 @@ command! EdVimrc e $MYVIMRC
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
-autocmd BufRead *_toc.write call Translation()
+autocmd BufRead *_toc.write call Cthulhu()
 autocmd BufWrite * call TimeStamp(1)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
