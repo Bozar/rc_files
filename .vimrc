@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 19, Wed | 18:01:55 | 2014
+" Last Update: Mar 20, Thu | 00:47:11 | 2014
 
 " Plugins "{{{2
 
@@ -564,7 +564,7 @@ endfunction "}}}
 " [word 2]
  "}}}
 function! UpdateWordList_Vocab() "{{{
-		let SaveCursor=getpos('.')
+		mark h
 		let List_Vocab='^Word List {{{$' "}}}
 	" detect word list in the first five lines
 		if line('$')<5 "{{{
@@ -574,14 +574,14 @@ function! UpdateWordList_Vocab() "{{{
 		1
 		call search(List_Vocab,'c',5)
 		if substitute(getline('.'),List_Vocab,'','')==getline('.')
-			call setpos('.', SaveCursor)
+			'h
 			echo "ERROR: '".List_Vocab."' not found!"
 			return
 		endif "}}}
 	" move cursor out of word list
 		if line("'h")<=5 "{{{
 			execute 'normal [z'
-			let SaveCursor=getpos('.')
+			mark h
 		endif "}}}
 	" clear old list
 	" put whole text to the end
@@ -599,7 +599,7 @@ function! UpdateWordList_Vocab() "{{{
 		'z+1,$delete "{{{
 		1
 		execute '/'.List_Vocab.'/+1put'
-		call setpos('.', SaveCursor) "}}}
+		'h "}}}
 endfunction "}}}
 function! F4_Normal_Vocab() "{{{
 	nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
