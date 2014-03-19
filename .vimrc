@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 19, Wed | 16:13:50 | 2014
+" Last Update: Mar 19, Wed | 16:27:16 | 2014
 
 " Plugins "{{{2
 
@@ -499,13 +499,13 @@ function! F2_GTD() "{{{
 endfunction "}}}
  "}}}4
 
-function! GetThingsDone() "{{{
+function! GetThingsDone() "{{{4
 	let i=1
 	while i<3
 		execute substitute('call F0_GTD()',0,i,'')
 		let i=i+1
 	endwhile
-endfunction "}}}
+endfunction "}}}4
  "}}}3
 
 " English vocabulary "{{{3
@@ -610,13 +610,13 @@ function! F4_Vocab() "{{{
 endfunction "}}}
  "}}}4
 
-function! Vocabulary() "{{{
+function! Vocabulary() "{{{4
 	let i=1
 	while i<5
 		execute substitute('call F0_Vocab()',0,i,'')
 		let i=i+1
 	endwhile
-endfunction "}}}
+endfunction "}}}4
  "}}}3
 
 " translation "{{{3
@@ -1076,13 +1076,13 @@ function! F8_Loc() "{{{
 endfunction "}}}
  "}}}4
 
-function! Localization() "{{{
+function! Localization() "{{{4
 	let i=1
 	while i<9
 		execute substitute('call F0_Loc()',0,i,'')
 		let i=i+1
 	endwhile
-endfunction "}}}
+endfunction "}}}4
  "}}}3
  "}}}2
 
