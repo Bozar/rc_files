@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 19, Wed | 16:27:16 | 2014
+" Last Update: Mar 19, Wed | 18:01:55 | 2014
 
 " Plugins "{{{2
 
@@ -738,7 +738,7 @@ function! SwitchBuffer_ProTrans() "{{{
 		endif "}}}
 endfunction "}}}
 function! QuickFix_ProTrans() "{{{
-	3,$s/\(\d\+\),/（见第\1页）/gec
+	3,$s/\(\d\+\)=/（见第\1页）/gec
 endfunction "}}}
 function! MakeSession_ProTrans() "{{{
 	execute 'mksession!' s:Session_ProTrans
