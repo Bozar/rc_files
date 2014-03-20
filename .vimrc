@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 20, Thu | 17:12:38 | 2014
+" Last Update: Mar 20, Thu | 18:30:03 | 2014
 
 " Plugins "{{{2
 
@@ -826,7 +826,7 @@ function! FileFormat_Loc() "{{{
 endfunction "}}}
 function! LineBreak_Loc() "{{{
 	1s/$/\r
-	call current(1,1)
+	call cursor(1,1)
 	while line('.')<line('$')
 		call search('#MARK#')
 		if substitute(getline('.'),'#MARK#.*#END#','','')==getline('.')
