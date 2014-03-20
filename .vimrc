@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 20, Thu | 00:47:11 | 2014
+" Last Update: Mar 20, Thu | 17:12:38 | 2014
 
 " Plugins "{{{2
 
@@ -12,6 +12,25 @@ filetype plugin on
  "}}}2
 
 " Functions "{{{2
+
+" variables "{{{3
+" translation project
+function! Var_Pro() "{{{
+	let s:BufG_Pro='glossary_toc.write'
+	let s:BufC_Pro='chinese_toc.write'
+	let s:BufE_Pro='english_toc.write'
+	let s:Session_Pro='trail_of_cthulhu.vim'
+endfunction
+call Var_Pro() "}}}
+" localization
+function! Var_Loc() "{{{
+	let s:BufE_Loc='english.loc'
+	let s:BufC_Loc='chinese.loc'
+	let s:BufT_Loc='tmp.loc'
+	let s:BufG_Loc='glossary.loc'
+endfunction
+call Var_Loc() "}}}
+ "}}}3
 
 " windows or linux "{{{3
 function! CheckOS() "{{{
@@ -635,31 +654,60 @@ function! SameLine_Trans() "{{{
 		execute 'normal ztma'
 		2wincmd w "}}}
 endfunction "}}}
-function! SwitchWindow_Trans() "{{{
+function! SwitchWindow_Trans(WinN,WinR,WinC,WinG) "{{{
+	" WinNumber, WinChinese, WinReference, WinGlossary
 	" detect number of windows
-		if winnr('$')!=3 "{{{
-			echo 'ERROR: There should be exact 3 windows for translation!'
+		if winnr('$')!=a:WinN "{{{
+			echo 'ERROR: There should be exact '.a:WinN.' windows for translation!'
 			return
 		endif "}}}
 	" yank glossary
-		if bufwinnr('%')==3 "{{{
+		if bufwinnr('%')==a:WinG "{{{
 			let @"=substitute(getline('.'),'^.\{-}\t\(.\{-}\)\t.*$','\1','')
 		endif "}}}
-	" switch between window 1 and 2
-		if bufwinnr('%')==2 "{{{
-			1wincmd w
+	" switch between window Chinese and Reference
+		if bufwinnr('%')==a:WinC "{{{
+			execute a:WinR.'wincmd w'
 		else
-			2wincmd w
+			execute a:WinC.'wincmd w'
 		endif "}}}
 endfunction "}}}
-function! SearchGlossary_Trans() "{{{
-	" detect number of windows
-		if winnr('$')!=3 "{{{
-			echo 'ERROR: There should be exact 3 windows for translation!'
+" switch buffer
+function! SwitchBuffer_Trans(project) "{{{
+	" variables
+		if a:project=='cthulhu'
+			let BufR=s:BufE_Pro
+			let BufC=s:BufC_Pro
+			let BufG=s:BufG_Pro
+		endif
+	" detect buffer
+		if bufexists(bufname(BufG))==0 "{{{
+			echo "ERROR: Buffer '".BufG."' not found!"
+			return
+		elseif bufexists(bufname(BufC))==0
+			echo "ERROR: Buffer '".BufC."' not found!"
+			return
+		elseif bufexists(bufname(BufR))==0
+			echo "ERROR: Buffer '".BufR."' not found!"
 			return
 		endif "}}}
-	" search
-		3wincmd w "{{{
+	" switch buffer
+		if bufname('%')==BufG "{{{
+			execute 'buffer' BufC
+		elseif bufname('%')==BufC
+			execute 'buffer' BufR
+		else
+			execute 'buffer' BufG
+		endif "}}}
+endfunction "}}}
+function! SearchGlossary_Trans(WinN,WinG) "{{{
+	" detect number of windows
+		if winnr('$')!=a:WinN "{{{
+			echo 'ERROR: There should be exact '.a:WinN.' windows for translation!'
+			return
+		endif "}}}
+	" search "{{{
+		execute a:WinG.'wincmd w'
 		let @/=@"
 		1
 		call search(@",'c')
@@ -674,11 +722,11 @@ endfunction "}}}
 " Function key: <F1> "{{{4
 " switch window
 function! F1_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f1> :call SwitchWindow_Trans()<cr>
+	nnoremap <buffer> <silent> <f1> :call SwitchWindow_Trans(3,1,2,3)<cr>
 endfunction "}}}
 " search glossary
 function! F1_Visual_Trans() "{{{
-	vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans()<cr>
+	vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans(3,3)<cr>
 endfunction "}}}
 
 function! F1_Trans() "{{{
@@ -708,75 +756,46 @@ endfunction "}}}4
  "}}}3
 
 " project: trail of cthulhu "{{{3
-function! Var_ProTrans() "{{{
-		let s:BufferG_ProTrans='glossary_toc.write'
-		let s:BufferC_ProTrans='chinese_toc.write'
-		let s:BufferE_ProTrans='english_toc.write'
-		let s:Session_ProTrans='trail_of_cthulhu.vim'
-endfunction
-call Var_ProTrans() "}}}
-" switch buffer
-function! SwitchBuffer_ProTrans() "{{{
-	" detect buffer
-		if bufexists(bufname(s:BufferG_ProTrans))==0 "{{{
-			echo "ERROR: Buffer '".s:BufferG_ProTrans."' not found!"
-			return
-		elseif bufexists(bufname(s:BufferC_ProTrans))==0
-			echo "ERROR: Buffer '".s:BufferC_ProTrans."' not found!"
-			return
-		elseif bufexists(bufname(s:BufferE_ProTrans))==0
-			echo "ERROR: Buffer '".s:BufferE_ProTrans."' not found!"
-			return
-		endif "}}}
-	" switch buffer
-		if bufname('%')==s:BufferG_ProTrans "{{{
-			execute 'buffer' s:BufferC_ProTrans
-		elseif bufname('%')==s:BufferC_ProTrans
-			execute 'buffer' s:BufferE_ProTrans
-		else
-			execute 'buffer' s:BufferG_ProTrans
-		endif "}}}
-endfunction "}}}
-function! QuickFix_ProTrans() "{{{
+function! QuickFix_Pro() "{{{
 	3,$s/\(\d\+\)=/（见第\1页）/gec
 endfunction "}}}
-function! MakeSession_ProTrans() "{{{
-	execute 'mksession!' s:Session_ProTrans
-	echo "NOTE: '".s:Session_ProTrans."' updated!"
+function! MakeSession_Pro() "{{{
+	execute 'mksession!' s:Session_Pro
+	echo "NOTE: '".s:Session_Pro."' updated!"
 endfunction "}}}
 
 " Function key: <F1> "{{{4
 " Translation() mappings: normal, visual
 " make session
-function! F1_Shift_Normal_ProTrans() "{{{
-	nnoremap <buffer> <silent> <s-f1> :call MakeSession_ProTrans()<cr>
+function! F1_Shift_Normal_Pro() "{{{
+	nnoremap <buffer> <silent> <s-f1> :call MakeSession_Pro()<cr>
 endfunction "}}}
 
-function! F1_ProTrans() "{{{
-	call F1_Shift_Normal_ProTrans()
+function! F1_Pro() "{{{
+	call F1_Shift_Normal_Pro()
 endfunction "}}}
  "}}}4
 
 " Function key: <F2> "{{{4
 " Translation() mappings: normal
 " quick fix
-function! F2_Shift_Normal_ProTrans() "{{{
-	nnoremap <buffer> <silent> <s-f2> :call QuickFix_ProTrans()<cr>
+function! F2_Shift_Normal_Pro() "{{{
+	nnoremap <buffer> <silent> <s-f2> :call QuickFix_Pro()<cr>
 endfunction "}}}
 
-function! F2_ProTrans() "{{{
-	call F2_Shift_Normal_ProTrans()
+function! F2_Pro() "{{{
+	call F2_Shift_Normal_Pro()
 endfunction "}}}
  "}}}4
 
 " Function key: <F3> "{{{4
 " switch buffer
-function! F3_Normal_ProTrans() "{{{
-	nnoremap <buffer> <silent> <f3> :call SwitchBuffer_ProTrans()<cr>
+function! F3_Normal_Pro() "{{{
+	nnoremap <buffer> <silent> <f3> :call SwitchBuffer_Trans('cthulhu')<cr>
 endfunction "}}}
 
-function! F3_ProTrans() "{{{
-	call F3_Normal_ProTrans()
+function! F3_Pro() "{{{
+	call F3_Normal_Pro()
 endfunction "}}}
  "}}}4
  
@@ -784,7 +803,7 @@ function! Cthulhu() "{{{4
 	call Translation()
 	let i=1
 	while i<4
-		execute substitute('call F0_ProTrans()',0,i,'')
+		execute substitute('call F0_Pro()',0,i,'')
 		let i=i+1
 	endwhile
 endfunction "}}}4
@@ -800,13 +819,6 @@ endfunction "}}}4
 " split window equally between all buffers except for glossary
 " :resize 3
 
-function! Var_Loc() "{{{
-	let s:WinE_Loc='english.loc'
-	let s:WinC_Loc='chinese.loc'
-	let s:WinT_Loc='tmp.loc'
-	let s:WinG_Loc='glossary.loc'
-endfunction
-call Var_Loc() "}}}
 function! FileFormat_Loc() "{{{
 	set fileencoding=utf-8
 	set fileformat=unix
@@ -826,24 +838,27 @@ function! LineBreak_Loc() "{{{
 	endwhile
 endfunction
  "}}}
+" switch buffers: chinese, glossary and tmp
 function! SwitchBuffer_Loc() "{{{
-	if bufname('%')=='chinese.loc'
-		execute 'buffer tmp.loc'
-	elseif bufname('%')=='tmp.loc'
-		execute 'buffer 2'
-	elseif bufname('%')==''
-		execute 'buffer chinese.loc'
+	if bufname('%')==s:BufE_Loc
+		return
+	elseif bufname('%')==s:BufC_Loc
+		execute 'buffer' s:BufT_Loc
+	elseif bufname('%')==s:BufT_Loc
+		execute 'buffer' s:BufG_Loc
+	else
+		execute 'buffer' s:BufC_Loc
 	endif
 endfunction "}}}
 function! SwitchWindow_Loc(window) "{{{
 	if a:window=='e'
-		execute bufwinnr(s:WinE_Loc).'wincmd w'
+		execute bufwinnr(s:BufE_Loc).'wincmd w'
 	elseif a:window=='c'
-		execute bufwinnr(s:WinC_Loc).'wincmd w'
+		execute bufwinnr(s:BufC_Loc).'wincmd w'
 	elseif a:window=='t'
-		execute bufwinnr(s:WinT_Loc).'wincmd w'
+		execute bufwinnr(s:BufT_Loc).'wincmd w'
 	elseif a:window=='g'
-		execute bufwinnr(s:WinG_Loc).'wincmd w'
+		execute bufwinnr(s:BufG_Loc).'wincmd w'
 	endif
 endfunction "}}}
 
@@ -851,15 +866,6 @@ endfunction "}}}
 " put cursor after the first \t
 function! F1_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f1> ^f	
-endfunction "}}}
-" search glossary
-" let @c='search pattern'
-function! F1_Visual_Loc() "{{{
-	vnoremap <buffer> <silent> <f1>
-		\ "cy
-		\ :call SwitchWindow_Loc('g')<cr>gg
-		\ :%s/<c-r>c\c//n<cr>
-		\ /<c-r>/<cr>
 endfunction "}}}
 " search GUID (short line) in English buffer
 " let @d='GUID'
@@ -873,24 +879,18 @@ endfunction "}}}
 
 function! F1_Loc() "{{{
 	call F1_Normal_Loc()
-	call F1_Visual_Loc()
 	call F1_Shift_Normal_Loc()
 endfunction "}}}
  "}}}4
 
 " Function key: <F2> "{{{4
-" search buffer and put cursor after the first '\t'
+" switch between windows
 function! F2_Normal_Loc() "{{{
-	nnoremap <buffer> <silent> <f2> 
-		\ ^yt	gg
-		\ :%s/^<c-r>"\(\t\)\@=\c//n<cr>
-		\ /<c-r>/<cr>^f	
+	nnoremap <buffer> <silent> <f2> :call SwitchWindow_Trans(4,2,3,4)<cr>
 endfunction "}}}
+" search glossary
 function! F2_Visual_Loc() "{{{
-	vnoremap <buffer> <silent> <f2> 
-		\ ygg
-		\ :%s/<c-r>"\c//n<cr>
-		\ /<c-r>/<cr>^f	
+	vnoremap <buffer> <silent> <f2> y:call SearchGlossary_Trans(4,4)<cr>
 endfunction "}}}
 " search English buffer
 function! F2_Shift_Normal_Loc() "{{{
@@ -931,6 +931,7 @@ function! F3_Normal_Loc() "{{{
 		\ :let @d=''\|:g/<c-r>//y D<cr>
 		\ :call SwitchWindow_Loc('t')<cr>
 		\ :call OverwriteBuffer()<cr>
+		\ :1<cr>
 endfunction "}}}
 " search wrong translation
 " let @c='English'
@@ -952,8 +953,7 @@ function! F4_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f4> <c-w>w
 endfunction "}}}
 function! F4_Shift_Normal_Loc() "{{{
-	nnoremap <buffer> <silent> <s-f4>
-		\ :call SwitchBuffer_Loc()<cr>
+	nnoremap <buffer> <silent> <s-f4> :call SwitchBuffer_Loc()<cr>
 endfunction "}}}
 
 function! F4_Loc() "{{{
@@ -974,7 +974,7 @@ function! F5_Normal_Loc() "{{{
 		\ :call SwitchWindow_Loc('e')<cr>gg/<c-r>d/+1<cr>
 		\ :let @e=''<cr>
 		\ :?#MARK#?;/#END#/y E<cr>
-		\ :call SwitchWindow_Loc('c')<cr>'Scc<c-r>e<esc>gg
+		\ :3wincmd w<cr>'Scc<c-r>e<esc>gg
 		\ :g/^$/d<cr>/<c-r>d<cr>/#END#/+1<cr>
 endfunction "}}}
 function! F5_Visual_Loc() "{{{
@@ -993,6 +993,7 @@ function! F5_Shift_Normal_Loc() "{{{
 		\ :g/\(#END#\)\@<!$/d D<cr>
 		\ :let @"=@d<cr>
 		\ :call SwitchWindow_Loc('c')<cr>:b 2<cr>:call OverwriteBuffer()<cr>
+		\ :1<cr>
 endfunction "}}}
 
 function! F5_Loc() "{{{
@@ -1034,11 +1035,13 @@ function! F7_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f7>
 		\ :y<cr>:call SwitchWindow_Loc('t')<cr>
 		\ :call OverwriteBuffer()<cr>
+		\ :1<cr>
 endfunction "}}}
 function! F7_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f7>
 		\ :y<cr>:call SwitchWindow_Loc('t')<cr>
 		\ :call OverwriteBuffer()<cr>
+		\ :1<cr>
 endfunction "}}}
 " append to buffer
 function! F7_Shift_Normal_Loc() "{{{
