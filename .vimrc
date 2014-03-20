@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 20, Thu | 18:30:03 | 2014
+" Last Update: Mar 20, Thu | 23:25:34 | 2014
 
 " Plugins "{{{2
 
@@ -322,27 +322,25 @@ function! TimeStamp(time) "{{{
 		endif "}}}
 	" creat new date
 		if a:time==0 "{{{
-			s/$/\rDate: /
-			execute Date_Time
 			s/$/\rLast Update: /
 			execute Update_Time
-			return
-		endif "}}}
+			s/$/\rDate: /
+			execute Date_Time
+			"}}}
 	" update time
-	" detect time stamp
-		1 "{{{
-		call search(String_Time,'c',3)
-		if substitute(getline('.'),String_Time,'','')==getline('.')
-			$-2
-			call search("Last Update: ","c","$")
+		elseif a:time==1 "{{{
+			1
+			call search(String_Time,'c',3)
 			if substitute(getline('.'),String_Time,'','')==getline('.')
-				call setpos('.', SaveCursor)
-				set foldenable
-				echo 'ERROR: Time stamp not found!'
-				return
+				$-2
+				call search("Last Update: ","c","$")
+				if substitute(getline('.'),String_Time,'','')==getline('.')
+					call setpos('.', SaveCursor)
+					set foldenable
+					echo 'ERROR: Time stamp not found!'
+					return
+				endif
 			endif
-		endif "}}}
-		if a:time==1 "{{{
 			execute '1,3'.Update_Time
 			execute '$-2,$'.Update_Time
 			call setpos('.', SaveCursor)
