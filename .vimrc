@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 21, Fri | 15:30:14 | 2014
+" Last Update: Mar 21, Fri | 17:33:51 | 2014
 
 " Plugins "{{{2
 
@@ -841,18 +841,6 @@ function! LineBreak_Loc() "{{{
 	endwhile
 endfunction
  "}}}
-" switch buffers: chinese, glossary and tmp
-function! SwitchWindow_Loc(window) "{{{
-	if a:window=='e'
-		execute bufwinnr(s:BufE_Loc).'wincmd w'
-	elseif a:window=='c'
-		execute bufwinnr(s:BufC_Loc).'wincmd w'
-	elseif a:window=='t'
-		execute bufwinnr(s:BufT_Loc).'wincmd w'
-	elseif a:window=='g'
-		execute bufwinnr(s:BufG_Loc).'wincmd w'
-	endif
-endfunction "}}}
 
 " Function key: <F1> "{{{4
 " put cursor after the first \t
@@ -864,7 +852,7 @@ endfunction "}}}
 function! F1_Shift_Normal_Loc() "{{{
   nnoremap <buffer> <silent> <s-f1>
 		\ $2F	l"dyt	
-		\ :call SwitchWindow_Loc('e')<cr>gg
+		\ :1wincmd w<cr>gg
 		\ :%s/<c-r>d\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}} 
@@ -888,14 +876,14 @@ endfunction "}}}
 function! F2_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f2> 
 		\ ^yt	
-		\ :call SwitchWindow_Loc('e')<cr>gg
+		\ :1wincmd w<cr>gg
 		\ :%s/\(\t#MARK#\t.\{-\}\)\@<=<c-r>"\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}}
 function! F2_Shift_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <s-f2> 
 		\ y
-		\ :call SwitchWindow_Loc('e')<cr>gg
+		\ :1wincmd w<cr>gg
 		\ :%s/\(\t#MARK#\t.\{-\}\)\@<=<c-r>"\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}}
@@ -921,7 +909,7 @@ endfunction "}}}
 function! F3_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f3>
 		\ :let @d=''\|:g/<c-r>//y D<cr>
-		\ :call SwitchWindow_Loc('t')<cr>
+		\ :2wincmd w<cr>
 		\ :call OverwriteBuffer()<cr>
 		\ :1<cr>
 endfunction "}}}
@@ -963,7 +951,7 @@ endfunction "}}}
 function! F5_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f5>
 		\ mS^"dy$
-		\ :call SwitchWindow_Loc('e')<cr>gg/<c-r>d/+1<cr>
+		\ :1wincmd w<cr>gg/<c-r>d/+1<cr>
 		\ :let @e=''<cr>
 		\ :?#MARK#?;/#END#/y E<cr>
 		\ :3wincmd w<cr>'Scc<c-r>e<esc>gg
@@ -972,10 +960,10 @@ endfunction "}}}
 function! F5_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f5>
 		\ mS"dy
-		\ :call SwitchWindow_Loc('e')<cr>gg/<c-r>d/+1<cr>
+		\ :1wincmd w<cr>gg/<c-r>d/+1<cr>
 		\ :let @e=''<cr>
 		\ :?#MARK#?;/#END#/y E<cr>
-		\ :call SwitchWindow_Loc('c')<cr>'Scc<c-r>e<esc>gg
+		\ :3wincmd w<cr>'Scc<c-r>e<esc>gg
 		\ :g/^$/d<cr>/<c-r>d<cr>/#END#/+1<cr>
 endfunction "}}}
 " put broken lines into Scratch (left)
@@ -984,7 +972,7 @@ function! F5_Shift_Normal_Loc() "{{{
 		\ :let @d=''<cr>
 		\ :g/\(#END#\)\@<!$/d D<cr>
 		\ :let @"=@d<cr>
-		\ :call SwitchWindow_Loc('c')<cr>:b 2<cr>:call OverwriteBuffer()<cr>
+		\ :3wincmd w<cr>:b 2<cr>:call OverwriteBuffer()<cr>
 		\ :1<cr>
 endfunction "}}}
 
@@ -999,16 +987,16 @@ endfunction "}}}
 " add text to bug fix
 function! F6_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f6>
-		\ :1,$yank<cr>:call SwitchWindow_Loc('c')<cr>
+		\ :1,$yank<cr>:3wincmd w<cr>
 		\ :b chinese.loc<cr>
 		\ :$-1put! "<cr>'a
-		\ :call SwitchWindow_Loc('t')<cr>
+		\ :2wincmd w<cr>
 endfunction "}}}
 " search GUID (long line) in English buffer
 function! F6_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f6>
 		\ $F-T	yt	
-		\ :call SwitchWindow_Loc('e')<cr>gg
+		\ :1wincmd w<cr>gg
 		\ :%s/<c-r>"\c//n<cr>
 		\ /<c-r>/<cr>
 endfunction "}}}
@@ -1025,25 +1013,25 @@ endfunction "}}}
 function! F7_Normal_Loc() "{{{
 	" put text into buffer where tmp buffer is
 	nnoremap <buffer> <silent> <f7>
-		\ :y<cr>:call SwitchWindow_Loc('t')<cr>
+		\ :y<cr>:2wincmd w<cr>
 		\ :call OverwriteBuffer()<cr>
 		\ :1<cr>
 endfunction "}}}
 function! F7_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <f7>
-		\ :y<cr>:call SwitchWindow_Loc('t')<cr>
+		\ :y<cr>:2wincmd w<cr>
 		\ :call OverwriteBuffer()<cr>
 		\ :1<cr>
 endfunction "}}}
 " append to buffer
 function! F7_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f7>
-		\ :y<cr>:call SwitchWindow_Loc('t')<cr>
+		\ :y<cr>:2wincmd w<cr>
 		\ :$put<cr>
 endfunction "}}}
 function! F7_Shift_Visual_Loc() "{{{
 	vnoremap <buffer> <silent> <s-f7>
-		\ :y<cr>:call SwitchWindow_Loc('t')<cr>
+		\ :y<cr>:2wincmd w<cr>
 		\ :$put<cr>
 endfunction "}}}
 function! F7_Loc() "{{{
@@ -1063,7 +1051,7 @@ endfunction "}}}
 " move cursor into the top-right buffer
 function! F8_Shift_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <s-f8>
-		\ :call SwitchWindow_Loc('e')<cr>
+		\ :1wincmd w<cr>
 endfunction "}}}
 function! F8_Loc() "{{{
 	call F8_Normal_Loc()
