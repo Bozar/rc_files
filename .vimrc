@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 20, Thu | 23:25:34 | 2014
+" Last Update: Mar 21, Fri | 15:30:14 | 2014
 
 " Plugins "{{{2
 
@@ -638,19 +638,20 @@ endfunction "}}}4
 
 " translation "{{{3
 " 3 rows: english = chinese = glossary
-function! SameLine_Trans() "{{{
+function! SameLine_Trans(WinNr,WinR,WinC) "{{{
 	" detect number of windows
-		if winnr('$')!=3 "{{{
-			echo 'ERROR: There should be exact 3 windows for translation!'
+		if winnr('$')!=a:WinNr "{{{
+			echo 'ERROR: There should be exact' a:WinNr 'windows for translation!'
 			return
 		endif "}}}
-	" move cursor
-		2wincmd w "{{{
+	" move cursor "{{{
+		execute a:WinC.'wincmd w'
 		let i=line('.')
-		1wincmd w
+		execute a:WinR.'wincmd w'
 		execute i
 		execute 'normal ztma'
-		2wincmd w "}}}
+		execute a:WinC.'wincmd w'
+		"}}}
 endfunction "}}}
 function! SwitchWindow_Trans(WinN,WinR,WinC,WinG) "{{{
 	" WinNumber, WinChinese, WinReference, WinGlossary
@@ -673,11 +674,15 @@ endfunction "}}}
 " switch buffer
 function! SwitchBuffer_Trans(project) "{{{
 	" variables
-		if a:project=='cthulhu'
+		if a:project=='cthulhu' "{{{
 			let BufR=s:BufE_Pro
 			let BufC=s:BufC_Pro
 			let BufG=s:BufG_Pro
-		endif
+		elseif a:project=='localization'
+			let BufR=s:BufT_Loc
+			let BufC=s:BufC_Loc
+			let BufG=s:BufG_Loc
+		endif "}}}
 	" detect buffer
 		if bufexists(bufname(BufG))==0 "{{{
 			echo "ERROR: Buffer '".BufG."' not found!"
@@ -736,7 +741,7 @@ endfunction "}}}
 " Function key: <F2> "{{{4
 " same line
 function! F2_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f2> :call SameLine_Trans()<cr>
+	nnoremap <buffer> <silent> <f2> :call SameLine_Trans(3,1,2)<cr>
 endfunction "}}}
 
 function! F2_Trans() "{{{
@@ -837,17 +842,6 @@ function! LineBreak_Loc() "{{{
 endfunction
  "}}}
 " switch buffers: chinese, glossary and tmp
-function! SwitchBuffer_Loc() "{{{
-	if bufname('%')==s:BufE_Loc
-		return
-	elseif bufname('%')==s:BufC_Loc
-		execute 'buffer' s:BufT_Loc
-	elseif bufname('%')==s:BufT_Loc
-		execute 'buffer' s:BufG_Loc
-	else
-		execute 'buffer' s:BufC_Loc
-	endif
-endfunction "}}}
 function! SwitchWindow_Loc(window) "{{{
 	if a:window=='e'
 		execute bufwinnr(s:BufE_Loc).'wincmd w'
@@ -951,7 +945,7 @@ function! F4_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f4> <c-w>w
 endfunction "}}}
 function! F4_Shift_Normal_Loc() "{{{
-	nnoremap <buffer> <silent> <s-f4> :call SwitchBuffer_Loc()<cr>
+	nnoremap <buffer> <silent> <s-f4> :call SwitchBuffer_Trans('localization')<cr>
 endfunction "}}}
 
 function! F4_Loc() "{{{
