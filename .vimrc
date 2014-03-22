@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 21, Fri | 22:06:53 | 2014
+" Last Update: Mar 22, Sat | 21:18:13 | 2014
 
 " Plugins "{{{2
 
@@ -28,8 +28,14 @@ function! Var_Loc() "{{{
 	let s:BufC_Loc='chinese.loc'
 	let s:BufT_Loc='tmp.loc'
 	let s:BufG_Loc='glossary.loc'
+	let s:Session_Loc='gw2.vim'
 endfunction
 call Var_Loc() "}}}
+" message
+function! Message() "{{{
+	let s:Error_Argument='ERROR: Argument not defined!'
+endfunction
+call Message() "}}}
  "}}}3
 
 " windows or linux "{{{3
@@ -59,6 +65,10 @@ function! SwitchSettings(setting) "{{{
 			else
 				set background=dark
 			endif "}}}
+		else "{{{
+			echo s:Error_Argument
+			return
+			"}}}
 		endif
 endfunction "}}}
  "}}}3
@@ -85,6 +95,10 @@ function! SearchPattern(pattern) "{{{
 		elseif a:pattern==3 "{{{
 			execute 'vim /'.@".'/ %'
 			"}}}
+		else "{{{
+			echo s:Error_Argument
+			return
+			"}}}
 		endif
 	" count matches
 		execute '%s/'.@z.'//gn'
@@ -108,6 +122,10 @@ function! MappingMarker(marker) "{{{
 		elseif a:marker==1
 			'hmark j
 			'lmark k
+		else "{{{
+			echo s:Error_Argument
+			return
+			"}}}
 		endif
 endfunction "}}}
  "}}}3
@@ -145,6 +163,10 @@ function! CreatFoldMarker(creat) "{{{
 		elseif a:creat==2 "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2s/\(\d\{1,2}\)$/\=submatch(0)+1/e "}}}
+		else "{{{
+			echo s:Error_Argument
+			return
+			"}}}
 		endif
 endfunction "}}}
 " new (0), after (1), before (2)
@@ -204,26 +226,34 @@ function! MoveFoldMarker(move) "{{{
 		elseif a:move==5 "{{{
 			call MappingMarker(0)
 			call MoveFoldMarker(4) "}}}
+		else "{{{
+			echo s:Error_Argument
+			return
+			"}}}
 		endif
 endfunction "}}}
  "}}}3
 
 " bullets: '*' and '+' "{{{3
 function! BulletPoint(bullet) "{{{
-	if a:bullet==0 "{{{
-		" title
+	" title
+		if a:bullet==0 "{{{
 			'j,'kg/^\t\{0,2}-\(-\|=\)\@!/left 0
 			'j,'ks/^-\(-\|=\)\@!//e
-		" paragraph
-		" == will be replaced with +
+	" paragraph
+	" == will be replaced with +
 			'j,'kg/^\t\{0,2}==/left 8
 			'j,'ks/^\(\t\t\)==/\1+ /e
-		" = will be replaced with *
+	" = will be replaced with *
 			'j,'kg/^\t\{0,2}=/left 4
 			'j,'ks/^\(\t\)=/\1* /e "}}}
-	elseif a:bullet==1 "{{{
+		elseif a:bullet==1 "{{{
 			call MappingMarker(0)
 			call BulletPoint(0) "}}}
+		else "{{{
+			echo s:Error_Argument
+			return
+			"}}}
 	endif
 endfunction "}}}
  "}}}3
@@ -286,6 +316,11 @@ function! ChangeFoldLevel(level)  "{{{
 		elseif a:level==7 "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(6) "}}}
+		else "{{{
+			call setpos('.', SaveCursor)
+			echo s:Error_Argument
+			return
+			"}}}
 		endif
 		call setpos('.', SaveCursor)
 endfunction "}}}
@@ -299,7 +334,28 @@ function! EmptyLines(line) "{{{
 		$g/^$/delete
 	elseif a:line==1
 		g/^$/delete
+	else "{{{
+		echo s:Error_Argument
+		return
+		"}}}
 	endif
+endfunction "}}}
+ "}}}3
+
+" make session "{{{3
+function! MakeSession(file) "{{{
+	" translation and localization
+		if a:file=='t'
+			let Session=s:Session_Pro
+		elseif a:file=='l'
+			let Session=s:Session_Loc
+		else
+			echo s:Error_Argument
+			return
+		endif
+	" update sessin
+		execute 'mksession!' Session
+		echo "NOTE:'" Session "' updated!"
 endfunction "}}}
  "}}}3
 
@@ -345,6 +401,11 @@ function! TimeStamp(time) "{{{
 			execute '$-2,$'.Update_Time
 			call setpos('.', SaveCursor)
 			echo 'NOTE: Time stamp updated!'
+		else "{{{
+			set foldenable
+			echo s:Error_Argument
+			return
+			"}}}
 		endif "}}}
 		set foldenable
 endfunction "}}}
@@ -445,6 +506,10 @@ function! ScratchBuffer(scratch) "{{{
 		elseif a:scratch==7 "{{{
 			call ScratchBuffer(0)
 			echo 'Scratch buffer' bufnr('$') 'created!'
+			"}}}
+		else "{{{
+			echo s:Error_Argument
+			return
 			"}}}
 		endif
 endfunction "}}}
@@ -674,14 +739,19 @@ endfunction "}}}
 " switch buffer
 function! SwitchBuffer_Trans(project) "{{{
 	" variables
-		if a:project=='cthulhu' "{{{
+	" translation and localization
+		if a:project=='t' "{{{
 			let BufR=s:BufE_Pro
 			let BufC=s:BufC_Pro
 			let BufG=s:BufG_Pro
-		elseif a:project=='localization'
+		elseif a:project=='l'
 			let BufR=s:BufT_Loc
 			let BufC=s:BufC_Loc
 			let BufG=s:BufG_Loc
+		else "{{{
+			echo s:Error_Argument
+			return
+			"}}}
 		endif "}}}
 	" detect buffer
 		if bufexists(bufname(BufG))==0 "{{{
@@ -762,16 +832,12 @@ endfunction "}}}4
 function! QuickFix_Pro() "{{{
 	3,$s/\(\d\+\)=/（见第\1页）/gec
 endfunction "}}}
-function! MakeSession_Pro() "{{{
-	execute 'mksession!' s:Session_Pro
-	echo "NOTE: '".s:Session_Pro."' updated!"
-endfunction "}}}
 
 " Function key: <F1> "{{{4
 " Translation() mappings: normal, visual
 " make session
 function! F1_Shift_Normal_Pro() "{{{
-	nnoremap <buffer> <silent> <s-f1> :call MakeSession_Pro()<cr>
+	nnoremap <buffer> <silent> <s-f1> :call MakeSession('t')<cr>
 endfunction "}}}
 
 function! F1_Pro() "{{{
@@ -794,7 +860,7 @@ endfunction "}}}
 " Function key: <F3> "{{{4
 " switch buffer
 function! F3_Normal_Pro() "{{{
-	nnoremap <buffer> <silent> <f3> :call SwitchBuffer_Trans('cthulhu')<cr>
+	nnoremap <buffer> <silent> <f3> :call SwitchBuffer_Trans('t')<cr>
 endfunction "}}}
 
 function! F3_Pro() "{{{
@@ -933,7 +999,7 @@ function! F4_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f4> <c-w>w
 endfunction "}}}
 function! F4_Shift_Normal_Loc() "{{{
-	nnoremap <buffer> <silent> <s-f4> :call SwitchBuffer_Trans('localization')<cr>
+	nnoremap <buffer> <silent> <s-f4> :call SwitchBuffer_Trans('l')<cr>
 endfunction "}}}
 
 function! F4_Loc() "{{{
