@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 22, Sat | 21:18:13 | 2014
+" Last Update: Mar 23, Sun | 01:22:59 | 2014
 
 " Plugins "{{{2
 
@@ -31,11 +31,6 @@ function! Var_Loc() "{{{
 	let s:Session_Loc='gw2.vim'
 endfunction
 call Var_Loc() "}}}
-" message
-function! Message() "{{{
-	let s:Error_Argument='ERROR: Argument not defined!'
-endfunction
-call Message() "}}}
  "}}}3
 
 " windows or linux "{{{3
@@ -65,10 +60,6 @@ function! SwitchSettings(setting) "{{{
 			else
 				set background=dark
 			endif "}}}
-		else "{{{
-			echo s:Error_Argument
-			return
-			"}}}
 		endif
 endfunction "}}}
  "}}}3
@@ -95,10 +86,6 @@ function! SearchPattern(pattern) "{{{
 		elseif a:pattern==3 "{{{
 			execute 'vim /'.@".'/ %'
 			"}}}
-		else "{{{
-			echo s:Error_Argument
-			return
-			"}}}
 		endif
 	" count matches
 		execute '%s/'.@z.'//gn'
@@ -122,10 +109,6 @@ function! MappingMarker(marker) "{{{
 		elseif a:marker==1
 			'hmark j
 			'lmark k
-		else "{{{
-			echo s:Error_Argument
-			return
-			"}}}
 		endif
 endfunction "}}}
  "}}}3
@@ -163,10 +146,6 @@ function! CreatFoldMarker(creat) "{{{
 		elseif a:creat==2 "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2s/\(\d\{1,2}\)$/\=submatch(0)+1/e "}}}
-		else "{{{
-			echo s:Error_Argument
-			return
-			"}}}
 		endif
 endfunction "}}}
 " new (0), after (1), before (2)
@@ -226,10 +205,6 @@ function! MoveFoldMarker(move) "{{{
 		elseif a:move==5 "{{{
 			call MappingMarker(0)
 			call MoveFoldMarker(4) "}}}
-		else "{{{
-			echo s:Error_Argument
-			return
-			"}}}
 		endif
 endfunction "}}}
  "}}}3
@@ -250,10 +225,6 @@ function! BulletPoint(bullet) "{{{
 		elseif a:bullet==1 "{{{
 			call MappingMarker(0)
 			call BulletPoint(0) "}}}
-		else "{{{
-			echo s:Error_Argument
-			return
-			"}}}
 	endif
 endfunction "}}}
  "}}}3
@@ -316,11 +287,6 @@ function! ChangeFoldLevel(level)  "{{{
 		elseif a:level==7 "{{{
 			call MappingMarker(0)
 			call ChangeFoldLevel(6) "}}}
-		else "{{{
-			call setpos('.', SaveCursor)
-			echo s:Error_Argument
-			return
-			"}}}
 		endif
 		call setpos('.', SaveCursor)
 endfunction "}}}
@@ -334,10 +300,6 @@ function! EmptyLines(line) "{{{
 		$g/^$/delete
 	elseif a:line==1
 		g/^$/delete
-	else "{{{
-		echo s:Error_Argument
-		return
-		"}}}
 	endif
 endfunction "}}}
  "}}}3
@@ -349,9 +311,6 @@ function! MakeSession(file) "{{{
 			let Session=s:Session_Pro
 		elseif a:file=='l'
 			let Session=s:Session_Loc
-		else
-			echo s:Error_Argument
-			return
 		endif
 	" update sessin
 		execute 'mksession!' Session
@@ -401,33 +360,57 @@ function! TimeStamp(time) "{{{
 			execute '$-2,$'.Update_Time
 			call setpos('.', SaveCursor)
 			echo 'NOTE: Time stamp updated!'
-		else "{{{
-			set foldenable
-			echo s:Error_Argument
-			return
-			"}}}
 		endif "}}}
 		set foldenable
 endfunction "}}}
  "}}}3
 
-" creat page number "{{{3
-function! PageNumber() "{{{
-	" creat two strings
-		let a=1|g/1/s//\=a/|let a=a+10/
-		%s/$/\r#INSERT_NUMBER#\r/
-		let a=10|g/#INSERT_NUMBER#/s//\=a/|let a=a+10
-	" join nearby lines
-		g/0$/.-1,.j
-	" add fold marker
-		%s/\s/-/
-		%s/$/ {{{/|%s/$/\r\r }}}/
-		%s/\({\|}\)$/\12/
-	" delete additional lines
-		g/^ {\{3}2$/.,.+1delete
-	" insert title
-		1s/^\(.*\)$/\1\r\1/
-		1s/2$/1/|$s/2$/1/
+" numbers "{{{3
+function! CreatNumber(fold) "{{{
+		let Chapter_Number='^\(\D*\)\(\d\+\)\(\D*\)$'
+		let Page_Number='^\(\D*\)\(\d\+\)-\(\d\+\)\(\D*\)$'
+		1
+	" chapter
+		if substitute(getline('.'),Chapter_Number,'','')!=getline('.') "{{{
+			let a=substitute(getline('.'),Chapter_Number,'\1','')
+			let i=substitute(getline('.'),Chapter_Number,'\2','')
+			let b=substitute(getline('.'),Chapter_Number,'\3','')
+			while line('.')<line('$')
+				+1
+				let i=i+1
+				execute 's/^.*$/'.a.i.b.'/'
+			endwhile "}}}
+	" page
+		elseif substitute(getline('.'),Page_Number,'','')!=getline('.') "{{{
+			let a=substitute(getline('.'),Page_Number,'\1','')
+			let i=substitute(getline('.'),Page_Number,'\2','')
+			let j=substitute(getline('.'),Page_Number,'\3','')
+			let b=substitute(getline('.'),Page_Number,'\4','')
+			let k=j-i
+			while line('.')<line('$')
+				let i=j+1
+				let j=j+k+1
+				+1
+				execute 's/^.*$/'.a.i.'-'.j.b.'/'
+			endwhile "}}}
+		else
+			echo 'ERROR: Number pattern not found in the first line!'
+			return
+		endif
+		$delete
+	" foldmarker
+		if a:fold==0 "{{{
+			return
+		elseif a:fold==1
+			%s/$/ {{{\r\r }}}/
+			g/{\|}/s/$/2/
+			1s/^/FOLDMARKER {{{\r/
+			1s/$/1/
+			$s/$/\r }}}/
+			$s/$/1/
+			1mark j
+			$mark k
+		endif "}}}
 endfunction "}}}
  "}}}3
 
@@ -506,10 +489,6 @@ function! ScratchBuffer(scratch) "{{{
 		elseif a:scratch==7 "{{{
 			call ScratchBuffer(0)
 			echo 'Scratch buffer' bufnr('$') 'created!'
-			"}}}
-		else "{{{
-			echo s:Error_Argument
-			return
 			"}}}
 		endif
 endfunction "}}}
@@ -748,10 +727,6 @@ function! SwitchBuffer_Trans(project) "{{{
 			let BufR=s:BufT_Loc
 			let BufC=s:BufC_Loc
 			let BufG=s:BufG_Loc
-		else "{{{
-			echo s:Error_Argument
-			return
-			"}}}
 		endif "}}}
 	" detect buffer
 		if bufexists(bufname(BufG))==0 "{{{
@@ -1370,8 +1345,9 @@ vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
 command! Bullet call BulletPoint(0)
 command! BulletV call BulletPoint(1)
  "}}}
-" creat page number "{{{
-command! Page call PageNumber()
+" creat number "{{{
+command! NumNoFold call CreatNumber(0)
+command! NumFold call CreatNumber(1)
  "}}}
 " update current time "{{{
 " search 'http://vim.wikia.com' for help
