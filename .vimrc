@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 23, Sun | 01:22:59 | 2014
+" Last Update: Mar 23, Sun | 01:30:28 | 2014
 
 " Plugins "{{{2
 
@@ -367,25 +367,25 @@ endfunction "}}}
 
 " numbers "{{{3
 function! CreatNumber(fold) "{{{
-		let Chapter_Number='^\(\D*\)\(\d\+\)\(\D*\)$'
-		let Page_Number='^\(\D*\)\(\d\+\)-\(\d\+\)\(\D*\)$'
+		let NoHyphen='^\(\D*\)\(\d\+\)\(\D*\)$'
+		let Hyphen='^\(\D*\)\(\d\+\)-\(\d\+\)\(\D*\)$'
 		1
 	" chapter
-		if substitute(getline('.'),Chapter_Number,'','')!=getline('.') "{{{
-			let a=substitute(getline('.'),Chapter_Number,'\1','')
-			let i=substitute(getline('.'),Chapter_Number,'\2','')
-			let b=substitute(getline('.'),Chapter_Number,'\3','')
+		if substitute(getline('.'),NoHyphen,'','')!=getline('.') "{{{
+			let a=substitute(getline('.'),NoHyphen,'\1','')
+			let i=substitute(getline('.'),NoHyphen,'\2','')
+			let b=substitute(getline('.'),NoHyphen,'\3','')
 			while line('.')<line('$')
-				+1
 				let i=i+1
+				+1
 				execute 's/^.*$/'.a.i.b.'/'
 			endwhile "}}}
 	" page
-		elseif substitute(getline('.'),Page_Number,'','')!=getline('.') "{{{
-			let a=substitute(getline('.'),Page_Number,'\1','')
-			let i=substitute(getline('.'),Page_Number,'\2','')
-			let j=substitute(getline('.'),Page_Number,'\3','')
-			let b=substitute(getline('.'),Page_Number,'\4','')
+		elseif substitute(getline('.'),Hyphen,'','')!=getline('.') "{{{
+			let a=substitute(getline('.'),Hyphen,'\1','')
+			let i=substitute(getline('.'),Hyphen,'\2','')
+			let j=substitute(getline('.'),Hyphen,'\3','')
+			let b=substitute(getline('.'),Hyphen,'\4','')
 			let k=j-i
 			while line('.')<line('$')
 				let i=j+1
