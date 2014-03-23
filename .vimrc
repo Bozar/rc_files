@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 23, Sun | 09:59:33 | 2014
+" Last Update: Mar 23, Sun | 20:21:38 | 2014
 
 " Plugins "{{{2
 
@@ -28,7 +28,6 @@ function! Var_Loc() "{{{
 	let s:BufC_Loc='chinese.loc'
 	let s:BufT_Loc='tmp.loc'
 	let s:BufG_Loc='glossary.loc'
-	let s:Session_Loc='gw2.vim'
 endfunction
 call Var_Loc() "}}}
  "}}}3
@@ -306,15 +305,11 @@ endfunction "}}}
 
 " make session "{{{3
 function! MakeSession(file) "{{{
-	" translation and localization
-		if a:file=='t'
-			let Session=s:Session_Pro
-		elseif a:file=='l'
-			let Session=s:Session_Loc
-		endif
-	" update sessin
-		execute 'mksession!' Session
-		echo "NOTE:'" Session "' updated!"
+	if a:file=='t'
+		let Session=s:Session_Pro
+	endif
+	execute 'mksession!' Session
+	echo "NOTE:'" Session "' updated!"
 endfunction "}}}
  "}}}3
 
