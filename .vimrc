@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 23, Sun | 01:30:28 | 2014
+" Last Update: Mar 23, Sun | 09:59:33 | 2014
 
 " Plugins "{{{2
 
@@ -322,7 +322,7 @@ endfunction "}}}
 " 'Date:' and 'Last Update:'
 " year (%Y) | month (%b) | day (%d) | weekday (%a)
 " hour (%H) | miniute (%M) | second (%S)
-function! TimeStamp(time) "{{{
+function! TimeStamp(time,echo) "{{{
 		let Date_Time="s/\\(Date: \\)\\@<=.*$/\\=strftime('%b %d | %a | %Y')/e"
 		let Update_Time="s/\\(Last Update: \\)\\@<=.*$/\\=strftime('%b %d, %a | %H:%M:%S | %Y')/e"
 		let String_Time='Last Update: '
@@ -332,7 +332,9 @@ function! TimeStamp(time) "{{{
 		if line('$')<3 "{{{
 			call setpos('.', SaveCursor)
 			set foldenable
-			echo 'ERROR: There should be at least 3 lines!'
+			if a:echo==1
+				echo 'ERROR: There should be at least 3 lines!'
+			endif
 			return
 		endif "}}}
 	" creat new date
@@ -352,14 +354,18 @@ function! TimeStamp(time) "{{{
 				if substitute(getline('.'),String_Time,'','')==getline('.')
 					call setpos('.', SaveCursor)
 					set foldenable
-					echo 'ERROR: Time stamp not found!'
+					if a:echo==1
+						echo 'ERROR: Time stamp not found!'
+					endif
 					return
 				endif
 			endif
 			execute '1,3'.Update_Time
 			execute '$-2,$'.Update_Time
 			call setpos('.', SaveCursor)
-			echo 'NOTE: Time stamp updated!'
+			if a:echo==1
+				echo 'NOTE: Time stamp updated!'
+			endif
 		endif "}}}
 		set foldenable
 endfunction "}}}
@@ -1353,8 +1359,8 @@ command! NumFold call CreatNumber(1)
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
-command! Time call TimeStamp(1)
-command! Date call TimeStamp(0)
+command! Time call TimeStamp(1,1)
+command! Date call TimeStamp(0,1)
  "}}}
 " delete empty lines "{{{
 command! DelEmpty call EmptyLines(1)
@@ -1426,7 +1432,7 @@ autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd BufRead *_toc.write call Cthulhu()
-autocmd BufWrite * call TimeStamp(1)
+autocmd BufWrite * call TimeStamp(1,0)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
  "}}}2
