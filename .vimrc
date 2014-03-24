@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 23, Sun | 20:21:38 | 2014
+" Last Update: Mar 24, Mon | 15:52:13 | 2014
 
 " Plugins "{{{2
 
@@ -65,18 +65,25 @@ endfunction "}}}
 
 " search pattern "{{{3
 function! SearchPattern(pattern) "{{{
+		let SaveCursor=getpos('.')
 		let @z=@"
 	" a-b substitution
 		if a:pattern==0 "{{{
-			execute '%s/'.@a.'/'.@b.'/gc'
+			1
+			call search(@a,'c')
+			if substitute(getline('.'),@a,'','')==getline('.')
+				call setpos('.', SaveCursor)
+				echo 'ERROR:' @a 'not found!' 
+				return
+			else
+				execute '%s/'.@a.'/'.@b.'/gc'
 			return
-			"}}}
+			endif "}}}
 	" search
 		elseif a:pattern==1 "{{{
 			let @/=@" "}}}
 	" yank all matched pattern
 		elseif a:pattern==2 "{{{
-			let SaveCursor=getpos('.')
 			let @x=''
 			execute 'g/'.@".'/yank X'
 			let @"=@x
@@ -237,7 +244,7 @@ function! ChangeFoldLevel(level)  "{{{
 		if a:level==0 "{{{
 			" detect level one marker
 				'j "{{{
-				call search("{{{\|}}}","c","'k")
+				call search('{{{\|}}}','c',''k')
 				if substitute(getline('.'),'\({{{\|}}}\)1$','','')!=getline('.')
 					call setpos('.', SaveCursor)
 					echo 'ERROR: Fold level 1 detected!'
