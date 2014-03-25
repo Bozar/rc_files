@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 24, Mon | 15:52:13 | 2014
+" Last Update: Mar 25, Tue | 10:33:26 | 2014
 
 " Plugins "{{{2
 
@@ -1036,6 +1036,7 @@ endfunction "}}}
 " add text to bug fix
 function! F6_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f6>
+		\ :2wincmd w<cr>
 		\ :1,$yank<cr>:3wincmd w<cr>
 		\ :b chinese.loc<cr>
 		\ :$-1put! "<cr>'a
