@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 25, Tue | 10:33:26 | 2014
+" Last Update: Mar 26, Wed | 09:15:05 | 2014
 
 " Plugins "{{{2
 
@@ -14,7 +14,7 @@ filetype plugin on
 " Functions "{{{2
 
 " variables "{{{3
-" translation project
+" translation project "{{{4
 function! Var_Pro() "{{{
 	let s:BufG_Pro='glossary_toc.write'
 	let s:BufC_Pro='chinese_toc.write'
@@ -22,6 +22,7 @@ function! Var_Pro() "{{{
 	let s:Session_Pro='trail_of_cthulhu.vim'
 endfunction
 call Var_Pro() "}}}
+ "}}}4
 " localization
 function! Var_Loc() "{{{
 	let s:BufE_Loc='english.loc'
@@ -30,6 +31,19 @@ function! Var_Loc() "{{{
 	let s:BufG_Loc='glossary.loc'
 endfunction
 call Var_Loc() "}}}
+" hold position marker "{{{4
+function! Var_HoldPos() "{{{
+	let s:HoldPos='###HOLD_POSITION###'
+endfunction
+call Var_HoldPos() "}}}
+ "}}}4
+" GTD "{{{4
+function! Var_GTD() "{{{
+	let s:Today_GTD='^\d\{1,2}月\d\{1,2}日 {\{3}\d$'
+	let s:Buffer_GTD='^缓冲区 {\{3}\d$'
+endfunction
+call Var_GTD() "}}}
+ "}}}4
  "}}}3
 
 " windows or linux "{{{3
@@ -69,7 +83,6 @@ function! SearchPattern(pattern) "{{{
 		let @z=@"
 	" a-b substitution
 		if a:pattern==0 "{{{
-			1
 			call search(@a,'c')
 			if substitute(getline('.'),@a,'','')==getline('.')
 				call setpos('.', SaveCursor)
@@ -244,7 +257,7 @@ function! ChangeFoldLevel(level)  "{{{
 		if a:level==0 "{{{
 			" detect level one marker
 				'j "{{{
-				call search('{{{\|}}}','c',''k')
+				call search("{{{\|}}}","cW","'k")
 				if substitute(getline('.'),'\({{{\|}}}\)1$','','')!=getline('.')
 					call setpos('.', SaveCursor)
 					echo 'ERROR: Fold level 1 detected!'
@@ -259,7 +272,7 @@ function! ChangeFoldLevel(level)  "{{{
 		elseif a:level==2 "{{{
 			" fold level exceeds 20
 				'j "{{{
-				call search("\({{{\|}}}\)[2-9][0-9]$","c","'k")
+				call search("\({{{\|}}}\)[2-9][0-9]$","cW","'k")
 				if substitute(getline("."),'\({{{\|}}}\)[2-9][0-9]$','','')!=getline('.')
 					call setpos('.', SaveCursor)
 					echo 'ERROR: Fold level exceeds 20!'
@@ -281,11 +294,11 @@ function! ChangeFoldLevel(level)  "{{{
 		elseif a:level==6 "{{{
 			'j
 			while line(".")<=line("'k")
-				if search('\({{{\|}}}\)$','c',line("'k"))==0
+				if search('\({{{\|}}}\)$','cW',line("'k"))==0
 					call setpos('.', SaveCursor)
 					return
 				endif
-				call search('\({{{\|}}}\)$','c',line("'k"))
+				call search('\({{{\|}}}\)$','cW',line("'k"))
 				s/\({{{\|}}}\)\@<=$/\=foldlevel(line('.'))/e
 				+1
 			endwhile "}}}
@@ -300,13 +313,18 @@ endfunction "}}}
 
 " delete lines "{{{3
 function! EmptyLines(line) "{{{
-	if a:line==0
-		1,$-1g/^$/.+1s/^$/###DELETE_EMPTY_LINES###/
-		g/^###DELETE_EMPTY_LINES###$/delete
+	call search(s:HoldPos,'c') "{{{
+	if substitute(getline('.'),s:HoldPos,'','')!=getline('.')
+		echo "ERROR: '".s:HoldPos."' found!"
+		return
+	endif "}}}
+	if a:line==0 "{{{
+		execute '1,$-1g/^$/.+1s/^$/'.s:HoldPos.'/e'
+		execute 'g/^'.s:HoldPos.'$/delete'
 		$g/^$/delete
 	elseif a:line==1
 		g/^$/delete
-	endif
+	endif "}}}
 endfunction "}}}
  "}}}3
 
@@ -352,7 +370,7 @@ function! TimeStamp(time,echo) "{{{
 			call search(String_Time,'c',3)
 			if substitute(getline('.'),String_Time,'','')==getline('.')
 				$-2
-				call search("Last Update: ","c","$")
+				call search('Last Update: ','c','$')
 				if substitute(getline('.'),String_Time,'','')==getline('.')
 					call setpos('.', SaveCursor)
 					set foldenable
@@ -525,28 +543,28 @@ function! AnotherDay_GTD() "{{{
 	" detect cursor position
 		call CursorAtFoldBegin() "{{{
 		execute 'normal [z'
-		if substitute(getline("."),'^\d\{1,2}月\d\{1,2}日 {\{3}\d$','','')==getline('.')
+		if substitute(getline('.'),s:Today_GTD,'','')==getline('.')
 			call setpos('.', SaveCursor)
-			echo 'ERROR: Date not found!'
+			echo "ERROR: '".s:Today_GTD."' not found!"
 			return
 		else
 			call setpos('.', SaveCursor)
 		endif "}}}
 	" insert new lines for another day
 		call MoveFoldMarker(2) "{{{
-		'h-2mark z
+	" fix substitution errors on rare occasions:
+	" the second day in a month
+	" in which case both }2 will be changed
+		'l-1
+		call search('}\{3}2$','c')
+		mark l
 		'h,'l-1yank
+		'h-2mark z
 		'zput "}}}
 	" change date and foldlevel
 		'z+1s/\d\{1,2}\(日\)\@=/\=submatch(0)+1/ "{{{
 		call MappingMarker(1)
 		call ChangeFoldLevel(2) "}}}
-	" fix substitution errors on rare occasions:
-	" the second day in a month
-	" in which case both }2 will be changed
-		g/^ }\{3}3$/.+1s/^\( }\{3}\)3$/\12/e "{{{
-		g/^ }\{3}2$/.+1s/^\( }\{3}\)2$/###TO_BE_DELETED###/e
-		g/###TO_BE_DELETED###/delete "}}}
 	" delete additional lines
 	" refresh markers
 		'zdelete "{{{
@@ -568,9 +586,44 @@ function! F2_GTD() "{{{
 endfunction "}}}
  "}}}4
 
+" Function key: <F3> "{{{4
+function! MoveTask_GTD() "{{{
+		set nofoldenable
+	" lines begin with * or ~
+		if substitute(getline('.'),'^\t\(\~\|\*\)','','')==getline('.') "{{{
+			set foldenable
+			echo 'ERROR: Task line not found!'
+			return
+		endif "}}}
+	" move tasks between buffer and today
+		+1mark h "{{{
+		execute 'normal [z'
+	" from today
+		if substitute(getline('.'),s:Today_GTD,'','')!=getline('.') "{{{
+			'h-1delete
+			call search(s:Buffer_GTD)
+			+1put
+			s/^\(\t\)\~/\1*/e "}}}
+	" from buffer
+		elseif substitute(getline('.'),s:Buffer_GTD,'','')!=getline('.') "{{{
+			'h-1delete
+			call search(s:Today_GTD)
+			execute 'normal ]z'
+			-1put
+			s/^\(\t\)\~/\1*/e "}}}
+		endif
+		'h
+		set foldenable "}}}
+endfunction "}}}
+
+function! F3_GTD() "{{{
+	nnoremap <buffer> <silent> <f3> :call MoveTask_GTD()<cr>
+endfunction "}}}
+ "}}}4
+
 function! GetThingsDone() "{{{4
 	let i=1
-	while i<3
+	while i<4
 		execute substitute('call F0_GTD()',0,i,'')
 		let i=i+1
 	endwhile
@@ -765,7 +818,6 @@ function! SearchGlossary_Trans(WinN,WinG) "{{{
 	" search "{{{
 		execute a:WinG.'wincmd w'
 		let @/=@"
-		1
 		call search(@",'c')
 		if substitute(getline('.'),@",'','')==getline('.')
 			echo "ERROR: '".@"."' not found!"
