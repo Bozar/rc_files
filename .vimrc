@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 26, Wed | 09:15:05 | 2014
+" Last Update: Mar 28, Fri | 12:34:21 | 2014
 
 " Plugins "{{{2
 
@@ -23,7 +23,7 @@ function! Var_Pro() "{{{
 endfunction
 call Var_Pro() "}}}
  "}}}4
-" localization
+" localization "{{{4
 function! Var_Loc() "{{{
 	let s:BufE_Loc='english.loc'
 	let s:BufC_Loc='chinese.loc'
@@ -31,6 +31,7 @@ function! Var_Loc() "{{{
 	let s:BufG_Loc='glossary.loc'
 endfunction
 call Var_Loc() "}}}
+ "}}}4
 " hold position marker "{{{4
 function! Var_HoldPos() "{{{
 	let s:HoldPos='###HOLD_POSITION###'
@@ -395,6 +396,7 @@ endfunction "}}}
 function! CreatNumber(fold) "{{{
 		let NoHyphen='^\(\D*\)\(\d\+\)\(\D*\)$'
 		let Hyphen='^\(\D*\)\(\d\+\)-\(\d\+\)\(\D*\)$'
+		$s/$/\r
 		1
 	" chapter
 		if substitute(getline('.'),NoHyphen,'','')!=getline('.') "{{{
@@ -743,10 +745,10 @@ endfunction "}}}4
 
 " translation "{{{3
 " 3 rows: english = chinese = glossary
-function! SameLine_Trans(WinNr,WinR,WinC) "{{{
+function! SameLine_Trans(WinNr,WinR,WinC,FType) "{{{
 	" detect number of windows
 		if winnr('$')!=a:WinNr "{{{
-			echo 'ERROR: There should be exact' a:WinNr 'windows for translation!'
+			echo 'ERROR: There should be exact' a:WinNr 'windows for' a:FType.'!'
 			return
 		endif "}}}
 	" move cursor "{{{
@@ -758,11 +760,11 @@ function! SameLine_Trans(WinNr,WinR,WinC) "{{{
 		execute a:WinC.'wincmd w'
 		"}}}
 endfunction "}}}
-function! SwitchWindow_Trans(WinN,WinR,WinC,WinG) "{{{
+function! SwitchWindow_Trans(WinN,WinR,WinC,WinG,FType) "{{{
 	" WinNumber, WinChinese, WinReference, WinGlossary
 	" detect number of windows
 		if winnr('$')!=a:WinN "{{{
-			echo 'ERROR: There should be exact '.a:WinN.' windows for translation!'
+			echo 'ERROR: There should be exact' a:WinN 'windows for' a:FType.'!'
 			return
 		endif "}}}
 	" yank glossary
@@ -809,10 +811,10 @@ function! SwitchBuffer_Trans(project) "{{{
 			execute 'buffer' BufG
 		endif "}}}
 endfunction "}}}
-function! SearchGlossary_Trans(WinN,WinG) "{{{
+function! SearchGlossary_Trans(WinN,WinG,FType) "{{{
 	" detect number of windows
 		if winnr('$')!=a:WinN "{{{
-			echo 'ERROR: There should be exact '.a:WinN.' windows for translation!'
+			echo 'ERROR: There should be exact' a:WinN 'windows for' a:FType.'!'
 			return
 		endif "}}}
 	" search "{{{
@@ -830,11 +832,11 @@ endfunction "}}}
 " Function key: <F1> "{{{4
 " switch window
 function! F1_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f1> :call SwitchWindow_Trans(3,1,2,3)<cr>
+	nnoremap <buffer> <silent> <f1> :call SwitchWindow_Trans(3,1,2,3,'trans')<cr>
 endfunction "}}}
 " search glossary
 function! F1_Visual_Trans() "{{{
-	vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans(3,3)<cr>
+	vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans(3,3,'trans')<cr>
 endfunction "}}}
 
 function! F1_Trans() "{{{
@@ -846,7 +848,7 @@ endfunction "}}}
 " Function key: <F2> "{{{4
 " same line
 function! F2_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f2> :call SameLine_Trans(3,1,2)<cr>
+	nnoremap <buffer> <silent> <f2> :call SameLine_Trans(3,1,2,'trans')<cr>
 endfunction "}}}
 
 function! F2_Trans() "{{{
@@ -869,25 +871,38 @@ function! QuickFix_Pro() "{{{
 endfunction "}}}
 
 " Function key: <F1> "{{{4
-" Translation() mappings: normal, visual
+" switch window
+function! F1_Normal_Pro() "{{{
+	nnoremap <buffer> <silent> <f1> :call SwitchWindow_Trans(3,1,2,3,'toc')<cr>
+endfunction "}}}
+" search glossary
+function! F1_Visual_Pro() "{{{
+	vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans(3,3,'toc')<cr>
+endfunction "}}}
 " make session
 function! F1_Shift_Normal_Pro() "{{{
 	nnoremap <buffer> <silent> <s-f1> :call MakeSession('t')<cr>
 endfunction "}}}
 
 function! F1_Pro() "{{{
+	call F1_Normal_Pro()
+	call F1_Visual_Pro()
 	call F1_Shift_Normal_Pro()
 endfunction "}}}
  "}}}4
 
 " Function key: <F2> "{{{4
-" Translation() mappings: normal
+" same line
+function! F2_Normal_Pro() "{{{
+	nnoremap <buffer> <silent> <f2> :call SameLine_Trans(3,1,2,'toc')<cr>
+endfunction "}}}
 " quick fix
 function! F2_Shift_Normal_Pro() "{{{
 	nnoremap <buffer> <silent> <s-f2> :call QuickFix_Pro()<cr>
 endfunction "}}}
 
 function! F2_Pro() "{{{
+	call F2_Normal_Pro()
 	call F2_Shift_Normal_Pro()
 endfunction "}}}
  "}}}4
@@ -904,7 +919,6 @@ endfunction "}}}
  "}}}4
  
 function! Cthulhu() "{{{4
-	call Translation()
 	let i=1
 	while i<4
 		execute substitute('call F0_Pro()',0,i,'')
@@ -967,11 +981,11 @@ endfunction "}}}
 " Function key: <F2> "{{{4
 " switch between windows
 function! F2_Normal_Loc() "{{{
-	nnoremap <buffer> <silent> <f2> :call SwitchWindow_Trans(4,2,3,4)<cr>
+	nnoremap <buffer> <silent> <f2> :call SwitchWindow_Trans(4,2,3,4,'loc')<cr>
 endfunction "}}}
 " search glossary
 function! F2_Visual_Loc() "{{{
-	vnoremap <buffer> <silent> <f2> y:call SearchGlossary_Trans(4,4)<cr>
+	vnoremap <buffer> <silent> <f2> y:call SearchGlossary_Trans(4,4,'loc')<cr>
 endfunction "}}}
 " search English buffer
 function! F2_Shift_Normal_Loc() "{{{
