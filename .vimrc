@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 28, Fri | 12:34:21 | 2014
+" Last Update: Apr 04, Fri | 21:32:52 | 2014
 
 " Plugins "{{{2
 
@@ -896,6 +896,10 @@ endfunction "}}}
 function! F2_Normal_Pro() "{{{
 	nnoremap <buffer> <silent> <f2> :call SameLine_Trans(3,1,2,'toc')<cr>
 endfunction "}}}
+" yank text
+function! F2_Visual_Pro() "{{{
+	vnoremap <buffer> <silent> <f2> y:call SwitchWindow_Trans(3,1,2,'','toc')<cr>
+endfunction "}}}
 " quick fix
 function! F2_Shift_Normal_Pro() "{{{
 	nnoremap <buffer> <silent> <s-f2> :call QuickFix_Pro()<cr>
@@ -903,6 +907,7 @@ endfunction "}}}
 
 function! F2_Pro() "{{{
 	call F2_Normal_Pro()
+	call F2_Visual_Pro()
 	call F2_Shift_Normal_Pro()
 endfunction "}}}
  "}}}4
