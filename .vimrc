@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 04, Fri | 21:32:52 | 2014
+" Last Update: Apr 05, Sat | 00:05:04 | 2014
 
 " Plugins "{{{2
 
@@ -61,19 +61,22 @@ endfunction "}}}
 
 " switch settings "{{{3
 function! SwitchSettings(setting) "{{{
-		if a:setting=='0' "{{{
+		if a:setting==0 "{{{
 			set hlsearch!
 			set hlsearch? "}}}
-		elseif a:setting=='1' "{{{
+		elseif a:setting==1 "{{{
 			set linebreak!
 			set linebreak? "}}}
 	" :h expr-option
-		elseif a:setting=='2' "{{{
+		elseif a:setting==2 "{{{
 			if &background=='dark'
 				set background=light
 			else
 				set background=dark
 			endif "}}}
+		elseif a:setting==3 "{{{
+			set modifiable!
+			set modifiable? "}}}
 		endif
 endfunction "}}}
  "}}}3
@@ -522,6 +525,23 @@ function! ScratchBuffer(scratch) "{{{
 endfunction "}}}
  "}}}3
 
+" repository "{{{3
+" Function key: <F1> "{{{4
+" switch modifiable
+function! F1_Repo() "{{{
+	nnoremap <buffer> <silent> <f1> :call SwitchSettings(3)<cr>
+endfunction "}}}
+ "}}}4
+
+function! Repository() "{{{4
+	let i=1
+	while i<2
+		execute substitute('call F0_Repo()',0,i,'')
+		let i=i+1
+	endwhile
+endfunction "}}}4
+ "}}}3
+ 
 " GTD "{{{3
 
 " Function key: <F1> "{{{4
@@ -1483,6 +1503,7 @@ command! FmVWrap call MoveFoldMarker(5)
 command! SwHlsearch call SwitchSettings(0)
 command! SwLinebreak call SwitchSettings(1)
 command! SwBackground call SwitchSettings(2)
+command! SwModifiable call SwitchSettings(3)
  "}}}
 " Chines word count "{{{
 command! Word %s/[^\x00-\xff]//gn
@@ -1506,6 +1527,7 @@ autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd BufRead *_toc.write call Cthulhu()
+autocmd BufRead *.repo call Repository()
 autocmd BufWrite * call TimeStamp(1,0)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
