@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 05, Sat | 00:05:04 | 2014
+" Last Update: Apr 06, Sun | 00:15:24 | 2014
 
 " Plugins "{{{2
 
@@ -617,8 +617,14 @@ function! MoveTask_GTD() "{{{
 			echo 'ERROR: Task line not found!'
 			return
 		endif "}}}
+	" move mark a
+		if substitute(getline(line('.')-2),s:Today_GTD,'','')!=getline(line('.')-2) "{{{
+			+1
+			execute 'normal wma'
+			-1
+		endif "}}}
 	" move tasks between buffer and today
-		+1mark h "{{{
+		+1mark h
 		execute 'normal [z'
 	" from today
 		if substitute(getline('.'),s:Today_GTD,'','')!=getline('.') "{{{
@@ -635,7 +641,7 @@ function! MoveTask_GTD() "{{{
 			s/^\(\t\)\~/\1*/e "}}}
 		endif
 		'h
-		set foldenable "}}}
+		set foldenable
 endfunction "}}}
 
 function! F3_GTD() "{{{
