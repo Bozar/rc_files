@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 06, Sun | 00:15:24 | 2014
+" Last Update: Apr 06, Sun | 22:36:11 | 2014
 
 " Plugins "{{{2
 
@@ -425,6 +425,7 @@ function! CreatNumber(fold) "{{{
 				execute 's/^.*$/'.a.i.'-'.j.b.'/'
 			endwhile "}}}
 		else
+			$delete
 			echo 'ERROR: Number pattern not found in the first line!'
 			return
 		endif
