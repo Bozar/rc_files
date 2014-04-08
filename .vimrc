@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 06, Sun | 22:36:11 | 2014
+" Last Update: Apr 08, Tue | 15:54:45 | 2014
 
 " Plugins "{{{2
 
@@ -1097,7 +1097,7 @@ endfunction "}}}
 " mark S (shared between buffers): search line
 function! F5_Normal_Loc() "{{{
 	nnoremap <buffer> <silent> <f5>
-		\ mS^"dy$
+		\ mS^"dy6t	
 		\ :1wincmd w<cr>gg/<c-r>d/+1<cr>
 		\ :let @e=''<cr>
 		\ :?#MARK#?;/#END#/y E<cr>
