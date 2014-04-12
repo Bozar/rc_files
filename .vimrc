@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 08, Tue | 15:54:45 | 2014
+" Last Update: Apr 12, Sat | 23:41:03 | 2014
 
 " Plugins "{{{2
 
@@ -716,7 +716,7 @@ endfunction "}}}
  "}}}
 function! UpdateWordList_Vocab() "{{{
 		mark h
-		let List_Vocab='^Word List {{{$' "}}}
+		let List_Vocab='^\(Word List\)\|\(生词表\) {{{$' "}}}
 	" detect word list in the first five lines
 		if line('$')<5 "{{{
 			echo 'ERROR: There should be at least 5 lines!'
