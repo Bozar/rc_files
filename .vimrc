@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 12, Sat | 23:41:03 | 2014
+" Last Update: Apr 14, Mon | 00:01:30 | 2014
 
 " Plugins "{{{2
 
@@ -723,7 +723,7 @@ function! UpdateWordList_Vocab() "{{{
 			return
 		endif
 		1
-		call search(List_Vocab,'c',5)
+		call search(List_Vocab,'c')
 		if substitute(getline('.'),List_Vocab,'','')==getline('.')
 			'h
 			echo "ERROR: '".List_Vocab."' not found!"
