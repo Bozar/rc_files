@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 14, Mon | 00:01:30 | 2014
+" Last Update: May 02, Fri | 00:57:28 | 2014
 
 " Plugins "{{{2
 
@@ -1242,8 +1242,8 @@ set hidden
 if CheckOS()=='windows' "{{{
 	autocmd GUIEnter * simalt ~x
 elseif has('gui_running')
-	set lines=999
-	set columns=999
+	set lines=50
+	set columns=123
 elseif CheckOS()=='linux'
 	set lines=30
 	set columns=100
