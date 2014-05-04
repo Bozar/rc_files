@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: May 02, Fri | 00:57:28 | 2014
+" Last Update: May 04, Sun | 10:09:25 | 2014
 
 " Plugins "{{{2
 
@@ -1242,8 +1242,8 @@ set hidden
 if CheckOS()=='windows' "{{{
 	autocmd GUIEnter * simalt ~x
 elseif has('gui_running')
-	set lines=50
-	set columns=123
+	set lines=30
+	set columns=100
 elseif CheckOS()=='linux'
 	set lines=30
 	set columns=100
@@ -1535,7 +1535,7 @@ autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd BufRead *_toc.write call Cthulhu()
 autocmd BufRead *.repo call Repository()
-autocmd BufWrite * call TimeStamp(1,0)
+autocmd BufRead * call TimeStamp(1,0)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}
  "}}}2
