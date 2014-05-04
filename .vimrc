@@ -1242,8 +1242,8 @@ set hidden
 if CheckOS()=='windows' "{{{
 	autocmd GUIEnter * simalt ~x
 elseif has('gui_running')
-	set lines=30
-	set columns=100
+	set lines=50
+	set columns=123
 elseif CheckOS()=='linux'
 	set lines=30
 	set columns=100
