@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: May 10, Sat | 23:24:26 | 2014
+" Last Update: May 11, Sun | 01:27:54 | 2014
 
 " Plugins "{{{2
 
@@ -1242,11 +1242,11 @@ set hidden
 if CheckOS()=='windows' "{{{
 	autocmd GUIEnter * simalt ~x
 elseif has('gui_running')
-	set lines=50
+	set lines=30
 	set columns=123
 elseif CheckOS()=='linux'
 	set lines=30
-	set columns=100
+	set columns=123
 endif "}}}
 " colorscheme
 set background=dark
@@ -1390,6 +1390,10 @@ onoremap ^ 0
 nnoremap q %
 vnoremap q %
 onoremap q %
+ "}}}
+" jump between marks "{{{
+" seperate <c-i> between <tab>
+nnoremap <a-o> <c-i>
  "}}}
 " a-b substitution "{{{
 nnoremap <silent> <a-q> :ABSubs<cr>
