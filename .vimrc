@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: May 11, Sun | 01:27:54 | 2014
+" Last Update: May 11, Sun | 10:27:07 | 2014
 
 " Plugins "{{{2
 
@@ -1242,10 +1242,10 @@ set hidden
 if CheckOS()=='windows' "{{{
 	autocmd GUIEnter * simalt ~x
 elseif has('gui_running')
-	set lines=30
+	set lines=31
 	set columns=123
 elseif CheckOS()=='linux'
-	set lines=30
+	set lines=31
 	set columns=123
 endif "}}}
 " colorscheme
