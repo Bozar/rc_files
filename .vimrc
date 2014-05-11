@@ -1242,10 +1242,10 @@ set hidden
 if CheckOS()=='windows' "{{{
 	autocmd GUIEnter * simalt ~x
 elseif has('gui_running')
-	set lines=31
+	set lines=30
 	set columns=123
 elseif CheckOS()=='linux'
-	set lines=31
+	set lines=30
 	set columns=123
 endif "}}}
 " colorscheme
