@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: May 11, Sun | 11:14:45 | 2014
+" Last Update: May 12, Mon | 19:36:20 | 2014
 
 " Plugins "{{{2
 
@@ -1298,7 +1298,11 @@ endif "}}}
 set modelines=1
 set backspace=indent,eol,start
 set sessionoptions=buffers,folds,sesdir,slash,unix,winsize
-set matchpairs+=<:>,《:》,“:”,‘:’
+set matchpairs+=<:>
+set matchpairs+=《:》
+set matchpairs+=“:”
+set matchpairs+=‘:’
+set matchpairs+=（:）
 " use both * and + registers when yanking in visual mode
 " least GUI components
 set guioptions=aP
@@ -1338,8 +1342,8 @@ nnoremap ` ~
 vnoremap ` ~
  "}}}
 " set lines "{{{
-nnoremap <silent> <c-up> :set lines+=1<cr>
-nnoremap <silent> <c-down> :set lines-=1<cr>
+nnoremap <silent> <c-down> :set lines+=1<cr>
+nnoremap <silent> <c-up> :set lines-=1<cr>
  "}}}
 " search backward "{{{
 nnoremap , ?
