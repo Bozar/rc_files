@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: May 12, Mon | 19:36:20 | 2014
+" Last Update: Jun 01, Sun | 23:51:12 | 2014
 
 " Plugins "{{{2
 
@@ -8,7 +8,6 @@ filetype off
 filetype plugin on
 
 " fcitx
-" NerdTree
  "}}}2
 
 " Functions "{{{2
@@ -40,7 +39,7 @@ call Var_HoldPos() "}}}
  "}}}4
 " GTD "{{{4
 function! Var_GTD() "{{{
-	let s:Today_GTD='^\d\{1,2}月\d\{1,2}日 {\{3}\d$'
+	let s:Today_GTD='^\d\{1,2} 月 \d\{1,2} 日 {\{3}\d$'
 	let s:Buffer_GTD='^缓冲区 {\{3}\d$'
 endfunction
 call Var_GTD() "}}}
@@ -78,6 +77,17 @@ function! SwitchSettings(setting) "{{{
 			set modifiable!
 			set modifiable? "}}}
 		endif
+endfunction "}}}
+ "}}}3
+
+" update timestamp before exit "{{{3
+function! UpdateBeforeExit() "{{{
+	execute 'buffer' bufnr('$') 
+	set buflisted 
+	bufdo call TimeStamp(1,0) 
+	if bufnr('%')==bufnr('$') 
+		xa 
+	endif
 endfunction "}}}
  "}}}3
 
@@ -585,7 +595,7 @@ function! AnotherDay_GTD() "{{{
 		'h-2mark z
 		'zput "}}}
 	" change date and foldlevel
-		'z+1s/\d\{1,2}\(日\)\@=/\=submatch(0)+1/ "{{{
+		'z+1s/\d\{1,2}\( 日\)\@=/\=submatch(0)+1/ "{{{
 		call MappingMarker(1)
 		call ChangeFoldLevel(2) "}}}
 	" delete additional lines
@@ -1219,24 +1229,21 @@ endfunction "}}}4
 
 " Vim settings "{{{2
 
-" Encoding "{{{3
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf-8,cp936,latin1
-set nobomb
- "}}}3
 
-" Display "{{{3
-" text line
+set nobomb
+set nolinebreak
+set hidden
+syntax enable
+
 set linespace=0
 set display=lastline
-set nolinebreak
-" syntax
-syntax enable
-" close buffer
-set hidden
+
 " language
 " change the name of 'lang' folder will force vim to use English
+
 " window size
 " windows | linux GUI | linux terminal
 if CheckOS()=='windows' "{{{
@@ -1248,142 +1255,154 @@ elseif CheckOS()=='linux'
 	set lines=31
 	set columns=123
 endif "}}}
-" colorscheme
+
 set background=dark
 if has('gui_running') "{{{
 	colorscheme solarized
 else
 	colorscheme desert
 endif "}}}
-" status line
+
 set laststatus=2
 set ruler
-" clear previous settings "{{{
+
+" status line "{{{
+" clear previous settings
 set statusline=
+
 " relative path, modified, readonly, help, preview
 set statusline+=%f%m%r%h%w
+
 " fileencoding, fileformat, buffer number, window number
 set statusline+=\ [%{&fenc}][%{&ff}][%n]
 " set statusline+=\ [%{&fenc}][%{&ff}][%n,%{winnr()}]
+
 " right aligned items
 set statusline+=%=
+
 " cursor line number
 " can be obtained from :echo line('.')
 " keep digits from right to left (just as text item)
 set statusline+=%1.4(%l%),
+
 " number of lines
 set statusline+=%1.5L
+
 " percentage through file
 set statusline+=\ %P
+
 " column number and virtual column number
 " set statusline+=[%1.3(%c%)
-" set statusline+=%1.4V] "}}}
-" number
+" set statusline+=%1.4V]
+ "}}}
+
 set number
-" command line
 set showcmd
-set cmdheight=2
-set history=100
 set wildmenu
-" font
 set ambiwidth=double
+
+set cmdheight=2
+set history=99
+
+" fonts
 if CheckOS()=='windows' "{{{
 	set guifont=Consolas:h15:cANSI
 elseif CheckOS()=='linux'
 	set guifont=DejaVu\ Sans\ \Mono\ 14
 endif "}}}
- "}}}3
 
-" Editing "{{{3
 set modelines=1
 set backspace=indent,eol,start
 set sessionoptions=buffers,folds,sesdir,slash,unix,winsize
+
+" matchpairs
 set matchpairs+=<:>
 set matchpairs+=《:》
 set matchpairs+=“:”
 set matchpairs+=‘:’
 set matchpairs+=（:）
+
 " use both * and + registers when yanking in visual mode
 " least GUI components
 set guioptions=aP
-" fold
+
 set foldmethod=marker
 set foldlevel=20
-" search
+
 set ignorecase
 set incsearch
 set nosmartcase
-" tab
+
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set noexpandtab
-" indent
+
 set autoindent
 set smartindent
+
 " change directory
 if CheckOS()=='windows' "{{{
 	cd d:\Documents\
 elseif CheckOS()=='linux'
 	cd ~/documents/
 endif "}}}
- "}}}3
  "}}}2
 
 " Key mappings and abbreviations "{{{2
 
-" use function keys and commands instead of mapleader "{{{
+" use function keys and commands instead of mapleader
 " see below: '; and :'
 set timeoutlen=0
 let mapleader='\'
- "}}}
-" switch case "{{{
+
+" switch case
 nnoremap ` ~
 vnoremap ` ~
- "}}}
-" set lines "{{{
+
+" set lines
 nnoremap <silent> <c-down> :set lines+=1<cr>
 nnoremap <silent> <c-up> :set lines-=1<cr>
- "}}}
-" search backward "{{{
+
+" search backward
 nnoremap , ?
 vnoremap , ?
- "}}}
-" next/previous buffer "{{{
+
+" next/previous buffer
 nnoremap <silent> <a-j> :bn<cr>
 nnoremap <silent> <a-k> :bp<cr>
- "}}}
-" switch between windows "{{{
+
+" switch between windows
 nnoremap <silent> <a-l> <c-w>w
 nnoremap <silent> <a-h> <c-w>W
- "}}}
-" save "{{{
+
+" save
 nnoremap <silent> <cr> :wa<cr>
- "}}}
-" open or close fold "{{{
+
+" open or close fold
 nnoremap <space> za
- "}}}
-" move to mark "{{{
+
+" move to mark
 nnoremap ' `
- "}}}
-" modified 'Y' "{{{
+
+" modified 'Y'
 nnoremap Y y$
- "}}}
-" ';', ',' and ':' "{{{
+
+" ';', ',' and ':'
 nnoremap ; :
 nnoremap <c-n> ;
 nnoremap <a-n> ,
 vnoremap ; :
 vnoremap <c-n> ;
 vnoremap <a-n> ,
- "}}}
-" gj and  gk "{{{
+
+" gj and  gk
 nnoremap <c-j> gj
 nnoremap <c-k> gk
 vnoremap <c-j> gj
 vnoremap <c-k> gk
- "}}}
-" ^ and $ "{{{
+
+" ^ and $
 nnoremap 0 ^
 nnoremap - $
 nnoremap ^ 0
@@ -1393,30 +1412,33 @@ vnoremap ^ 0
 onoremap 0 ^
 onoremap - $
 onoremap ^ 0
- "}}}
-" jump between brackets "{{{
+
+" jump between brackets
 nnoremap q %
 vnoremap q %
 onoremap q %
- "}}}
-" jump between marks "{{{
+
+" jump between marks
 " seperate <c-i> between <tab>
 nnoremap <a-o> <c-i>
- "}}}
-" a-b substitution "{{{
+
+" a-b substitution
 nnoremap <silent> <a-q> :ABSubs<cr>
 vnoremap <silent> <a-q> "by:ABSubs<cr>
- "}}}
-" bullet points "{{{
+
+" bullet points
 nnoremap <silent> <a-b> :Bullet<cr>
 vnoremap <silent> <a-b> <esc>:BulletV<cr>
- "}}}
-" switch settings "{{{
+
+" update timestamp before exit
+nnoremap <c-z> :LastUpdate<cr>
+
+" switch settings
 nnoremap <silent> \ :SwBackground<cr>
 nnoremap <silent> <c-\> :SwHlsearch<cr>
 nnoremap <silent> <a-\> :SwLinebreak<cr>
- "}}}
-" change fold level "{{{
+
+" change fold level
 nnoremap <silent> <a-=> :FlPlus<cr>
 vnoremap <silent> <a-=> <esc>:FlVPlus<cr>
 nnoremap <silent> <a--> :FlMinus<cr>
@@ -1425,22 +1447,22 @@ nnoremap <silent> _ :FlDelNum<cr>
 vnoremap <silent> _ <esc>:FlVDelNum<cr>
 nnoremap <silent> + :FlAppNum<cr>
 vnoremap <silent> + <esc>:FlVAppNum<cr>
- "}}}
-" append, insert and creat fold marker "{{{
+
+" append, insert and creat fold marker
 nnoremap <silent> <tab> :FmAfter<cr>
 nnoremap <silent> <s-tab> :FmBefore<cr>
 nnoremap <silent> <c-tab> :FmInside<cr>
 nnoremap <silent> ~ :FmCreat<cr>
 nnoremap <silent> Q :FmWrap<cr>
 vnoremap <silent> Q <esc>:FmVWrap<cr>
- "}}}
-" search visual selection "{{{
+
+" search visual selection
 " forward, backward and yank match pattern
 vnoremap <silent> <tab> y:SearchForward<cr>
 vnoremap <silent> <s-tab> y:SearchYankAll<cr>
 vnoremap <silent> <c-tab> y:SearchGrep<cr>:copen<cr>
- "}}}
-" Scratch buffer "{{{
+
+" Scratch buffer
 " edit
 nnoremap <silent> <c-q> :ScrEdit<cr>
 " substitute
@@ -1455,52 +1477,57 @@ vnoremap <silent> <c-backspace> y:ScrBefore<cr>
 " move
 nnoremap <silent> <a-backspace> :ScrMove<cr>
 vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
- "}}}
  "}}}2
 
 " User defined commands "{{{2
 
-" insert bullet points "{{{
+" insert bullet points
 command! Bullet call BulletPoint(0)
 command! BulletV call BulletPoint(1)
- "}}}
-" creat number "{{{
+
+" creat number
 command! NumNoFold call CreatNumber(0)
 command! NumFold call CreatNumber(1)
- "}}}
-" update current time "{{{
+
+" update current time
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
 command! Time call TimeStamp(1,1)
 command! Date call TimeStamp(0,1)
- "}}}
-" delete empty lines "{{{
+command! LastUpdate call UpdateBeforeExit()
+
+" delete empty lines
 command! DelEmpty call EmptyLines(1)
 command! DelAdd call EmptyLines(0)
- "}}}
-" a-b substitution "{{{
+
+" a-b substitution
 command! ABSubs call SearchPattern(0)
- "}}}
-" foward/backward search "{{{
+
+" foward/backward search
 command! SearchForward call SearchPattern(1)
 command! SearchYankAll call SearchPattern(2)
 command! SearchGrep call SearchPattern(3)
- "}}}
-" Scratch buffer "{{{
+
+" Scratch buffer
+
 " put text to Scratch
 command! ScrAfter call ScratchBuffer(4)
 command! ScrBefore call ScratchBuffer(3)
 command! ScrSubs call ScratchBuffer(2)
+
 " creat new Scratch
 command! ScrCreat call ScratchBuffer(7)
+
 " edit Scratch
 command! ScrEdit call ScratchBuffer(1)
+
 " move text between Scratch and other buffers
 command! ScrMove call ScratchBuffer(5)
 command! ScrVMove call ScratchBuffer(6)
- "}}}
-" folds "{{{
+
+" folds
+
 " change fold level
 command! FlMinus call ChangeFoldLevel(0)
 command! FlVMinus call ChangeFoldLevel(1)
@@ -1510,6 +1537,7 @@ command! FlDelNum call ChangeFoldLevel(4)
 command! FlVDelNum call ChangeFoldLevel(5)
 command! FlAppNum call ChangeFoldLevel(6)
 command! FlVAppNum call ChangeFoldLevel(7)
+
 " append, insert and creat fold marker
 command! FmCreat call MoveFoldMarker(0)
 command! FmAfter call MoveFoldMarker(1)
@@ -1517,38 +1545,36 @@ command! FmBefore call MoveFoldMarker(2)
 command! FmInside call MoveFoldMarker(3)
 command! FmWrap call MoveFoldMarker(4)
 command! FmVWrap call MoveFoldMarker(5)
- "}}}
-" switch settings "{{{
+
+" switch settings
 command! SwHlsearch call SwitchSettings(0)
 command! SwLinebreak call SwitchSettings(1)
 command! SwBackground call SwitchSettings(2)
 command! SwModifiable call SwitchSettings(3)
- "}}}
-" Chines word count "{{{
+
+" Chines word count
 command! Word %s/[^\x00-\xff]//gn
- "}}}
-" load key mappings "{{{
+
+" load key mappings
 command! KeVocab call Vocabulary()
 command! KeLocal call Localization()
 command! KeGTD call GetThingsDone()
 command! KeTranslation call Translation()
 command! KeCthulhu call Cthulhu()
- "}}}
-" localization "{{{
+
+" localization
 command! LocFormat call FileFormat_Loc()
 command! LocLine call LineBreak_Loc()
- "}}}
-" edit .vimrc "{{{
+
+" edit .vimrc
 command! EdVimrc e $MYVIMRC
- "}}}
-" autocommands "{{{
+
+" autocommands
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd BufRead *_toc.write call Cthulhu()
 autocmd BufRead *.repo call Repository()
-autocmd BufRead * call TimeStamp(1,0)
 autocmd VimEnter * call ScratchBuffer(0)
- "}}}
  "}}}2
-" vim: set nolinebreak number foldlevel=20: "}}}1
+" vim: set nolinebreak number foldmethod=marker foldlevel=20: "}}}1
