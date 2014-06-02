@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Jun 01, Sun | 23:51:12 | 2014
+" Last Update: Jun 03, Tue | 00:39:33 | 2014
 
 " Plugins "{{{2
 
@@ -77,17 +77,6 @@ function! SwitchSettings(setting) "{{{
 			set modifiable!
 			set modifiable? "}}}
 		endif
-endfunction "}}}
- "}}}3
-
-" update timestamp before exit "{{{3
-function! UpdateBeforeExit() "{{{
-	execute 'buffer' bufnr('$') 
-	set buflisted 
-	bufdo call TimeStamp(1,0) 
-	if bufnr('%')==bufnr('$') 
-		xa 
-	endif
 endfunction "}}}
  "}}}3
 
@@ -1430,9 +1419,6 @@ vnoremap <silent> <a-q> "by:ABSubs<cr>
 nnoremap <silent> <a-b> :Bullet<cr>
 vnoremap <silent> <a-b> <esc>:BulletV<cr>
 
-" update timestamp before exit
-nnoremap <c-z> :LastUpdate<cr>
-
 " switch settings
 nnoremap <silent> \ :SwBackground<cr>
 nnoremap <silent> <c-\> :SwHlsearch<cr>
@@ -1495,7 +1481,6 @@ command! NumFold call CreatNumber(1)
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
 command! Time call TimeStamp(1,1)
 command! Date call TimeStamp(0,1)
-command! LastUpdate call UpdateBeforeExit()
 
 " delete empty lines
 command! DelEmpty call EmptyLines(1)
@@ -1575,6 +1560,7 @@ autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd BufRead *_toc.write call Cthulhu()
 autocmd BufRead *.repo call Repository()
+autocmd BufRead * call TimeStamp(1,0)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}2
 " vim: set nolinebreak number foldmethod=marker foldlevel=20: "}}}1
