@@ -1,5 +1,4 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Jun 03, Tue | 00:39:33 | 2014
 
 " Plugins "{{{2
 
@@ -13,15 +12,6 @@ filetype plugin on
 " Functions "{{{2
 
 " variables "{{{3
-" translation project "{{{4
-function! Var_Pro() "{{{
-	let s:BufG_Pro='glossary_toc.write'
-	let s:BufC_Pro='chinese_toc.write'
-	let s:BufE_Pro='english_toc.write'
-	let s:Session_Pro='trail_of_cthulhu.vim'
-endfunction
-call Var_Pro() "}}}
- "}}}4
 " localization "{{{4
 function! Var_Loc() "{{{
 	let s:BufE_Loc='english.loc'
@@ -333,64 +323,23 @@ endfunction "}}}
 
 " make session "{{{3
 function! MakeSession(file) "{{{
-	if a:file=='t'
-		let Session=s:Session_Pro
-	endif
+	if a:file=='NONEXSIST' "{{{
+		let Session=s:NONEXSIST
+	elseif a:file=='NONEXSIST'
+		let Session=s:NONEXSIST
+	endif "}}}
 	execute 'mksession!' Session
 	echo "NOTE:'" Session "' updated!"
 endfunction "}}}
  "}}}3
 
 " time stamp "{{{3
-" 'Date:' and 'Last Update:'
+" search 'http://vim.wikia.com' for help
 " year (%Y) | month (%b) | day (%d) | weekday (%a)
 " hour (%H) | miniute (%M) | second (%S)
-function! TimeStamp(time,echo) "{{{
-		let Date_Time="s/\\(Date: \\)\\@<=.*$/\\=strftime('%b %d | %a | %Y')/e"
-		let Update_Time="s/\\(Last Update: \\)\\@<=.*$/\\=strftime('%b %d, %a | %H:%M:%S | %Y')/e"
-		let String_Time='Last Update: '
-		let SaveCursor=getpos('.')
-		set nofoldenable
-	" check lines
-		if line('$')<3 "{{{
-			call setpos('.', SaveCursor)
-			set foldenable
-			if a:echo==1
-				echo 'ERROR: There should be at least 3 lines!'
-			endif
-			return
-		endif "}}}
-	" creat new date
-		if a:time==0 "{{{
-			s/$/\rLast Update: /
-			execute Update_Time
-			s/$/\rDate: /
-			execute Date_Time
-			"}}}
-	" update time
-		elseif a:time==1 "{{{
-			1
-			call search(String_Time,'c',3)
-			if substitute(getline('.'),String_Time,'','')==getline('.')
-				$-2
-				call search('Last Update: ','c','$')
-				if substitute(getline('.'),String_Time,'','')==getline('.')
-					call setpos('.', SaveCursor)
-					set foldenable
-					if a:echo==1
-						echo 'ERROR: Time stamp not found!'
-					endif
-					return
-				endif
-			endif
-			execute '1,3'.Update_Time
-			execute '$-2,$'.Update_Time
-			call setpos('.', SaveCursor)
-			if a:echo==1
-				echo 'NOTE: Time stamp updated!'
-			endif
-		endif "}}}
-		set foldenable
+function! TimeStamp() "{{{
+	s/$/\r/
+	s/^/\=strftime('%b %d | %a | %Y')/
 endfunction "}}}
  "}}}3
 
@@ -891,73 +840,6 @@ function! Translation() "{{{4
 endfunction "}}}4
  "}}}3
 
-" project: trail of cthulhu "{{{3
-function! QuickFix_Pro() "{{{
-	3,$s/\(\d\+\)=/（见第\1页）/gec
-endfunction "}}}
-
-" Function key: <F1> "{{{4
-" switch window
-function! F1_Normal_Pro() "{{{
-	nnoremap <buffer> <silent> <f1> :call SwitchWindow_Trans(3,1,2,3,'toc')<cr>
-endfunction "}}}
-" search glossary
-function! F1_Visual_Pro() "{{{
-	vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans(3,3,'toc')<cr>
-endfunction "}}}
-" make session
-function! F1_Shift_Normal_Pro() "{{{
-	nnoremap <buffer> <silent> <s-f1> :call MakeSession('t')<cr>
-endfunction "}}}
-
-function! F1_Pro() "{{{
-	call F1_Normal_Pro()
-	call F1_Visual_Pro()
-	call F1_Shift_Normal_Pro()
-endfunction "}}}
- "}}}4
-
-" Function key: <F2> "{{{4
-" same line
-function! F2_Normal_Pro() "{{{
-	nnoremap <buffer> <silent> <f2> :call SameLine_Trans(3,1,2,'toc')<cr>
-endfunction "}}}
-" yank text
-function! F2_Visual_Pro() "{{{
-	vnoremap <buffer> <silent> <f2> y:call SwitchWindow_Trans(3,1,2,'','toc')<cr>
-endfunction "}}}
-" quick fix
-function! F2_Shift_Normal_Pro() "{{{
-	nnoremap <buffer> <silent> <s-f2> :call QuickFix_Pro()<cr>
-endfunction "}}}
-
-function! F2_Pro() "{{{
-	call F2_Normal_Pro()
-	call F2_Visual_Pro()
-	call F2_Shift_Normal_Pro()
-endfunction "}}}
- "}}}4
-
-" Function key: <F3> "{{{4
-" switch buffer
-function! F3_Normal_Pro() "{{{
-	nnoremap <buffer> <silent> <f3> :call SwitchBuffer_Trans('t')<cr>
-endfunction "}}}
-
-function! F3_Pro() "{{{
-	call F3_Normal_Pro()
-endfunction "}}}
- "}}}4
- 
-function! Cthulhu() "{{{4
-	let i=1
-	while i<4
-		execute substitute('call F0_Pro()',0,i,'')
-		let i=i+1
-	endwhile
-endfunction "}}}4
- "}}}3
-
 " Localization "{{{3
 
 " need to tweak the Excel table first
@@ -1346,16 +1228,14 @@ set timeoutlen=0
 let mapleader='\'
 
 " switch case
-nnoremap ` ~
-vnoremap ` ~
+noremap ` ~
 
 " set lines
 nnoremap <silent> <c-down> :set lines+=1<cr>
 nnoremap <silent> <c-up> :set lines-=1<cr>
 
 " search backward
-nnoremap , ?
-vnoremap , ?
+noremap , ?
 
 " next/previous buffer
 nnoremap <silent> <a-j> :bn<cr>
@@ -1372,40 +1252,27 @@ nnoremap <silent> <cr> :wa<cr>
 nnoremap <space> za
 
 " move to mark
-nnoremap ' `
+noremap ' `
 
 " modified 'Y'
-nnoremap Y y$
+noremap Y y$
 
 " ';', ',' and ':'
-nnoremap ; :
-nnoremap <c-n> ;
-nnoremap <a-n> ,
-vnoremap ; :
-vnoremap <c-n> ;
-vnoremap <a-n> ,
+noremap ; :
+noremap <c-n> ;
+noremap <a-n> ,
 
 " gj and  gk
-nnoremap <c-j> gj
-nnoremap <c-k> gk
-vnoremap <c-j> gj
-vnoremap <c-k> gk
+noremap <c-j> gj
+noremap <c-k> gk
 
 " ^ and $
-nnoremap 0 ^
-nnoremap - $
-nnoremap ^ 0
-vnoremap 0 ^
-vnoremap - $
-vnoremap ^ 0
-onoremap 0 ^
-onoremap - $
-onoremap ^ 0
+noremap 0 ^
+noremap - $
+noremap ^ 0
 
 " jump between brackets
-nnoremap q %
-vnoremap q %
-onoremap q %
+noremap q %
 
 " jump between marks
 " seperate <c-i> between <tab>
@@ -1471,16 +1338,15 @@ vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
 command! Bullet call BulletPoint(0)
 command! BulletV call BulletPoint(1)
 
-" creat number
-command! NumNoFold call CreatNumber(0)
-command! NumFold call CreatNumber(1)
-
 " update current time
 " search 'http://vim.wikia.com' for help
 " change language settings in windows
 " 时钟、语言和区域——区域和语言——格式：英语（美国）
-command! Time call TimeStamp(1,1)
-command! Date call TimeStamp(0,1)
+command! Date call TimeStamp()
+
+" creat number
+command! NumNoFold call CreatNumber(0)
+command! NumFold call CreatNumber(1)
 
 " delete empty lines
 command! DelEmpty call EmptyLines(1)
@@ -1545,7 +1411,6 @@ command! KeVocab call Vocabulary()
 command! KeLocal call Localization()
 command! KeGTD call GetThingsDone()
 command! KeTranslation call Translation()
-command! KeCthulhu call Cthulhu()
 
 " localization
 command! LocFormat call FileFormat_Loc()
@@ -1558,9 +1423,7 @@ command! EdVimrc e $MYVIMRC
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
-autocmd BufRead *_toc.write call Cthulhu()
 autocmd BufRead *.repo call Repository()
-autocmd BufRead * call TimeStamp(1,0)
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}2
 " vim: set nolinebreak number foldmethod=marker foldlevel=20: "}}}1
