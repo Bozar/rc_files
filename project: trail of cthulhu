@@ -1,0 +1,97 @@
+" project: trail of cthulhu "{{{1
+
+" variables "{{{2
+
+function! Var_Pro() "{{{
+	let s:BufG_Pro='glossary_toc.write'
+	let s:BufC_Pro='chinese_toc.write'
+	let s:BufE_Pro='english_toc.write'
+	let s:Session_Pro='trail_of_cthulhu.vim'
+endfunction
+call Var_Pro() "}}}
+ "}}}2
+
+" make session "{{{3
+function! MakeSession(file) "{{{
+	if a:file=='t'
+		let Session=s:Session_Pro
+	endif
+	execute 'mksession!' Session
+	echo "NOTE:'" Session "' updated!"
+endfunction "}}}
+ "}}}3
+
+" functions "{{{2
+
+function! QuickFix_Pro() "{{{
+	3,$s/\(\d\+\)=/（见第\1页）/gec
+endfunction "}}}
+
+" Function key: <F1> "{{{3
+" switch window
+function! F1_Normal_Pro() "{{{
+	nnoremap <buffer> <silent> <f1> :call SwitchWindow_Trans(3,1,2,3,'toc')<cr>
+endfunction "}}}
+" search glossary
+function! F1_Visual_Pro() "{{{
+	vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans(3,3,'toc')<cr>
+endfunction "}}}
+" make session
+function! F1_Shift_Normal_Pro() "{{{
+	nnoremap <buffer> <silent> <s-f1> :call MakeSession('t')<cr>
+endfunction "}}}
+
+function! F1_Pro() "{{{
+	call F1_Normal_Pro()
+	call F1_Visual_Pro()
+	call F1_Shift_Normal_Pro()
+endfunction "}}}
+ "}}}3
+
+" Function key: <F2> "{{{3
+" same line
+function! F2_Normal_Pro() "{{{
+	nnoremap <buffer> <silent> <f2> :call SameLine_Trans(3,1,2,'toc')<cr>
+endfunction "}}}
+" yank text
+function! F2_Visual_Pro() "{{{
+	vnoremap <buffer> <silent> <f2> y:call SwitchWindow_Trans(3,1,2,'','toc')<cr>
+endfunction "}}}
+" quick fix
+function! F2_Shift_Normal_Pro() "{{{
+	nnoremap <buffer> <silent> <s-f2> :call QuickFix_Pro()<cr>
+endfunction "}}}
+
+function! F2_Pro() "{{{
+	call F2_Normal_Pro()
+	call F2_Visual_Pro()
+	call F2_Shift_Normal_Pro()
+endfunction "}}}
+ "}}}3
+
+" Function key: <F3> "{{{3
+" switch buffer
+function! F3_Normal_Pro() "{{{
+	nnoremap <buffer> <silent> <f3> :call SwitchBuffer_Trans('t')<cr>
+endfunction "}}}
+
+function! F3_Pro() "{{{
+	call F3_Normal_Pro()
+endfunction "}}}
+ "}}}3
+ 
+function! Cthulhu() "{{{3
+	let i=1
+	while i<4
+		execute substitute('call F0_Pro()',0,i,'')
+		let i=i+1
+	endwhile
+endfunction "}}}3
+ "}}}2
+
+" commands "{{{2
+
+command! KeCthulhu call Cthulhu()
+autocmd BufRead *_toc.write call Cthulhu()
+ "}}}2
+ "}}}1
