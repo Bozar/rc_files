@@ -474,23 +474,6 @@ function! ScratchBuffer(scratch) "{{{
 endfunction "}}}
  "}}}3
 
-" repository "{{{3
-" Function key: <F1> "{{{4
-" switch modifiable
-function! F1_Repo() "{{{
-	nnoremap <buffer> <silent> <f1> :call SwitchSettings(3)<cr>
-endfunction "}}}
- "}}}4
-
-function! Repository() "{{{4
-	let i=1
-	while i<2
-		execute substitute('call F0_Repo()',0,i,'')
-		let i=i+1
-	endwhile
-endfunction "}}}4
- "}}}3
- 
 " GTD "{{{3
 
 " Function key: <F1> "{{{4
@@ -1423,7 +1406,6 @@ command! EdVimrc e $MYVIMRC
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
-autocmd BufRead *.repo call Repository()
 autocmd VimEnter * call ScratchBuffer(0)
  "}}}2
 " vim: set nolinebreak number foldmethod=marker foldlevel=20: "}}}1
