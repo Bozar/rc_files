@@ -163,6 +163,7 @@ endfunction "}}}
 " new (0), after (1), before (2)
 " inside (3), wrap text (4,5)
 function! MoveFoldMarker(move) "{{{
+
 	" creat level one marker
 		if a:move==0 "{{{
 			call CreatFoldMarker(0)
@@ -170,29 +171,42 @@ function! MoveFoldMarker(move) "{{{
 			-1mark j
 			-1
 		endif "}}}
+
+	" remember position
+		execute 'normal H'
+		let Top=line('.')
+		''
+
 	" detect fold
-		let SaveCursor=getpos('.') "{{{
+		let SaveCursor=getpos('.')
 		call CursorAtFoldBegin()
 		execute 'normal [z'
-		if substitute(getline('.'),'{\{3}\d\{0,2}$','','')==getline('.')
+		if substitute(getline('.'),'{\{3}\d\{0,2}$','','')==getline('.') "{{{
 			echo "ERROR: Fold '[z' not found!"
 			call setpos('.', SaveCursor)
 			return
 		else
 			call setpos('.', SaveCursor)
 		endif "}}}
+
 	" after
 		if a:move==1 "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2delete
 			'lput
-			-1 "}}}
+			execute Top
+			execute 'normal zt'
+			'l+1 "}}}
+
 	" before
 		elseif a:move==2 "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2delete
 			'hput!
-			-1 "}}}
+			execute Top
+			execute 'normal zt'
+			'h-1 "}}}
+
 	" inside
 		elseif a:move==3 "{{{
 			mark z
@@ -200,6 +214,7 @@ function! MoveFoldMarker(move) "{{{
 			'h+1,'h+2delete
 			'zput
 			-1 "}}}
+
 	" wrap text, normal
 		elseif a:move==4 "{{{
 			call CreatFoldMarker(2)
@@ -213,11 +228,13 @@ function! MoveFoldMarker(move) "{{{
 			'k,'k+1join!
 			execute 'normal [z'
 			"}}}
+
 	" wrap text, visual
 		elseif a:move==5 "{{{
 			call MappingMarker(0)
 			call MoveFoldMarker(4) "}}}
 		endif
+
 endfunction "}}}
  "}}}3
 
