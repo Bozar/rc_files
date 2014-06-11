@@ -194,8 +194,7 @@ function! MoveFoldMarker(move) "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2delete
 			'lput
-			execute Top
-			execute 'normal zt'
+			execute Top ' | normal zt'
 			'l+1 "}}}
 
 	" before
@@ -203,8 +202,7 @@ function! MoveFoldMarker(move) "{{{
 			call CreatFoldMarker(1)
 			'h+1,'h+2delete
 			'hput!
-			execute Top
-			execute 'normal zt'
+			execute Top ' | normal zt'
 			'h-1 "}}}
 
 	" inside
@@ -213,7 +211,8 @@ function! MoveFoldMarker(move) "{{{
 			call CreatFoldMarker(2)
 			'h+1,'h+2delete
 			'zput
-			-1 "}}}
+			execute Top ' | normal zt'
+			'z+1 "}}}
 
 	" wrap text, normal
 		elseif a:move==4 "{{{
@@ -227,12 +226,15 @@ function! MoveFoldMarker(move) "{{{
 			'j,'j+1join!
 			'k,'k+1join!
 			execute 'normal [z'
-			"}}}
+			execute Top ' | normal zt'
+			'' "}}}
 
 	" wrap text, visual
 		elseif a:move==5 "{{{
 			call MappingMarker(0)
-			call MoveFoldMarker(4) "}}}
+			call MoveFoldMarker(4)
+			execute Top ' | normal zt'
+			'' "}}}
 		endif
 
 endfunction "}}}
