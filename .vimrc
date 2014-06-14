@@ -478,7 +478,8 @@ function! ScratchBuffer(scratch) "{{{
 				'Hput
 				1g/^$/d
 				set foldenable
-				'H "}}}
+				'H
+				delmarks H "}}}
 			endif "}}}
 	" visual mode
 		elseif a:scratch==6 "{{{
