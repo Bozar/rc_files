@@ -697,6 +697,8 @@ function! UpdateWordList_Vocab() "{{{
 		'z+1,'xs/\[/\r[/ge "{{{
 		'z+1,'xs/\]/]\r/ge
 		'z+1,'xg!/\[/delete "}}}
+	" add a blank line in the end
+		$s;$;\r
 	" move words back to list
 		'z+1,$delete "{{{
 		1
