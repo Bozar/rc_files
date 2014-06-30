@@ -589,7 +589,7 @@ function! MoveTask_GTD() "{{{
 			'h-1delete
 			call search(s:Today_GTD)
 			execute 'normal ]z'
-			-1put
+			-2put
 			s/^\(\t\)\~/\1*/e "}}}
 		endif
 		'h
