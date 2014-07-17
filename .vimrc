@@ -1271,6 +1271,10 @@ noremap <a-n> ,
 noremap <c-j> gj
 noremap <c-k> gk
 
+" move between paragraphs
+noremap <c-h> {
+noremap <c-l> }
+
 " ^ and $
 noremap 0 ^
 noremap - $
