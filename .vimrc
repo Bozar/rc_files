@@ -1339,6 +1339,11 @@ vnoremap <silent> <c-backspace> y:ScrBefore<cr>
 " move
 nnoremap <silent> <a-backspace> :ScrMove<cr>
 vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
+
+" command range
+cabbrev jk 'j,'k
+cabbrev be 1,$
+
  "}}}2
 
 " User defined commands "{{{2
