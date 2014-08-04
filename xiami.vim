@@ -22,7 +22,8 @@ fun! Substitute_Xiami() "{{{
 		%s;\(\a\);\l\1;g
 
 	" illegal characters
-		%s;['()];;ge
+		%s;['():];_;ge
+		%s;[?!];;ge
 
 	" extensions
 
