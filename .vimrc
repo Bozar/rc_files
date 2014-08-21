@@ -1439,8 +1439,5 @@ autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd VimEnter * call ScratchBuffer(0)
 
-" se ffs=unix
-"se ff=unix
-
  "}}}2
 " vim: set nolinebreak number foldmethod=marker foldlevel=20: "}}}1
