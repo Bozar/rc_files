@@ -675,10 +675,10 @@ function! UpdateWordList_Vocab() "{{{
 		endif
 		1
 		call search(List_Vocab,'c')
+	" add new Word List if necessary
 		if substitute(getline('.'),List_Vocab,'','')==getline('.')
+			2s/$/\rWord List {{{\r\r\r }}}/
 			'h
-			echo "ERROR: '".List_Vocab."' not found!"
-			return
 		endif "}}}
 	" move cursor out of word list
 		if line("'h")<=5 "{{{
@@ -1438,5 +1438,9 @@ autocmd BufRead *.loc call Localization()
 autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd VimEnter * call ScratchBuffer(0)
+
+" se ffs=unix
+"se ff=unix
+
  "}}}2
 " vim: set nolinebreak number foldmethod=marker foldlevel=20: "}}}1
