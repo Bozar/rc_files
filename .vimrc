@@ -1124,15 +1124,13 @@ set display=lastline
 " windows | linux GUI | linux terminal
 if CheckOS()=='windows' "{{{
 	autocmd GUIEnter * simalt ~x
-elseif has('gui_running')
-	set lines=31
-	set columns=123
+	set background=light
 elseif CheckOS()=='linux'
 	set lines=31
 	set columns=123
+	set background=dark
 endif "}}}
 
-set background=dark
 if has('gui_running') "{{{
 	colorscheme solarized
 else
