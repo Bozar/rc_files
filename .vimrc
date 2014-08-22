@@ -240,26 +240,6 @@ function! MoveFoldMarker(move) "{{{
 endfunction "}}}
  "}}}3
 
-" bullets: '*' and '+' "{{{3
-function! BulletPoint(bullet) "{{{
-	" title
-		if a:bullet==0 "{{{
-			'j,'kg/^\t\{0,2}-\(-\|=\)\@!/left 0
-			'j,'ks/^-\(-\|=\)\@!//e
-	" paragraph
-	" == will be replaced with +
-			'j,'kg/^\t\{0,2}==/left 8
-			'j,'ks/^\(\t\t\)==/\1+ /e
-	" = will be replaced with *
-			'j,'kg/^\t\{0,2}=/left 4
-			'j,'ks/^\(\t\)=/\1* /e "}}}
-		elseif a:bullet==1 "{{{
-			call MappingMarker(0)
-			call BulletPoint(0) "}}}
-	endif
-endfunction "}}}
- "}}}3
-
 " change fold level "{{{3
 " minus (0,1); plus (2,3)
 " delete number (4,5); append number (6,7)
@@ -1289,10 +1269,6 @@ nnoremap <a-o> <c-i>
 nnoremap <silent> <a-q> :ABSubs<cr>
 vnoremap <silent> <a-q> "by:ABSubs<cr>
 
-" bullet points
-nnoremap <silent> <a-b> :Bullet<cr>
-vnoremap <silent> <a-b> <esc>:BulletV<cr>
-
 " switch settings
 nnoremap <silent> \ :SwBackground<cr>
 nnoremap <silent> <c-\> :SwHlsearch<cr>
@@ -1345,10 +1321,6 @@ cabbrev be 1,$
  "}}}2
 
 " User defined commands "{{{2
-
-" insert bullet points
-command! Bullet call BulletPoint(0)
-command! BulletV call BulletPoint(1)
 
 " update current time
 " search 'http://vim.wikia.com' for help
