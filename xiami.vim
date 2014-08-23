@@ -1,5 +1,13 @@
 " xiami "{{{1
 
+" maps "{{{2
+
+nno <buffer> <silent> <f1> :call DeleteAdd_Xiami()<cr>
+nno <buffer> <silent> <f2> :call Substitute_Xiami()<cr>
+nno <buffer> <silent> <f3> :call Move_Xiami()<cr>
+
+ "}}}2
+
 " functions "{{{2
 
 fun! DeleteAdd_Xiami() "{{{
@@ -11,59 +19,58 @@ endfun "}}}
 
 fun! Substitute_Xiami() "{{{
 
-	" spaces to underlines
+" spaces to underlines
 
-		%s;\t\d\{-}\s*$;;
-		%s;\s\+$;;
-		%s;\s\+;_;g
+	%s;\t\d\{-}\s*$;;
+	%s;\s\+$;;
+	%s;\s\+;_;g
 
-	" lowercase
+" lowercase
 
-		%s;\(\a\);\l\1;g
+	%s;\(\a\);\l\1;g
 
-	" illegal characters
-		%s;['():];_;ge
-		%s;[?!];;ge
+" illegal characters
 
-	" extensions
+	%s;['():];_;ge
+	%s;[?!];;ge
+	%s;[\[\|\]];_;ge
+	%s;_\+;_;ge
+	%s;_$;;ge
 
-		%s;$;.mp3;
+" extensions
 
-	" old filenames
+	%s;$;.mp3;
 
-		%s;^;\t;
-		%s;^;\=line('.');
+" old filenames
 
-		if line('$')>9
-			1,9s;^;0;
-		endif
+	%s;^;\t;
+	%s;^;\=line('.');
 
-		%s;\(\d\)\t;\1.mp3 ;
-		%s;^;!mv ;
+	if line('$')>9
+		1,9s;^;0;
+	endif
 
-	" add blank lines
+	%s;\(\d\)\t;\1.mp3 ;
+	%s;^;!mv ;
 
-		%s;$;\r
-		$delete
+" add blank lines
+
+	%s;$;\r
 
 endfun "}}}
 
 fun! Move_Xiami() "{{{
 
 	while line('.')<line('$')
+
 		exe 'normal visy'
 		exe @"
 		+2
+
 	endwhile
 
 endfun "}}}
 
  "}}}2
-" maps "{{{2
 
-nno <buffer> <silent> <f1> :call DeleteAdd_Xiami()<cr>
-nno <buffer> <silent> <f2> :call Substitute_Xiami()<cr>
-nno <buffer> <silent> <f3> :call Move_Xiami()<cr>
-
- "}}}2
  "}}}1
