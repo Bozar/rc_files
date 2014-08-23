@@ -1314,6 +1314,9 @@ vnoremap <silent> <c-backspace> y:ScrBefore<cr>
 nnoremap <silent> <a-backspace> :ScrMove<cr>
 vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
 
+" markdown link
+inoremap <silent> <c-l> []()T[
+
 " command range
 cabbrev jk 'j,'k
 cabbrev be 1,$
