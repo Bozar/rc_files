@@ -1318,8 +1318,8 @@ vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
 inoremap <silent> <c-l> []()T[
 
 " command range
-cabbrev jk 'j,'k
-cabbrev be 1,$
+inoremap <c-j> 'j,'k
+inoremap <c-k> 1,$
 
  "}}}2
 
