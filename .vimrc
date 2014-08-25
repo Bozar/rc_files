@@ -1319,7 +1319,9 @@ inoremap <silent> <c-l> []()T[
 
 " command range
 inoremap <c-j> 'j,'k
+cnoremap <c-j> 'j,'k
 inoremap <c-k> 1,$
+cnoremap <c-k> 1,$
 
  "}}}2
 
