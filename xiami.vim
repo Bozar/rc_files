@@ -31,7 +31,7 @@ fun! Substitute_Xiami() "{{{
 
 " illegal characters
 
-	%s;['():];_;ge
+	%s;['():,];_;ge
 	%s;[?!];;ge
 	%s;[\[\|\]];_;ge
 	%s;_\+;_;ge
