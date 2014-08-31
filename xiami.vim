@@ -21,19 +21,17 @@ fun! Substitute_Xiami() "{{{
 
 " spaces to underlines
 
-	%s;\t\d\{-}\s*$;;
-	%s;\s\+$;;
-	%s;\s\+;_;g
+	%s;\t\d\{-}\s*$;;e
+	%s;\s\+$;;e
+	%s;\s\+;_;ge
 
 " lowercase
 
-	%s;\(\a\);\l\1;g
+	%s;\(\a\);\l\1;ge
 
 " illegal characters
 
-	%s;['():,];_;ge
-	%s;[?!];;ge
-	%s;[\[\|\]];_;ge
+	%s;[^a-z0-9];_;ge
 	%s;_\+;_;ge
 	%s;_$;;ge
 
