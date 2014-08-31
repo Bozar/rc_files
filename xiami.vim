@@ -19,19 +19,19 @@ endfun "}}}
 
 fun! Substitute_Xiami() "{{{
 
-" spaces to underlines
-
-	%s;\t\d\{-}\s*$;;e
-	%s;\s\+$;;e
-	%s;\s\+;_;ge
-
 " lowercase
 
 	%s;\(\a\);\l\1;ge
 
-" illegal characters
+" delete characters
 
-	%s;[^a-z0-9];_;ge
+	%s;\t\d\{-}\s*$;;e
+
+	%s;[!()\-\[\]:"',.?];_;ge
+
+" spaces to underlines
+
+	%s;\s\+;_;ge
 	%s;_\+;_;ge
 	%s;_$;;ge
 
