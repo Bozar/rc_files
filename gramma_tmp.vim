@@ -11,8 +11,10 @@ fun Gramma_Tmp() "{{{
 	$mark k
 	Bullet
 
-	exe '4,$s;‘;“;ge'
-	exe '4,$s;’;”;ge'
+	4,$s;‘;“;ge
+	4,$s;’;”;ge
+
+	4,$s;\( \)\@<!～\( \)\@!; ～ ;ge
 
 	call setpos('.', top_cursor)
 	exe 'normal zt'
