@@ -21,11 +21,11 @@ fun Gramma_Tmp() "{{{
 
 endfun "}}}
 
-fun Key_Gramma_Tmp()
+fun Key_Gramma_Tmp() "{{{
 
 	nno <buffer> <silent> <f1> :call Gramma_Tmp()<cr>
 
-endfun
+endfun "}}}
 
 au Bufread gramma.read call Key_Gramma_Tmp()
 
