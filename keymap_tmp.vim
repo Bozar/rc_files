@@ -10,6 +10,12 @@ fun Bullet_Tmp() "{{{3
 
 endfun "}}}3
 
+fun Blank_Tmp() "{{{3
+
+	%s;^\s\+$;;e
+
+endfun "}}}3
+
 fun Quote_Tmp() "{{{3
 
 	4,$s;‘;“;ge
@@ -52,6 +58,7 @@ fun Gramma_Format_Tmp() "{{{4
 
 	call Cursor_Tmp(0)
 
+	call Blank_Tmp()
 	call Bullet_Tmp()
 	call Quote_Tmp()
 
@@ -76,6 +83,7 @@ fun Scarlet_Format_Tmp() "{{{4
 
 	call Cursor_Tmp(0)
 
+	call Blank_Tmp()
 	call Bullet_Tmp()
 	call Space_Tmp()
 
@@ -98,6 +106,7 @@ fun Jojo_Format_Tmp() "{{{4
 
 	call Cursor_Tmp(0)
 
+	call Blank_Tmp()
 	call Space_Tmp()
 
 	call Cursor_Tmp(1)
@@ -111,6 +120,29 @@ fun Jojo_Key_Tmp() "{{{4
 endfun "}}}4
 
 au Bufread jojo.watch call Jojo_Key_Tmp()
+
+ "}}}3
+" fiasco.write "{{{3
+
+fun Fiasco_Format_Tmp() "{{{4
+
+	call Cursor_Tmp(0)
+
+	call Blank_Tmp()
+	call Bullet_Tmp()
+	call Quote_Tmp()
+
+	call Cursor_Tmp(1)
+
+endfun "}}}4
+
+fun Fiasco_Key_Tmp() "{{{4
+
+	nno <buffer> <silent> <f1> :call Fiasco_Format_Tmp()<cr>
+
+endfun "}}}4
+
+au Bufread fiasco.write call Fiasco_Key_Tmp()
 
  "}}}3
  "}}}2
