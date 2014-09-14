@@ -2,34 +2,34 @@
 
 " global "{{{2
 
-fun Bullet_Tmp() "{{{3
+fun Bullet_TmpKeyMap() "{{{
 
 	1mark j
 	$mark k
 	Bullet
 
-endfun "}}}3
+endfun "}}}
 
-fun Blank_Tmp() "{{{3
+fun Blank_TmpKeyMap() "{{{
 
 	%s;^\s\+$;;e
 
-endfun "}}}3
+endfun "}}}
 
-fun Quote_Tmp() "{{{3
+fun Quote_TmpKeyMap() "{{{
 
 	4,$s;‘;“;ge
 	4,$s;’;”;ge
 
-endfun "}}}3
+endfun "}}}
 
-fun Space_Tmp() "{{{3
+fun Space_TmpKeyMap() "{{{
 
 	%s;\(\a\|\d\)\@<! \(\a\|\d\|{\|}\)\@!;;gec
 
-endfun "}}}3
+endfun "}}}
 
-fun Cursor_Tmp(when) "{{{3
+fun Cursor_TmpKeyMap(when) "{{{
 
 	if a:when == 0
 
@@ -47,102 +47,97 @@ fun Cursor_Tmp(when) "{{{3
 
 	endif
 
-endfun "}}}3
+endfun "}}}
+
+fun Combine_TmpKeyMap() "{{{
+
+	'<,'>left 0
+	'<,'>join!
+	s;^;\t;
+
+endfun "}}}
 
  "}}}2
 " files "{{{2
 
 " gramma.read "{{{3
 
-fun Gramma_Format_Tmp() "{{{4
+fun Gramma_Format_TmpKeyMap() "{{{
 
-	call Cursor_Tmp(0)
+	call Cursor_TmpKeyMap(0)
 
-	call Blank_Tmp()
-	call Bullet_Tmp()
-	call Quote_Tmp()
+	call Blank_TmpKeyMap()
+	call Bullet_TmpKeyMap()
+	call Quote_TmpKeyMap()
 
 	4,$s;\( \)\@<!～\( \)\@!; ～ ;ge
+	4,$s;\( \)\@<!+\( \)\@!; + ;ge
 
-	call Cursor_Tmp(1)
+	call Cursor_TmpKeyMap(1)
 
-endfun "}}}4
+endfun "}}}
 
-fun Gramma_Key_Tmp() "{{{4
+fun Gramma_Key_TmpKeyMap() "{{{
 
-	nno <buffer> <silent> <f1> :call Gramma_Format_Tmp()<cr>
+	nno <buffer> <silent> <f1> :call Gramma_Format_TmpKeyMap()<cr>
 
-endfun "}}}4
+endfun "}}}
 
-au Bufread gramma.read call Gramma_Key_Tmp()
+au Bufread gramma.read call Gramma_Key_TmpKeyMap()
 
  "}}}3
 " scarlet.read "{{{3
 
-fun Scarlet_Format_Tmp() "{{{4
+fun Scarlet_Format_TmpKeyMap(mode) "{{{
 
-	call Cursor_Tmp(0)
+	if a:mode == 0
 
-	call Blank_Tmp()
-	call Bullet_Tmp()
-	call Space_Tmp()
+		call Cursor_TmpKeyMap(0)
 
-	call Cursor_Tmp(1)
+		call Blank_TmpKeyMap()
+		call Bullet_TmpKeyMap()
+		call Space_TmpKeyMap()
 
-endfun "}}}4
+		call Cursor_TmpKeyMap(1)
 
-fun Scarlet_Key_Tmp() "{{{4
+	elseif a:mode == 1
 
-	nno <buffer> <silent> <f1> :call Scarlet_Format_Tmp()<cr>
+		call Combine_TmpKeyMap()
 
-endfun "}}}4
+	endif
 
-au Bufread scarlet.read call Scarlet_Key_Tmp()
+endfun "}}}
+
+fun Scarlet_Key_TmpKeyMap() "{{{
+
+	nno <buffer> <silent> <f1> :call Scarlet_Format_TmpKeyMap(0)<cr>
+	vno <buffer> <silent> <f1> <esc>:call Scarlet_Format_TmpKeyMap(1)<cr>
+
+endfun "}}}
+
+au Bufread scarlet.read call Scarlet_Key_TmpKeyMap()
 
  "}}}3
 " jojo.watch "{{{3
 
-fun Jojo_Format_Tmp() "{{{4
+fun Jojo_Format_TmpKeyMap() "{{{
 
-	call Cursor_Tmp(0)
+	call Cursor_TmpKeyMap(0)
 
-	call Blank_Tmp()
-	call Space_Tmp()
+	call Blank_TmpKeyMap()
+	call Space_TmpKeyMap()
 
-	call Cursor_Tmp(1)
+	call Cursor_TmpKeyMap(1)
 
-endfun "}}}4
+endfun "}}}
 
-fun Jojo_Key_Tmp() "{{{4
+fun Jojo_Key_TmpKeyMap() "{{{
 
-	nno <buffer> <silent> <f1> :call Jojo_Format_Tmp()<cr>
+	nno <buffer> <silent> <f1> :call Jojo_Format_TmpKeyMap()<cr>
 
-endfun "}}}4
+endfun "}}}
 
-au Bufread jojo.watch call Jojo_Key_Tmp()
-
- "}}}3
-" fiasco.write "{{{3
-
-fun Fiasco_Format_Tmp() "{{{4
-
-	call Cursor_Tmp(0)
-
-	call Blank_Tmp()
-	call Bullet_Tmp()
-	call Quote_Tmp()
-
-	call Cursor_Tmp(1)
-
-endfun "}}}4
-
-fun Fiasco_Key_Tmp() "{{{4
-
-	nno <buffer> <silent> <f1> :call Fiasco_Format_Tmp()<cr>
-
-endfun "}}}4
-
-au Bufread fiasco.write call Fiasco_Key_Tmp()
+au Bufread jojo.watch call Jojo_Key_TmpKeyMap()
 
  "}}}3
  "}}}2
