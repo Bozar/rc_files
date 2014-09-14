@@ -476,6 +476,38 @@ endfunction "}}}
 
 " GTD "{{{3
 
+" Function key: <F4> "{{{4
+
+function Progress_GTD() "{{{
+
+	let Progress = '第 \d\{1,2} 次，共 \d\{2,3} 分钟$'
+	if substitute(getline('.'),Progress,'','')==getline('.')
+
+		return
+
+	else
+
+		'<mark j
+		'>mark k
+
+		execute "'j,'ks/" . Progress . "//"
+
+		let i=1|'j,'kg/$/s/$/\=i/|let i=i+1
+		'j,'ks/$/#/
+		let i=1|'j,'kg/$/s/$/\=i*30/|let i=i+1
+
+		'j,'ks/\(\d\{1,2}\)#\(\d\{2,3}\)$/第 \1 次，共 \2 分钟/
+
+	endif
+
+endfunction "}}}
+
+function! F4_GTD() "{{{
+	vnoremap <buffer> <silent> <f4> <esc>:call Progress_GTD()<cr>
+	inoremap <buffer> <silent> <f4> ，第 1 次，共 30 分钟<esc>
+endfunction "}}}
+ "}}}4
+
 " Function key: <F1> "{{{4
 " to-do (*) and finished (~)
 function! Finished_GTD() "{{{
@@ -583,7 +615,7 @@ endfunction "}}}
 
 function! GetThingsDone() "{{{4
 	let i=1
-	while i<4
+	while i<5
 		execute substitute('call F0_GTD()',0,i,'')
 		let i=i+1
 	endwhile
