@@ -140,5 +140,27 @@ endfun "}}}
 au Bufread jojo.watch call Jojo_Key_TmpKeyMap()
 
  "}}}3
+" latex.read "{{{3
+
+fun Latex_Format_TmpKeyMap() "{{{
+
+	call Cursor_TmpKeyMap(0)
+
+	call Bullet_TmpKeyMap()
+	call Blank_TmpKeyMap()
+
+	call Cursor_TmpKeyMap(1)
+
+endfun "}}}
+
+fun Latex_Key_TmpKeyMap() "{{{
+
+	nno <buffer> <silent> <f1> :call Latex_Format_TmpKeyMap()<cr>
+
+endfun "}}}
+
+au Bufread latex.read call Latex_Key_TmpKeyMap()
+
+ "}}}3
  "}}}2
  "}}}1
