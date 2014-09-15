@@ -2,6 +2,28 @@
 
 " global "{{{2
 
+fun Fold_TmpKeyMap(mode,pattern) "{{{
+
+	if a:mode == 0
+
+		1
+		while line('.')<line('$')
+			call search(a:pattern,'W')
+			if substitute(getline('.'),a:pattern,'','') != getline('.')
+				mark j
+				exe 'normal ]z'
+				mark k
+				'j+1,'k-1le 8
+				'k+1
+			else
+				return
+			endif
+		endwhile
+
+	endif
+
+endfun "}}}
+
 fun Bullet_TmpKeyMap() "{{{
 
 	1mark j
@@ -94,6 +116,7 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 
 		call Cursor_TmpKeyMap(0)
 
+		call Fold_TmpKeyMap(0,'笔记 {{{5$')
 		call Blank_TmpKeyMap()
 		call Bullet_TmpKeyMap()
 		call Space_TmpKeyMap()
@@ -104,6 +127,10 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 
 		call Combine_TmpKeyMap()
 
+	elseif a:mode == 2
+
+		s;$;\r笔记 {{{5\r\r\r}}}5;
+
 	endif
 
 endfun "}}}
@@ -112,6 +139,7 @@ fun Scarlet_Key_TmpKeyMap() "{{{
 
 	nno <buffer> <silent> <f1> :call Scarlet_Format_TmpKeyMap(0)<cr>
 	vno <buffer> <silent> <f1> <esc>:call Scarlet_Format_TmpKeyMap(1)<cr>
+	nno <buffer> <silent> <f2> :call Scarlet_Format_TmpKeyMap(2)<cr>
 
 endfun "}}}
 
