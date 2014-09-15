@@ -13,7 +13,7 @@ fun Fold_TmpKeyMap(mode,pattern) "{{{
 				mark j
 				exe 'normal ]z'
 				mark k
-				'j+1,'k-1le 8
+				'j+1,'k-1g;.$;le 8
 				'k+1
 			else
 				return
