@@ -4,8 +4,11 @@
 
 fun AddSpace_TmpKeyMap() "{{{
 
-	4,$s;\( \)\@<!～\( \)\@!; ～ ;ge
-	4,$s;\( \)\@<!+\( \)\@!; + ;ge
+	4,$s;\(\s\)\@<!～; ～;ge
+	4,$s;～\(\s\)\@!;～ ;ge
+
+	4,$s;\(\s\)\@<!+; +;ge
+	4,$s;+\(\s\)\@!;+ ;ge
 
 endfun "}}}
 
@@ -52,7 +55,7 @@ fun Quote_TmpKeyMap() "{{{
 
 endfun "}}}
 
-fun Space_TmpKeyMap() "{{{
+fun DelSpace_TmpKeyMap() "{{{
 
 	%s;\(\a\|\d\)\@<! \(\a\|\d\|{\|}\)\@!;;gec
 
@@ -124,7 +127,7 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 		call Fold_TmpKeyMap(0,'笔记 {{{5$')
 		call Blank_TmpKeyMap()
 		call Bullet_TmpKeyMap()
-		call Space_TmpKeyMap()
+		call DelSpace_TmpKeyMap()
 
 		call Cursor_TmpKeyMap(1)
 
@@ -158,7 +161,7 @@ fun Jojo_Format_TmpKeyMap() "{{{
 	call Cursor_TmpKeyMap(0)
 
 	call Blank_TmpKeyMap()
-	call Space_TmpKeyMap()
+	call DelSpace_TmpKeyMap()
 
 	call Cursor_TmpKeyMap(1)
 
