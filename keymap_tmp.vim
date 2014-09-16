@@ -137,7 +137,8 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 
 	elseif a:mode == 2
 
-		s;$;\r笔记 {{{5\r\r\r}}}5;
+		s;$;\r笔记 {{{5\r\r\r }}}5;
+		exe 'normal [zj'
 
 	endif
 
