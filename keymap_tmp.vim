@@ -2,6 +2,13 @@
 
 " global "{{{2
 
+fun AddSpace_TmpKeyMap() "{{{
+
+	4,$s;\( \)\@<!～\( \)\@!; ～ ;ge
+	4,$s;\( \)\@<!+\( \)\@!; + ;ge
+
+endfun "}}}
+
 fun Fold_TmpKeyMap(mode,pattern) "{{{
 
 	if a:mode == 0
@@ -91,9 +98,7 @@ fun Gramma_Format_TmpKeyMap() "{{{
 	call Blank_TmpKeyMap()
 	call Bullet_TmpKeyMap()
 	call Quote_TmpKeyMap()
-
-	4,$s;\( \)\@<!～\( \)\@!; ～ ;ge
-	4,$s;\( \)\@<!+\( \)\@!; + ;ge
+	call AddSpace_TmpKeyMap()
 
 	call Cursor_TmpKeyMap(1)
 
