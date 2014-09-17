@@ -83,8 +83,13 @@ endfun "}}}
 
 fun Combine_TmpKeyMap() "{{{
 
-	'<,'>left 0
-	'<,'>join!
+	exe 'normal {j'
+	mark j
+	exe 'normal }k'
+	mark k
+
+	'j,'kleft 0
+	'j,'kjoin!
 	s;^;\t;
 
 endfun "}}}
@@ -133,12 +138,12 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 
 	elseif a:mode == 1
 
-		call Combine_TmpKeyMap()
+		s;$;\r笔记 {{{5\r\r\r }}}5;
+		exe 'normal [zj'
 
 	elseif a:mode == 2
 
-		s;$;\r笔记 {{{5\r\r\r }}}5;
-		exe 'normal [zj'
+		call Combine_TmpKeyMap()
 
 	endif
 
@@ -147,8 +152,8 @@ endfun "}}}
 fun Scarlet_Key_TmpKeyMap() "{{{
 
 	nno <buffer> <silent> <f1> :call Scarlet_Format_TmpKeyMap(0)<cr>
-	vno <buffer> <silent> <f1> <esc>:call Scarlet_Format_TmpKeyMap(1)<cr>
-	nno <buffer> <silent> <f2> :call Scarlet_Format_TmpKeyMap(2)<cr>
+	nno <buffer> <silent> <f2> :call Scarlet_Format_TmpKeyMap(1)<cr>
+	nno <buffer> <silent> <f3> :call Scarlet_Format_TmpKeyMap(2)<cr>
 
 endfun "}}}
 
@@ -197,6 +202,37 @@ fun Latex_Key_TmpKeyMap() "{{{
 endfun "}}}
 
 au Bufread latex.read call Latex_Key_TmpKeyMap()
+
+ "}}}3
+" fiasco_gm.write "{{{3
+
+fun Fiasco_Format_TmpKeyMap(mode) "{{{
+
+	if a:mode == 0
+
+		call Cursor_TmpKeyMap(0)
+
+		call Bullet_TmpKeyMap()
+		call Blank_TmpKeyMap()
+
+		call Cursor_TmpKeyMap(1)
+
+	elseif a:mode == 1
+
+		call Combine_TmpKeyMap()
+
+	endif
+
+endfun "}}}
+
+fun Fiasco_Key_TmpKeyMap() "{{{
+
+	nno <buffer> <silent> <f1> :call Fiasco_Format_TmpKeyMap(0)<cr>
+	nno <buffer> <silent> <f2> :call Fiasco_Format_TmpKeyMap(1)<cr>
+
+endfun "}}}
+
+au Bufread fiasco_gm.write call Fiasco_Key_TmpKeyMap()
 
  "}}}3
  "}}}2
