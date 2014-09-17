@@ -70,6 +70,8 @@ fun Cursor_TmpKeyMap(when) "{{{
 		exe 'normal H'
 		let s:top_cursor = getpos('.')
 
+		call setpos('.', s:current_cursor)
+
 	elseif a:when == 1
 
 		call setpos('.', s:top_cursor)
@@ -125,16 +127,14 @@ au Bufread gramma.read call Gramma_Key_TmpKeyMap()
 
 fun Scarlet_Format_TmpKeyMap(mode) "{{{
 
-	if a:mode == 0
+	call Cursor_TmpKeyMap(0)
 
-		call Cursor_TmpKeyMap(0)
+	if a:mode == 0
 
 		call Fold_TmpKeyMap(0,'笔记 {{{5$')
 		call Blank_TmpKeyMap()
 		call Bullet_TmpKeyMap()
 		call DelSpace_TmpKeyMap()
-
-		call Cursor_TmpKeyMap(1)
 
 	elseif a:mode == 1
 
@@ -146,6 +146,8 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 		call Combine_TmpKeyMap()
 
 	endif
+
+	call Cursor_TmpKeyMap(1)
 
 endfun "}}}
 
@@ -208,20 +210,20 @@ au Bufread latex.read call Latex_Key_TmpKeyMap()
 
 fun Fiasco_Format_TmpKeyMap(mode) "{{{
 
-	if a:mode == 0
+	call Cursor_TmpKeyMap(0)
 
-		call Cursor_TmpKeyMap(0)
+	if a:mode == 0
 
 		call Bullet_TmpKeyMap()
 		call Blank_TmpKeyMap()
-
-		call Cursor_TmpKeyMap(1)
 
 	elseif a:mode == 1
 
 		call Combine_TmpKeyMap()
 
 	endif
+
+	call Cursor_TmpKeyMap(1)
 
 endfun "}}}
 
