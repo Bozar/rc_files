@@ -10,6 +10,9 @@ fun AddSpace_TmpKeyMap() "{{{
 	4,$s;\(\s\)\@<!+; +;ge
 	4,$s;+\(\s\)\@!;+ ;ge
 
+	4,$s;\(\s\)\@<!=; =;ge
+	4,$s;=\(\s\)\@!;= ;ge
+
 endfun "}}}
 
 fun Fold_TmpKeyMap(mode,pattern) "{{{
