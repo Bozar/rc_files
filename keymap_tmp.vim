@@ -10,9 +10,6 @@ fun AddSpace_TmpKeyMap() "{{{
 	4,$s;\(\s\)\@<!+; +;ge
 	4,$s;+\(\s\)\@!;+ ;ge
 
-	4,$s;\(\s\)\@<!=; =;ge
-	4,$s;=\(\s\)\@!;= ;ge
-
 endfun "}}}
 
 fun Fold_TmpKeyMap(mode,pattern) "{{{
@@ -60,7 +57,7 @@ endfun "}}}
 
 fun DelSpace_TmpKeyMap() "{{{
 
-	%s;\(\a\|\d\)\@<! \(\a\|\d\|{\|}\)\@!;;gec
+	%s;[^\x00-\xff] [^\x00-\xff];;ge
 
 endfun "}}}
 
