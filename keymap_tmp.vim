@@ -23,7 +23,7 @@ fun Fold_TmpKeyMap(mode,pattern) "{{{
 				mark j
 				exe 'normal ]z'
 				mark k
-				'j+1,'k-1g;.$;le 8
+				'j+1,'k-1s;^\(\t\{0,1}\)\(\S\);\t\t\2;e
 				'k+1
 			else
 				return
@@ -57,7 +57,7 @@ endfun "}}}
 
 fun DelSpace_TmpKeyMap() "{{{
 
-	%s;[^\x00-\xff] [^\x00-\xff];;ge
+	%s;\([^\x00-\xff]\) \([^\x00-\xff]\);\1\2;ge
 
 endfun "}}}
 
