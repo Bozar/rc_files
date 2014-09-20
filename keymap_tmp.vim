@@ -5,15 +5,7 @@
 fun AddNote_TmpKeyMap(pattern,foldlevel) "{{{
 
 	exe 's;$;\r' . a:pattern . ' {{{' . a:foldlevel . '\r\r\r }}}' . a:foldlevel . '\r;'
-
-	+1
-	if substitute(getline('.'),'^ }}}\d$','','') != getline('.')
-		-1g;^$;d
-		-1
-	else
-		-2
-	endif
-
+	-1
 	exe 'normal [zj'
 
 endfun "}}}
