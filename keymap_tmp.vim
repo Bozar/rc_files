@@ -2,6 +2,22 @@
 
 " global "{{{2
 
+fun AddNote_TmpKeyMap(pattern,foldlevel) "{{{
+
+	exe 's;$;\r' . a:pattern . ' {{{' . a:foldlevel . '\r\r\r }}}' . a:foldlevel . '\r;'
+
+	+1
+	if substitute(getline('.'),'^ }}}\d$','','') != getline('.')
+		-1g;^$;d
+		-1
+	else
+		-2
+	endif
+
+	exe 'normal [zj'
+
+endfun "}}}
+
 fun AddSpace_TmpKeyMap() "{{{
 
 	4,$s;\(\s\)\@<!～; ～;ge
@@ -12,25 +28,21 @@ fun AddSpace_TmpKeyMap() "{{{
 
 endfun "}}}
 
-fun Fold_TmpKeyMap(mode,pattern) "{{{
+fun Fold_TmpKeyMap(pattern) "{{{
 
-	if a:mode == 0
-
-		1
-		while line('.')<line('$')
-			call search(a:pattern,'W')
-			if substitute(getline('.'),a:pattern,'','') != getline('.')
-				mark j
-				exe 'normal ]z'
-				mark k
-				'j+1,'k-1s;^\(\t\{0,1}\)\(\S\);\t\t\2;e
-				'k+1
-			else
-				return
-			endif
-		endwhile
-
-	endif
+	1
+	while line('.')<line('$')
+		call search(a:pattern,'W')
+		if substitute(getline('.'),a:pattern,'','') != getline('.')
+			mark j
+			exe 'normal ]z'
+			mark k
+			'j+1,'k-1s;^\(\t\{0,1}\)\(\S\);\t\t\2;e
+			'k+1
+		else
+			$
+		endif
+	endwhile
 
 endfun "}}}
 
@@ -131,7 +143,7 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 
 		call Cursor_TmpKeyMap(0)
 
-		call Fold_TmpKeyMap(0,'笔记 {{{5$')
+		call Fold_TmpKeyMap('笔记 {{{5$')
 		call Blank_TmpKeyMap()
 		call Bullet_TmpKeyMap()
 		call DelSpace_TmpKeyMap()
@@ -140,8 +152,10 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 
 	elseif a:mode == 1
 
-		s;$;\r笔记 {{{5\r\r\r }}}5;
-		exe 'normal [zj'
+		call AddNote_TmpKeyMap('笔记',5)
+
+		" s;$;\r笔记 {{{5\r\r\r }}}5\r;
+		" exe 'normal [zj'
 
 	elseif a:mode == 2
 
