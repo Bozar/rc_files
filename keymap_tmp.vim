@@ -28,12 +28,14 @@ fun AddSpace_TmpKeyMap() "{{{
 
 endfun "}}}
 
-fun Fold_TmpKeyMap(pattern) "{{{
+fun IndentFold_TmpKeyMap(pattern,foldlevel) "{{{
+
+	let combine = '^' . a:pattern . ' {{{' . a:foldlevel .'$'
 
 	1
 	while line('.')<line('$')
-		call search(a:pattern,'W')
-		if substitute(getline('.'),a:pattern,'','') != getline('.')
+		call search(combine,'W')
+		if substitute(getline('.'),combine,'','') != getline('.')
 			mark j
 			exe 'normal ]z'
 			mark k
@@ -54,13 +56,7 @@ fun Bullet_TmpKeyMap() "{{{
 
 endfun "}}}
 
-fun Blank_TmpKeyMap() "{{{
-
-	%s;^\s\+$;;e
-
-endfun "}}}
-
-fun Quote_TmpKeyMap() "{{{
+fun SubsQuote_TmpKeyMap() "{{{
 
 	4,$s;‘;“;ge
 	4,$s;’;”;ge
@@ -69,11 +65,12 @@ endfun "}}}
 
 fun DelSpace_TmpKeyMap() "{{{
 
+	%s;^\s\+$;;e
 	%s;\([^\x00-\xff]\) \([^\x00-\xff]\);\1\2;ge
 
 endfun "}}}
 
-fun Cursor_TmpKeyMap(when) "{{{
+fun MoveCursor_TmpKeyMap(when) "{{{
 
 	if a:when == 0
 
@@ -95,7 +92,7 @@ fun Cursor_TmpKeyMap(when) "{{{
 
 endfun "}}}
 
-fun Combine_TmpKeyMap() "{{{
+fun JoinLines_TmpKeyMap() "{{{
 
 	exe 'normal {j'
 	mark j
@@ -115,14 +112,14 @@ endfun "}}}
 
 fun Gramma_Format_TmpKeyMap() "{{{
 
-	call Cursor_TmpKeyMap(0)
+	call MoveCursor_TmpKeyMap(0)
 
-	call Blank_TmpKeyMap()
+	call DelSpace_TmpKeyMap()
 	call Bullet_TmpKeyMap()
-	call Quote_TmpKeyMap()
+	call SubsQuote_TmpKeyMap()
 	call AddSpace_TmpKeyMap()
 
-	call Cursor_TmpKeyMap(1)
+	call MoveCursor_TmpKeyMap(1)
 
 endfun "}}}
 
@@ -141,25 +138,21 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 
 	if a:mode == 0
 
-		call Cursor_TmpKeyMap(0)
+		call MoveCursor_TmpKeyMap(0)
 
-		call Fold_TmpKeyMap('笔记 {{{5$')
-		call Blank_TmpKeyMap()
-		call Bullet_TmpKeyMap()
+		call IndentFold_TmpKeyMap('笔记',5)
 		call DelSpace_TmpKeyMap()
+		call Bullet_TmpKeyMap()
 
-		call Cursor_TmpKeyMap(1)
+		call MoveCursor_TmpKeyMap(1)
 
 	elseif a:mode == 1
 
 		call AddNote_TmpKeyMap('笔记',5)
 
-		" s;$;\r笔记 {{{5\r\r\r }}}5\r;
-		" exe 'normal [zj'
-
 	elseif a:mode == 2
 
-		call Combine_TmpKeyMap()
+		call JoinLines_TmpKeyMap()
 
 	endif
 
@@ -180,12 +173,11 @@ au Bufread scarlet.read call Scarlet_Key_TmpKeyMap()
 
 fun Jojo_Format_TmpKeyMap() "{{{
 
-	call Cursor_TmpKeyMap(0)
+	call MoveCursor_TmpKeyMap(0)
 
-	call Blank_TmpKeyMap()
 	call DelSpace_TmpKeyMap()
 
-	call Cursor_TmpKeyMap(1)
+	call MoveCursor_TmpKeyMap(1)
 
 endfun "}}}
 
@@ -202,12 +194,12 @@ au Bufread jojo.watch call Jojo_Key_TmpKeyMap()
 
 fun Latex_Format_TmpKeyMap() "{{{
 
-	call Cursor_TmpKeyMap(0)
+	call MoveCursor_TmpKeyMap(0)
 
 	call Bullet_TmpKeyMap()
-	call Blank_TmpKeyMap()
+	call DelSpace_TmpKeyMap()
 
-	call Cursor_TmpKeyMap(1)
+	call MoveCursor_TmpKeyMap(1)
 
 endfun "}}}
 
@@ -226,16 +218,16 @@ fun Fiasco_Format_TmpKeyMap(mode) "{{{
 
 	if a:mode == 0
 
-		call Cursor_TmpKeyMap(0)
+		call MoveCursor_TmpKeyMap(0)
 
 		call Bullet_TmpKeyMap()
-		call Blank_TmpKeyMap()
+		call DelSpace_TmpKeyMap()
 
-		call Cursor_TmpKeyMap(1)
+		call MoveCursor_TmpKeyMap(1)
 
 	elseif a:mode == 1
 
-		call Combine_TmpKeyMap()
+		call JoinLines_TmpKeyMap()
 
 	endif
 
