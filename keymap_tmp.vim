@@ -161,7 +161,7 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 		call DelSpace_TmpKeyMap()
 		call Bullet_TmpKeyMap()
 
-		%s;\(雷\)\@<!斯垂德;雷斯垂德;ge
+		%s;类斯垂德;雷斯垂德;ge
 
 		call MoveCursor_TmpKeyMap(1)
 
