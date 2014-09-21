@@ -10,7 +10,7 @@ fun GlossaryIab_TmpKeyMap(title) "{{{
 	mark j
 	'}
 	mark k
-	'j,'kleft 0
+	'j,'ks;^\s\+;;e
 	'j
 
 	while line('.') < line("'k")
