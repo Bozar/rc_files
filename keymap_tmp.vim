@@ -115,9 +115,9 @@ fun JoinLines_TmpKeyMap() "{{{
 	mark j
 	exe 'normal }k'
 	mark k
-
 	'j,'kleft 0
-	'j,'kjoin!
+	'j,'kjoin
+	call DelSpace_TmpKeyMap()
 	s;^;\t;
 
 endfun "}}}
