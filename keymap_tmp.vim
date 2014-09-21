@@ -2,6 +2,31 @@
 
 " global "{{{2
 
+fun GlossaryIab_TmpKeyMap(title) "{{{
+
+	1
+	call search(a:title . ' {\{3}\d$')
+	+2
+	mark j
+	'}
+	mark k
+	'j,'kleft 0
+	'j
+
+	while line('.') < line("'k")
+		if substitute(getline('.'),'\t','','') == getline('.')
+			echo 'ERROR: Tab not found in Line ' . line('.') . '!'
+			return
+		endif
+		let line = '^\(.\{-1,}\)\t\(.*\)$'
+		let left = substitute(getline('.'),line,'\1','')
+		let right = substitute(getline('.'),line,'\1\2','')
+		exe 'iab <buffer> ' left right
+		+1
+	endwhile
+
+endfun "}}}
+
 fun AddNote_TmpKeyMap(pattern,foldlevel) "{{{
 
 	exe 's;$;\r' . a:pattern . ' {{{' . a:foldlevel . '\r\r\r }}}' . a:foldlevel . '\r;'
@@ -22,7 +47,7 @@ endfun "}}}
 
 fun IndentFold_TmpKeyMap(pattern,foldlevel) "{{{
 
-	let combine = '^' . a:pattern . ' {{{' . a:foldlevel .'$'
+	let combine = '^' . a:pattern . ' {\{3}' . a:foldlevel .'$'
 
 	1
 	while line('.')<line('$')
@@ -136,6 +161,8 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 		call DelSpace_TmpKeyMap()
 		call Bullet_TmpKeyMap()
 
+		%s;\(雷\)\@<!斯垂德;雷斯垂德;ge
+
 		call MoveCursor_TmpKeyMap(1)
 
 	elseif a:mode == 1
@@ -155,6 +182,10 @@ fun Scarlet_Key_TmpKeyMap() "{{{
 	nno <buffer> <silent> <f1> :call Scarlet_Format_TmpKeyMap(0)<cr>
 	nno <buffer> <silent> <f2> :call Scarlet_Format_TmpKeyMap(1)<cr>
 	nno <buffer> <silent> <f3> :call Scarlet_Format_TmpKeyMap(2)<cr>
+
+	call MoveCursor_TmpKeyMap(0)
+	call GlossaryIab_TmpKeyMap('名词表')
+	call MoveCursor_TmpKeyMap(1)
 
 endfun "}}}
 
