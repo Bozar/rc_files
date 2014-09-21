@@ -82,7 +82,7 @@ endfun "}}}
 
 fun DelSpace_TmpKeyMap() "{{{
 
-	%s;^\s\+$;;e
+	%s;\s\+$;;e
 	%s;\([^\x00-\xff]\) \([^\x00-\xff]\);\1\2;ge
 
 endfun "}}}
