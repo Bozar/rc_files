@@ -20,7 +20,7 @@ fun GlossaryIab_TmpKeyMap(title) "{{{
 		endif
 		let line = '^\(.\{-1,}\)\t\(.*\)$'
 		let left = substitute(getline('.'),line,'\1','')
-		let right = substitute(getline('.'),line,'\1\2','')
+		let right = substitute(getline('.'),line,'\2','')
 		exe 'iab <buffer> ' left right
 		+1
 	endwhile
@@ -157,8 +157,6 @@ fun Scarlet_Format_TmpKeyMap(mode) "{{{
 		call IndentFold_TmpKeyMap('笔记',5)
 		call DelSpace_TmpKeyMap()
 		call Bullet_TmpKeyMap()
-
-		%s;类斯垂德;雷斯垂德;ge
 
 		call MoveCursor_TmpKeyMap(1)
 
