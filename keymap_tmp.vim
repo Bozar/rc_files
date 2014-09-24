@@ -261,5 +261,27 @@ endfun "}}}
 au Bufread fiasco_gm.write call Fiasco_Key_TmpKeyMap()
 
  "}}}3
+" hero_quest.read "{{{3
+
+fun Heroquest_Format_TmpKeyMap(mode) "{{{
+
+	call MoveCursor_TmpKeyMap(0)
+
+	call Bullet_TmpKeyMap()
+	call DelSpace_TmpKeyMap()
+
+	call MoveCursor_TmpKeyMap(1)
+
+endfun "}}}
+
+fun Heroquest_Key_TmpKeyMap() "{{{
+
+	nno <buffer> <silent> <f1> :call Heroquest_Format_TmpKeyMap()<cr>
+
+endfun "}}}
+
+au Bufread hero_quest.read call Heroquest_Key_TmpKeyMap()
+
+ "}}}3
  "}}}2
  "}}}1
