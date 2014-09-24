@@ -263,7 +263,7 @@ au Bufread fiasco_gm.write call Fiasco_Key_TmpKeyMap()
  "}}}3
 " hero_quest.read "{{{3
 
-fun Heroquest_Format_TmpKeyMap(mode) "{{{
+fun Heroquest_Format_TmpKeyMap() "{{{
 
 	call MoveCursor_TmpKeyMap(0)
 
