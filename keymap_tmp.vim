@@ -2,6 +2,24 @@
 
 " global "{{{2
 
+fun InsertBullet_TmpKeyMap(bullet) "{{{
+
+	'<,'>left 0
+
+	if a:bullet == 0
+		'<s;^;=;
+		'<+1,'>g;^.;s;^;-;
+	elseif a:bullet == 1
+		'<,'>g;^.;s;^;-;
+	elseif a:bullet == 2
+		'<s;^;==;
+		'<+1,'>g;^.;s;^;--;
+	elseif a:bullet == 3
+		'<,'>g;^.;s;^;--;
+	endif
+
+endfun "}}}
+
 fun GlossaryIab_TmpKeyMap(title) "{{{
 
 	1
@@ -124,22 +142,36 @@ endfun "}}}
 
 " gramma.read "{{{3
 
-fun Gramma_Format_TmpKeyMap() "{{{
+fun Gramma_Format_TmpKeyMap(mode) "{{{
 
-	call MoveCursor_TmpKeyMap(0)
+	if a:mode == 0
 
-	call DelSpace_TmpKeyMap()
-	call Bullet_TmpKeyMap()
-	call SubsQuote_TmpKeyMap()
-	call AddSpace_TmpKeyMap()
+		call MoveCursor_TmpKeyMap(0)
 
-	call MoveCursor_TmpKeyMap(1)
+		call DelSpace_TmpKeyMap()
+		call Bullet_TmpKeyMap()
+		call SubsQuote_TmpKeyMap()
+		call AddSpace_TmpKeyMap()
+
+		call MoveCursor_TmpKeyMap(1)
+
+	elseif a:mode == 1
+
+		call InsertBullet_TmpKeyMap(0)
+
+	elseif a:mode == 2
+
+		call InsertBullet_TmpKeyMap(3)
+
+	endif
 
 endfun "}}}
 
 fun Gramma_Key_TmpKeyMap() "{{{
 
-	nno <buffer> <silent> <f1> :call Gramma_Format_TmpKeyMap()<cr>
+	nno <buffer> <silent> <f1> :call Gramma_Format_TmpKeyMap(0)<cr>
+	vno <buffer> <silent> <f2> <esc>:call Gramma_Format_TmpKeyMap(1)<cr>
+	vno <buffer> <silent> <f3> <esc>:call Gramma_Format_TmpKeyMap(2)<cr>
 
 endfun "}}}
 
