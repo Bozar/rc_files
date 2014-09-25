@@ -315,5 +315,41 @@ endfun "}}}
 au Bufread hero_quest.read call Heroquest_Key_TmpKeyMap()
 
  "}}}3
+" ghost.read "{{{3
+
+fun Ghost_Format_TmpKeyMap(mode) "{{{
+
+	if a:mode == 0
+
+		call MoveCursor_TmpKeyMap(0)
+
+		call IndentFold_TmpKeyMap('笔记',4)
+		call DelSpace_TmpKeyMap()
+
+		call MoveCursor_TmpKeyMap(1)
+
+	elseif a:mode == 1
+
+		call AddNote_TmpKeyMap('笔记',4)
+
+	elseif a:mode == 2
+
+		call JoinLines_TmpKeyMap()
+
+	endif
+
+endfun "}}}
+
+fun Ghost_Key_TmpKeyMap() "{{{
+
+	nno <buffer> <silent> <f1> :call Ghost_Format_TmpKeyMap(0)<cr>
+	nno <buffer> <silent> <f2> :call Ghost_Format_TmpKeyMap(1)<cr>
+	nno <buffer> <silent> <f3> :call Ghost_Format_TmpKeyMap(2)<cr>
+
+endfun "}}}
+
+au Bufread ghost.read call Ghost_Key_TmpKeyMap()
+
+ "}}}3
  "}}}2
  "}}}1
