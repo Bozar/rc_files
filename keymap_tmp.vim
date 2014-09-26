@@ -7,15 +7,26 @@ fun InsertBullet_TmpKeyMap(bullet) "{{{
 	'<,'>left 0
 
 	if a:bullet == 0
-		'<s;^;=;
-		'<+1,'>g;^.;s;^;-;
+
+		if line("'<") == line("'>")
+			'<s;^;=;
+
+		else
+			'<s;^;=;
+			'<+1,'>g;^.;s;^;-;
+
+		endif
+
 	elseif a:bullet == 1
 		'<,'>g;^.;s;^;-;
+
 	elseif a:bullet == 2
 		'<s;^;==;
 		'<+1,'>g;^.;s;^;--;
+
 	elseif a:bullet == 3
 		'<,'>g;^.;s;^;--;
+
 	endif
 
 endfun "}}}
