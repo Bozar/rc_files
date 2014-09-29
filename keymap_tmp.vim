@@ -189,47 +189,6 @@ endfun "}}}
 au Bufread gramma.read call Gramma_Key_TmpKeyMap()
 
  "}}}3
-" scarlet.read "{{{3
-
-fun Scarlet_Format_TmpKeyMap(mode) "{{{
-
-	if a:mode == 0
-
-		call MoveCursor_TmpKeyMap(0)
-
-		call IndentFold_TmpKeyMap('笔记',5)
-		call DelSpace_TmpKeyMap()
-		call Bullet_TmpKeyMap()
-
-		call MoveCursor_TmpKeyMap(1)
-
-	elseif a:mode == 1
-
-		call AddNote_TmpKeyMap('笔记',5)
-
-	elseif a:mode == 2
-
-		call JoinLines_TmpKeyMap()
-
-	endif
-
-endfun "}}}
-
-fun Scarlet_Key_TmpKeyMap() "{{{
-
-	nno <buffer> <silent> <f1> :call Scarlet_Format_TmpKeyMap(0)<cr>
-	nno <buffer> <silent> <f2> :call Scarlet_Format_TmpKeyMap(1)<cr>
-	nno <buffer> <silent> <f3> :call Scarlet_Format_TmpKeyMap(2)<cr>
-
-	call MoveCursor_TmpKeyMap(0)
-	call GlossaryIab_TmpKeyMap('名词表')
-	call MoveCursor_TmpKeyMap(1)
-
-endfun "}}}
-
-au Bufread scarlet.read call Scarlet_Key_TmpKeyMap()
-
- "}}}3
 " jojo.watch "{{{3
 
 fun Jojo_Format_TmpKeyMap() "{{{
@@ -271,59 +230,6 @@ fun Latex_Key_TmpKeyMap() "{{{
 endfun "}}}
 
 au Bufread latex.read call Latex_Key_TmpKeyMap()
-
- "}}}3
-" fiasco_gm.write "{{{3
-
-fun Fiasco_Format_TmpKeyMap(mode) "{{{
-
-	if a:mode == 0
-
-		call MoveCursor_TmpKeyMap(0)
-
-		call Bullet_TmpKeyMap()
-		call DelSpace_TmpKeyMap()
-
-		call MoveCursor_TmpKeyMap(1)
-
-	elseif a:mode == 1
-
-		call JoinLines_TmpKeyMap()
-
-	endif
-
-endfun "}}}
-
-fun Fiasco_Key_TmpKeyMap() "{{{
-
-	nno <buffer> <silent> <f1> :call Fiasco_Format_TmpKeyMap(0)<cr>
-	nno <buffer> <silent> <f2> :call Fiasco_Format_TmpKeyMap(1)<cr>
-
-endfun "}}}
-
-au Bufread fiasco_gm.write call Fiasco_Key_TmpKeyMap()
-
- "}}}3
-" hero_quest.read "{{{3
-
-fun Heroquest_Format_TmpKeyMap() "{{{
-
-	call MoveCursor_TmpKeyMap(0)
-
-	call Bullet_TmpKeyMap()
-	call DelSpace_TmpKeyMap()
-
-	call MoveCursor_TmpKeyMap(1)
-
-endfun "}}}
-
-fun Heroquest_Key_TmpKeyMap() "{{{
-
-	nno <buffer> <silent> <f1> :call Heroquest_Format_TmpKeyMap()<cr>
-
-endfun "}}}
-
-au Bufread hero_quest.read call Heroquest_Key_TmpKeyMap()
 
  "}}}3
 " ghost.read "{{{3
