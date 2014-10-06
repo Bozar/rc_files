@@ -268,5 +268,26 @@ endfun "}}}
 au Bufread ghost.read call Ghost_Key_TmpKeyMap()
 
  "}}}3
+" aspects_of_the_novel.read "{{{3
+
+fun Aspect_Format_TmpKeyMap() "{{{
+
+	call MoveCursor_TmpKeyMap(0)
+
+	call DelSpace_TmpKeyMap()
+
+	call MoveCursor_TmpKeyMap(1)
+
+endfun "}}}
+
+fun Aspect_Key_TmpKeyMap() "{{{
+
+	nno <buffer> <silent> <f1> :call Aspect_Format_TmpKeyMap()<cr>
+
+endfun "}}}
+
+au Bufread aspects_of_the_novel.read call Aspect_Key_TmpKeyMap()
+
+ "}}}3
  "}}}2
  "}}}1
