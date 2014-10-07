@@ -2,6 +2,14 @@
 
 " global "{{{2
 
+fun AddBlankLine_TmpKeyMap() "{{{
+
+	g;};-1s;^\(.\)\(}\)\@!;###MARK###\1;e
+	%s;^\(###MARK###.*\)$;\1\r;e
+	%s;^###MARK###;;e
+
+endfun "}}}
+
 fun InsertBullet_TmpKeyMap(bullet) "{{{
 
 	'<,'>left 0
@@ -163,6 +171,7 @@ fun Gramma_Format_TmpKeyMap(mode) "{{{
 		call Bullet_TmpKeyMap()
 		call SubsQuote_TmpKeyMap()
 		call AddSpace_TmpKeyMap()
+		call AddBlankLine_TmpKeyMap()
 
 		call MoveCursor_TmpKeyMap(1)
 
@@ -196,6 +205,7 @@ fun Jojo_Format_TmpKeyMap() "{{{
 	call MoveCursor_TmpKeyMap(0)
 
 	call DelSpace_TmpKeyMap()
+	call AddBlankLine_TmpKeyMap()
 
 	call MoveCursor_TmpKeyMap(1)
 
@@ -218,6 +228,7 @@ fun Latex_Format_TmpKeyMap() "{{{
 
 	call Bullet_TmpKeyMap()
 	call DelSpace_TmpKeyMap()
+	call AddBlankLine_TmpKeyMap()
 
 	call MoveCursor_TmpKeyMap(1)
 
@@ -242,6 +253,7 @@ fun Ghost_Format_TmpKeyMap(mode) "{{{
 
 		call IndentFold_TmpKeyMap('笔记',4)
 		call DelSpace_TmpKeyMap()
+		call AddBlankLine_TmpKeyMap()
 
 		call MoveCursor_TmpKeyMap(1)
 
@@ -275,6 +287,7 @@ fun Aspect_Format_TmpKeyMap() "{{{
 	call MoveCursor_TmpKeyMap(0)
 
 	call DelSpace_TmpKeyMap()
+	call AddBlankLine_TmpKeyMap()
 
 	call MoveCursor_TmpKeyMap(1)
 
@@ -287,6 +300,28 @@ fun Aspect_Key_TmpKeyMap() "{{{
 endfun "}}}
 
 au Bufread aspects_of_the_novel.read call Aspect_Key_TmpKeyMap()
+
+ "}}}3
+" fisherman.write "{{{3
+
+fun Fisherman_Format_TmpKeyMap() "{{{
+
+	call MoveCursor_TmpKeyMap(0)
+
+	call DelSpace_TmpKeyMap()
+	call AddBlankLine_TmpKeyMap()
+
+	call MoveCursor_TmpKeyMap(1)
+
+endfun "}}}
+
+fun Fisherman_Key_TmpKeyMap() "{{{
+
+	nno <buffer> <silent> <f1> :call Fisherman_Format_TmpKeyMap()<cr>
+
+endfun "}}}
+
+au Bufread fisherman.write call Fisherman_Key_TmpKeyMap()
 
  "}}}3
  "}}}2
