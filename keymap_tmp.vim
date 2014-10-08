@@ -317,7 +317,18 @@ endfun "}}}
 
 fun Fisherman_Key_TmpKeyMap() "{{{
 
-	nno <buffer> <silent> <f1> :call Fisherman_Format_TmpKeyMap()<cr>
+	nno <buffer> <silent> <f1> <c-w>w
+
+	nno <buffer> <silent> <f2> :call search('{2$')<cr>
+	nno <buffer> <silent> <s-f2> :call search('{2$','b')<cr>
+
+	nno <buffer> <silent> <f3> :call search('{3$')<cr>
+	nno <buffer> <silent> <s-f3> :call search('{3$','b')<cr>
+
+	nno <buffer> <silent> <f4> :call search('{4$')<cr>
+	nno <buffer> <silent> <s-f4> :call search('{4$','b')<cr>
+
+	nno <buffer> <silent> <f5> :call Fisherman_Format_TmpKeyMap()<cr>
 
 endfun "}}}
 
