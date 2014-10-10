@@ -59,6 +59,13 @@ function! SwitchSettings(setting) "{{{
 		elseif a:setting==3 "{{{
 			set modifiable!
 			set modifiable? "}}}
+		elseif a:setting==4
+			if substitute(&colorcolumn,50,'','')
+			\ == &colorcolumn
+				set colorcolumn=50
+			else
+				set colorcolumn-=50
+			endif
 		endif
 endfunction "}}}
  "}}}3
@@ -1023,7 +1030,6 @@ set number
 set showcmd
 set wildmenu
 set ambiwidth=double
-set colorcolumn=50
 
 set cmdheight=2
 set history=99
@@ -1090,13 +1096,9 @@ nnoremap <silent> <c-up> :set lines-=1<cr>
 " search backward
 noremap , ?
 
-" next/previous buffer
-nnoremap <silent> <a-j> :bn<cr>
-nnoremap <silent> <a-k> :bp<cr>
-
 " switch between windows
-nnoremap <silent> <a-l> <c-w>w
-nnoremap <silent> <a-h> <c-w>W
+nnoremap <silent> <a-j> <c-w>w
+nnoremap <silent> <a-k> <c-w>W
 
 " save
 nnoremap <silent> <cr> :wa<cr>
@@ -1257,10 +1259,11 @@ command! FmWrap call MoveFoldMarker(4)
 command! FmVWrap call MoveFoldMarker(5)
 
 " switch settings
-command! SwHlsearch call SwitchSettings(0)
-command! SwLinebreak call SwitchSettings(1)
-command! SwBackground call SwitchSettings(2)
-command! SwModifiable call SwitchSettings(3)
+command SwHlsearch call SwitchSettings(0)
+command SwLinebreak call SwitchSettings(1)
+command SwBackground call SwitchSettings(2)
+command SwModifiable call SwitchSettings(3)
+command SwColorColumn call SwitchSettings(4)
 
 " Chines word count
 command! Word %s/[^\x00-\xff]//gn
@@ -1280,6 +1283,12 @@ command! EdVimrc e $MYVIMRC
 " autocommands
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.vocab call Vocabulary()
+
+let s:ColorColumn = '*.vim'
+let s:ColorColumn .= ',*.vimrc'
+execute 'autocmd BufRead ' . s:ColorColumn .
+\ ' set colorcolumn=50'
+
 autocmd VimEnter * call ScratchBuffer(0)
 
  "}}}2
