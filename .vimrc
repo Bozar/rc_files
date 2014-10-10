@@ -1023,6 +1023,7 @@ set number
 set showcmd
 set wildmenu
 set ambiwidth=double
+set colorcolumn=50
 
 set cmdheight=2
 set history=99
