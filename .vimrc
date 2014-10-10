@@ -27,13 +27,6 @@ function! Var_HoldPos() "{{{
 endfunction
 call Var_HoldPos() "}}}
  "}}}4
-" GTD "{{{4
-function! Var_GTD() "{{{
-	let s:Today_GTD='^\d\{1,2} 月 \d\{1,2} 日 {\{3}\d$'
-	let s:Buffer_GTD='^缓冲区 {\{3}\d$'
-endfunction
-call Var_GTD() "}}}
- "}}}4
  "}}}3
 
 " windows or linux "{{{3
@@ -122,14 +115,6 @@ function! MappingMarker(marker) "{{{
 			'hmark j
 			'lmark k
 		endif
-endfunction "}}}
- "}}}3
-
-" detect cursor position "{{{3
-function! CursorAtFoldBegin() "{{{
-	if substitute(getline('.'),'{\{3}\d\{0,2}$','','')!=getline('.')
-		+1
-	endif
 endfunction "}}}
  "}}}3
 
@@ -472,154 +457,6 @@ function! ScratchBuffer(scratch) "{{{
 			"}}}
 		endif
 endfunction "}}}
- "}}}3
-
-" GTD "{{{3
-
-" Function key: <F4> "{{{4
-
-function Progress_GTD() "{{{
-
-	let Progress = '第 \d\{1,2} 次，共 \d\{2,3} 分钟$'
-	if substitute(getline('.'),Progress,'','')==getline('.')
-
-		return
-
-	else
-
-		'<mark j
-		'>mark k
-
-		execute "'j,'ks/" . Progress . "//"
-
-		let i=1|'j,'kg/$/s/$/\=i/|let i=i+1
-		'j,'ks/$/#/
-		let i=1|'j,'kg/$/s/$/\=i*30/|let i=i+1
-
-		'j,'ks/\(\d\{1,2}\)#\(\d\{2,3}\)$/第 \1 次，共 \2 分钟/
-
-	endif
-
-endfunction "}}}
-
-function! F4_GTD() "{{{
-	vnoremap <buffer> <silent> <f4> <esc>:call Progress_GTD()<cr>
-	inoremap <buffer> <silent> <f4> ，第 1 次，共 30 分钟<esc>
-endfunction "}}}
- "}}}4
-
-" Function key: <F1> "{{{4
-" to-do (*) and finished (~)
-function! Finished_GTD() "{{{
-	if substitute(getline('.'),'^\t\*','','')!=getline('.')
-		s/^\t\*/\t\~/
-	elseif substitute(getline('.'),'^\t\~','','')!=getline('.')
-		s/^\t\~/\t\*/
-	endif
-endfunction "}}}
-
-function! F1_GTD() "{{{
-	nnoremap <buffer> <silent> <f1> :call Finished_GTD()<cr>
-endfunction "}}}
- "}}}4
-
-" Function key: <F2> "{{{4
-function! AnotherDay_GTD() "{{{
-		let SaveCursor=getpos('.')
-	" detect cursor position
-		call CursorAtFoldBegin() "{{{
-		execute 'normal [z'
-		if substitute(getline('.'),s:Today_GTD,'','')==getline('.')
-			call setpos('.', SaveCursor)
-			echo "ERROR: '".s:Today_GTD."' not found!"
-			return
-		else
-			call setpos('.', SaveCursor)
-		endif "}}}
-	" insert new lines for another day
-		call MoveFoldMarker(2) "{{{
-	" fix substitution errors on rare occasions:
-	" the second day in a month
-	" in which case both }2 will be changed
-		'l-1
-		call search('}\{3}2$','c')
-		mark l
-		'h,'l-1yank
-		'h-2mark z
-		'zput "}}}
-	" change date and foldlevel
-		'z+1s/\d\{1,2}\( 日\)\@=/\=submatch(0)+1/ "{{{
-		call MappingMarker(1)
-		call ChangeFoldLevel(2) "}}}
-	" delete additional lines
-	" refresh markers
-		'zdelete "{{{
-		execute 'normal mh]zml'
-		"}}}
-	" progress bar: substitute 'page 2-5' with 'page 6-'
-	" substitute finished (~) with unfinished (*)
-		'h,'ls/\(\d\+-\)\@<=\(\d\+\)/\=submatch(0)+1/e "{{{
-		'h,'ls/\d\+-\(\d\+\)/\1-/e
-		'h,'ls/\t\~/\t\*/e "}}}
-	" new marker
-		'h+2 "{{{
-		execute 'normal wma'
-		"}}}
-endfunction "}}}
-
-function! F2_GTD() "{{{
-	nnoremap <buffer> <silent> <f2> :call AnotherDay_GTD()<cr>
-endfunction "}}}
- "}}}4
-
-" Function key: <F3> "{{{4
-function! MoveTask_GTD() "{{{
-		set nofoldenable
-	" lines begin with * or ~
-		if substitute(getline('.'),'^\t\(\~\|\*\)','','')==getline('.') "{{{
-			set foldenable
-			echo 'ERROR: Task line not found!'
-			return
-		endif "}}}
-	" move mark a
-		if substitute(getline(line('.')-2),s:Today_GTD,'','')!=getline(line('.')-2) "{{{
-			+1
-			execute 'normal wma'
-			-1
-		endif "}}}
-	" move tasks between buffer and today
-		+1mark h
-		execute 'normal [z'
-	" from today
-		if substitute(getline('.'),s:Today_GTD,'','')!=getline('.') "{{{
-			'h-1delete
-			call search(s:Buffer_GTD)
-			+1put
-			s/^\(\t\)\~/\1*/e "}}}
-	" from buffer
-		elseif substitute(getline('.'),s:Buffer_GTD,'','')!=getline('.') "{{{
-			'h-1delete
-			call search(s:Today_GTD)
-			execute 'normal ]z'
-			-2put
-			s/^\(\t\)\~/\1*/e "}}}
-		endif
-		'h
-		set foldenable
-endfunction "}}}
-
-function! F3_GTD() "{{{
-	nnoremap <buffer> <silent> <f3> :call MoveTask_GTD()<cr>
-endfunction "}}}
- "}}}4
-
-function! GetThingsDone() "{{{4
-	let i=1
-	while i<5
-		execute substitute('call F0_GTD()',0,i,'')
-		let i=i+1
-	endwhile
-endfunction "}}}4
  "}}}3
 
 " English vocabulary "{{{3
@@ -1430,7 +1267,6 @@ command! Word %s/[^\x00-\xff]//gn
 " load key mappings
 command! KeVocab call Vocabulary()
 command! KeLocal call Localization()
-command! KeGTD call GetThingsDone()
 command! KeTranslation call Translation()
 
 " localization
@@ -1442,7 +1278,6 @@ command! EdVimrc e $MYVIMRC
 
 " autocommands
 autocmd BufRead *.loc call Localization()
-autocmd BufRead *.gtd call GetThingsDone()
 autocmd BufRead *.vocab call Vocabulary()
 autocmd VimEnter * call ScratchBuffer(0)
 
