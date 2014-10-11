@@ -1301,7 +1301,7 @@ let s:ColorColumn .= ',*.vimrc'
 execute 'autocmd BufRead ' . s:ColorColumn .
 \ ' setl tw=50'
 execute 'autocmd BufRead ' . s:ColorColumn .
-\ ' setl colorcolumn=50'
+\ ' setl colorcolumn=+0'
 execute 'autocmd BufRead ' . s:ColorColumn .
 \ ' setl fo+=1mBj'
 
