@@ -1287,8 +1287,8 @@ command! KeTranslation call Translation()
 command! LocFormat call FileFormat_Loc()
 command! LocLine call LineBreak_Loc()
 
-" edit .vimrc
-command! EdVimrc e $MYVIMRC
+" edit files
+command EdVimrc e $MYVIMRC
 
 " autocommands
 autocmd BufRead *.loc call Localization()
@@ -1322,6 +1322,9 @@ execute 'autocmd BufRead ' . s:Indent .
 \ ' setl comments+=s:-,m:-,ex:/'
 execute 'autocmd BufRead ' . s:Indent .
 \ ' setl comments+=:+'
+
+autocmd BufRead achieve.note setl comments+=:*
+autocmd BufRead achieve.note setl fo+=ro
 
  "}}}2
 " vim: set nolinebreak number foldmethod=marker foldlevel=20: "}}}1
