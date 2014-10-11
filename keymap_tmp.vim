@@ -101,9 +101,26 @@ endfun "}}}
 
 fun Bullet_TmpKeyMap() "{{{
 
-	1mark j
-	$mark k
-	Bullet
+	while 1
+		 call search(
+		\ g:ListBefore_Bullet . '\|' .
+		\ g:ParaBefore_Bullet . '\|' .
+		\ g:SubListBefore_Bullet . '\|' .
+		\ g:SubParaBefore_Bullet,'wc')
+		let l:check = substitute(getline('.'),
+		\ g:ListBefore_Bullet . '\|' .
+		\ g:ParaBefore_Bullet . '\|' .
+		\ g:SubListBefore_Bullet . '\|' .
+		\ g:SubParaBefore_Bullet,'','')
+		if l:check == getline('.')
+			return
+		else
+			'{+1mark j
+			'}-1mark k
+			Bullet
+			execute 'normal gwip'
+		endif
+	endwhile
 
 endfun "}}}
 
