@@ -1313,7 +1313,15 @@ execute 'autocmd BufRead ' . s:Indent .
 execute 'autocmd BufRead ' . s:Indent .
 \ ' setl fo+=ro1mBj'
 execute 'autocmd BufRead ' . s:Indent .
-\ ' setl comments+=n:=,n:-'
+\ ' setl comments+=s:==,m:==,ex:/'
+execute 'autocmd BufRead ' . s:Indent .
+\ ' setl comments+=s:--,m:--,ex:/'
+execute 'autocmd BufRead ' . s:Indent .
+\ ' setl comments+=s:=,m:=,ex:/'
+execute 'autocmd BufRead ' . s:Indent .
+\ ' setl comments+=s:-,m:-,ex:/'
+execute 'autocmd BufRead ' . s:Indent .
+\ ' setl comments+=:+'
 
  "}}}2
 " vim: set nolinebreak number foldmethod=marker foldlevel=20: "}}}1
