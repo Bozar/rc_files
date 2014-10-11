@@ -138,28 +138,6 @@ fun DelSpace_TmpKeyMap() "{{{
 
 endfun "}}}
 
-fun MoveCursor_TmpKeyMap(when) "{{{
-
-	if a:when == 0
-
-		let s:current_cursor = getpos('.')
-
-		exe 'normal H'
-		let s:top_cursor = getpos('.')
-
-		call setpos('.', s:current_cursor)
-
-	elseif a:when == 1
-
-		call setpos('.', s:top_cursor)
-		exe 'normal zt'
-
-		call setpos('.', s:current_cursor)
-
-	endif
-
-endfun "}}}
-
 fun JoinLines_TmpKeyMap() "{{{
 
 	exe 'normal {j'
@@ -182,7 +160,7 @@ fun Gramma_Format_TmpKeyMap(mode) "{{{
 
 	if a:mode == 0
 
-		call MoveCursor_TmpKeyMap(0)
+		call KeepPos_MoveCursor(0)
 
 		call DelSpace_TmpKeyMap()
 		call Bullet_TmpKeyMap()
@@ -190,7 +168,7 @@ fun Gramma_Format_TmpKeyMap(mode) "{{{
 		call AddSpace_TmpKeyMap()
 		call AddBlankLine_TmpKeyMap()
 
-		call MoveCursor_TmpKeyMap(1)
+		call KeepPos_MoveCursor(1)
 
 	elseif a:mode == 1
 
@@ -219,12 +197,12 @@ au Bufread gramma.read call Gramma_Key_TmpKeyMap()
 
 fun Jojo_Format_TmpKeyMap() "{{{
 
-	call MoveCursor_TmpKeyMap(0)
+	call KeepPos_MoveCursor(0)
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call MoveCursor_TmpKeyMap(1)
+	call KeepPos_MoveCursor(1)
 
 endfun "}}}
 
@@ -241,13 +219,13 @@ au Bufread jojo.watch call Jojo_Key_TmpKeyMap()
 
 fun Latex_Format_TmpKeyMap() "{{{
 
-	call MoveCursor_TmpKeyMap(0)
+	call KeepPos_MoveCursor(0)
 
 	call Bullet_TmpKeyMap()
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call MoveCursor_TmpKeyMap(1)
+	call KeepPos_MoveCursor(1)
 
 endfun "}}}
 
@@ -266,13 +244,13 @@ fun Ghost_Format_TmpKeyMap(mode) "{{{
 
 	if a:mode == 0
 
-		call MoveCursor_TmpKeyMap(0)
+		call KeepPos_MoveCursor(0)
 
 		call IndentFold_TmpKeyMap('笔记',4)
 		call DelSpace_TmpKeyMap()
 		call AddBlankLine_TmpKeyMap()
 
-		call MoveCursor_TmpKeyMap(1)
+		call KeepPos_MoveCursor(1)
 
 	elseif a:mode == 1
 
@@ -301,12 +279,12 @@ au Bufread ghost.read call Ghost_Key_TmpKeyMap()
 
 fun Aspect_Format_TmpKeyMap() "{{{
 
-	call MoveCursor_TmpKeyMap(0)
+	call KeepPos_MoveCursor(0)
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call MoveCursor_TmpKeyMap(1)
+	call KeepPos_MoveCursor(1)
 
 endfun "}}}
 
@@ -323,12 +301,12 @@ au Bufread aspects_of_the_novel.read call Aspect_Key_TmpKeyMap()
 
 fun Fisherman_Format_TmpKeyMap() "{{{
 
-	call MoveCursor_TmpKeyMap(0)
+	call KeepPos_MoveCursor(0)
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call MoveCursor_TmpKeyMap(1)
+	call KeepPos_MoveCursor(1)
 
 endfun "}}}
 
