@@ -485,8 +485,16 @@ endfunction "}}}
 
 " Function key: <F2> "{{{4
 " search word
+function Bracket_Vocab() "{{{
+
+	execute 'normal "+yi['
+	let @+ = substitute(@+,'\(\(\_.\t\)\| \)',
+	\'\\(\\(\\_.\\t\\)\\| \\)','g')
+	execute '/\[' . @+ . '\]'
+
+endfunction "}}}
 function! F2_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <f2> "+yi[/\[<c-r>"\]<cr>zz
+	nnoremap <buffer> <silent> <f2> :call Bracket_Vocab()<cr>zz
 endfunction "}}}
 
 function! F2_Vocab() "{{{
@@ -1086,8 +1094,9 @@ endif "}}}
 set timeoutlen=0
 let mapleader='\'
 
-" switch case
-noremap ` ~
+" format paragraph
+noremap ` gwip
+vnoremap ` gw
 
 " set lines
 nnoremap <silent> <c-down> :set lines+=1<cr>
@@ -1144,6 +1153,7 @@ vnoremap <silent> <a-q> "by:ABSubs<cr>
 " switch settings
 nnoremap <silent> \ :SwBackground<cr>
 nnoremap <silent> <c-\> :SwHlsearch<cr>
+nnoremap <silent> \| :SwColorColumn<cr>
 nnoremap <silent> <a-\> :SwLinebreak<cr>
 
 " change fold level
@@ -1283,13 +1293,27 @@ command! EdVimrc e $MYVIMRC
 " autocommands
 autocmd BufRead *.loc call Localization()
 autocmd BufRead *.vocab call Vocabulary()
+autocmd VimEnter * call ScratchBuffer(0)
 
 let s:ColorColumn = '*.vim'
 let s:ColorColumn .= ',*.vimrc'
-execute 'autocmd BufRead ' . s:ColorColumn .
-\ ' set colorcolumn=50'
 
-autocmd VimEnter * call ScratchBuffer(0)
+execute 'autocmd BufRead ' . s:ColorColumn .
+\ ' setl tw=50'
+execute 'autocmd BufRead ' . s:ColorColumn .
+\ ' setl colorcolumn=50'
+execute 'autocmd BufRead ' . s:ColorColumn .
+\ ' setl fo+=1mBj'
+
+let s:Indent = '*.read'
+let s:Indent .= ',*.write'
+
+execute 'autocmd BufRead ' . s:Indent .
+\ ' setl tw=50'
+execute 'autocmd BufRead ' . s:Indent .
+\ ' setl fo+=ro1mBj'
+execute 'autocmd BufRead ' . s:Indent .
+\ ' setl comments+=n:=,n:-'
 
  "}}}2
 " vim: set nolinebreak number foldmethod=marker foldlevel=20: "}}}1
