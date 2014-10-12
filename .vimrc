@@ -136,7 +136,10 @@ function! CreatFoldMarker(creat) "{{{
 			.-1,.s/$/1/
 		endif "}}}
 	" move cursor
-		call FoldBegin_MoveCursor()
+		if substitute(getline('.'),
+			\'{\{3}\d\{0,2}$','','') != getline('.')
+			+1
+		endif
 	" same level
 		if a:creat==1 "{{{
 			execute 'normal [zmh]zml'
@@ -171,7 +174,10 @@ function! MoveFoldMarker(move) "{{{
 
 	" detect fold
 		let SaveCursor=getpos('.')
-		call FoldBegin_MoveCursor()
+		if substitute(getline('.'),
+			\'{\{3}\d\{0,2}$','','') != getline('.')
+			+1
+		endif
 		execute 'normal [z'
 		if substitute(getline('.'),'{\{3}\d\{0,2}$','','')==getline('.') "{{{
 			echo "ERROR: Fold '[z' not found!"
