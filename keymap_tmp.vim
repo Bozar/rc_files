@@ -99,31 +99,6 @@ fun IndentFold_TmpKeyMap(pattern,foldlevel) "{{{
 
 endfun "}}}
 
-fun Bullet_TmpKeyMap() "{{{
-
-	while 1
-		 call search(
-		\ g:ListBefore_Bullet . '\|' .
-		\ g:ParaBefore_Bullet . '\|' .
-		\ g:SubListBefore_Bullet . '\|' .
-		\ g:SubParaBefore_Bullet,'wc')
-		let l:check = substitute(getline('.'),
-		\ g:ListBefore_Bullet . '\|' .
-		\ g:ParaBefore_Bullet . '\|' .
-		\ g:SubListBefore_Bullet . '\|' .
-		\ g:SubParaBefore_Bullet,'','')
-		if l:check == getline('.')
-			return
-		else
-			'{+1mark j
-			'}-1mark k
-			Bullet
-			execute 'normal gwip'
-		endif
-	endwhile
-
-endfun "}}}
-
 fun SubsQuote_TmpKeyMap() "{{{
 
 	4,$s;‘;“;ge
@@ -163,7 +138,7 @@ fun Gramma_Format_TmpKeyMap(mode) "{{{
 		call KeepPos_MoveCursor(0)
 
 		call DelSpace_TmpKeyMap()
-		call Bullet_TmpKeyMap()
+		BuGlobalTW
 		call SubsQuote_TmpKeyMap()
 		call AddSpace_TmpKeyMap()
 		call AddBlankLine_TmpKeyMap()
@@ -221,7 +196,7 @@ fun Latex_Format_TmpKeyMap() "{{{
 
 	call KeepPos_MoveCursor(0)
 
-	call Bullet_TmpKeyMap()
+	BuGlobalTW
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
