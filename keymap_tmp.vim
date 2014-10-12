@@ -1,5 +1,21 @@
 " tmp key-mappings for specific files "{{{1
 
+" autoload "{{{2
+
+function s:KeepPos_IfLoaded() "{{{
+
+	let s:Loaded = 1
+	try
+		call move_cursor#KeepPos(2)
+		catch /E117/
+		let s:Loaded = 0
+	endtry
+
+endfunction "}}}
+
+autocmd VimEnter * call <sid>KeepPos_IfLoaded()
+
+ "}}}2
 " global "{{{2
 
 fun AddBlankLine_TmpKeyMap() "{{{
@@ -129,55 +145,20 @@ endfun "}}}
  "}}}2
 " files "{{{2
 
-" gramma.read "{{{3
-
-fun Gramma_Format_TmpKeyMap(mode) "{{{
-
-	if a:mode == 0
-
-		call move_cursor#KeepPos(0)
-
-		call DelSpace_TmpKeyMap()
-		BuGlobalTW
-		call SubsQuote_TmpKeyMap()
-		call AddSpace_TmpKeyMap()
-		call AddBlankLine_TmpKeyMap()
-
-		call move_cursor#KeepPos(1)
-
-	elseif a:mode == 1
-
-		call InsertBullet_TmpKeyMap(0)
-
-	elseif a:mode == 2
-
-		call InsertBullet_TmpKeyMap(3)
-
-	endif
-
-endfun "}}}
-
-fun Gramma_Key_TmpKeyMap() "{{{
-
-	nno <buffer> <silent> <f1> :call Gramma_Format_TmpKeyMap(0)<cr>
-	vno <buffer> <silent> <f2> <esc>:call Gramma_Format_TmpKeyMap(1)<cr>
-	vno <buffer> <silent> <f3> <esc>:call Gramma_Format_TmpKeyMap(2)<cr>
-
-endfun "}}}
-
-au Bufread gramma.read call Gramma_Key_TmpKeyMap()
-
- "}}}3
 " jojo.watch "{{{3
 
 fun Jojo_Format_TmpKeyMap() "{{{
 
-	call move_cursor#KeepPos(0)
+	if s:Loaded == 1
+		call move_cursor#KeepPos(0)
+	endif
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call move_cursor#KeepPos(1)
+	if s:Loaded == 1
+		call move_cursor#KeepPos(1)
+	endif
 
 endfun "}}}
 
@@ -194,13 +175,17 @@ au Bufread jojo.watch call Jojo_Key_TmpKeyMap()
 
 fun Latex_Format_TmpKeyMap() "{{{
 
-	call move_cursor#KeepPos(0)
+	if s:Loaded == 1
+		call move_cursor#KeepPos(0)
+	endif
 
 	BuGlobalTW
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call move_cursor#KeepPos(1)
+	if s:Loaded == 1
+		call move_cursor#KeepPos(1)
+	endif
 
 endfun "}}}
 
@@ -219,13 +204,17 @@ fun Ghost_Format_TmpKeyMap(mode) "{{{
 
 	if a:mode == 0
 
+	if s:Loaded == 1
 		call move_cursor#KeepPos(0)
+	endif
 
 		call IndentFold_TmpKeyMap('笔记',4)
 		call DelSpace_TmpKeyMap()
 		call AddBlankLine_TmpKeyMap()
 
+	if s:Loaded == 1
 		call move_cursor#KeepPos(1)
+	endif
 
 	elseif a:mode == 1
 
@@ -254,12 +243,16 @@ au Bufread ghost.read call Ghost_Key_TmpKeyMap()
 
 fun Aspect_Format_TmpKeyMap() "{{{
 
-	call move_cursor#KeepPos(0)
+	if s:Loaded == 1
+		call move_cursor#KeepPos(0)
+	endif
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call move_cursor#KeepPos(1)
+	if s:Loaded == 1
+		call move_cursor#KeepPos(1)
+	endif
 
 endfun "}}}
 
@@ -276,12 +269,16 @@ au Bufread aspects.read call Aspect_Key_TmpKeyMap()
 
 fun Fisherman_Format_TmpKeyMap() "{{{
 
-	call move_cursor#KeepPos(0)
+	if s:Loaded == 1
+		call move_cursor#KeepPos(0)
+	endif
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call move_cursor#KeepPos(1)
+	if s:Loaded == 1
+		call move_cursor#KeepPos(1)
+	endif
 
 endfun "}}}
 
