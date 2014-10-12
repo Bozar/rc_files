@@ -1314,27 +1314,27 @@ execute 'autocmd BufRead ' . s:ColorColumn .
 let g:FilePat_BufRead_Bullet = '*.read'
 let g:FilePat_BufRead_Bullet .= ',*.write'
 
-execute 'autocmd BufRead ' .
+execute 'autocmd BufRead,BufNewFile ' .
 \ g:FilePat_BufRead_Bullet .
 \ ' setl tw=50'
-execute 'autocmd BufRead ' .
+execute 'autocmd BufRead,BufNewFile ' .
 \ g:FilePat_BufRead_Bullet .
-\ ' setl fo+=ro1mBj'
-execute 'autocmd BufRead ' .
+\ ' setl fo+=ro12mBj'
+execute 'autocmd BufRead,BufNewFile ' .
 \ g:FilePat_BufRead_Bullet .
-\ ' setl comments+=s:==,m:==,ex:/'
-execute 'autocmd BufRead ' .
+\ ' setl comments='
+execute 'autocmd BufRead,BufNewFile ' .
 \ g:FilePat_BufRead_Bullet .
-\ ' setl comments+=s:--,m:--,ex:/'
-execute 'autocmd BufRead ' .
+\ ' setl comments+=s:==,m:--,ex:/'
+execute 'autocmd BufRead,BufNewFile ' .
 \ g:FilePat_BufRead_Bullet .
-\ ' setl comments+=s:=,m:=,ex:/'
-execute 'autocmd BufRead ' .
+\ ' setl comments+=s:=,m:-,ex:/'
+execute 'autocmd BufRead,BufNewFile ' .
 \ g:FilePat_BufRead_Bullet .
-\ ' setl comments+=s:-,m:-,ex:/'
-execute 'autocmd BufRead ' .
+\ ' setl comments+=b:*'
+execute 'autocmd BufRead,BufNewFile ' .
 \ g:FilePat_BufRead_Bullet .
-\ ' setl comments+=:+'
+\ ' setl comments+=b:+'
 
 autocmd BufRead achieve.note setl comments+=:*,:~
 autocmd BufRead achieve.note setl fo+=ro
