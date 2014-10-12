@@ -135,7 +135,7 @@ fun Gramma_Format_TmpKeyMap(mode) "{{{
 
 	if a:mode == 0
 
-		call KeepPos_MoveCursor(0)
+		call move_cursor#KeepPos(0)
 
 		call DelSpace_TmpKeyMap()
 		BuGlobalTW
@@ -143,7 +143,7 @@ fun Gramma_Format_TmpKeyMap(mode) "{{{
 		call AddSpace_TmpKeyMap()
 		call AddBlankLine_TmpKeyMap()
 
-		call KeepPos_MoveCursor(1)
+		call move_cursor#KeepPos(1)
 
 	elseif a:mode == 1
 
@@ -172,12 +172,12 @@ au Bufread gramma.read call Gramma_Key_TmpKeyMap()
 
 fun Jojo_Format_TmpKeyMap() "{{{
 
-	call KeepPos_MoveCursor(0)
+	call move_cursor#KeepPos(0)
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call KeepPos_MoveCursor(1)
+	call move_cursor#KeepPos(1)
 
 endfun "}}}
 
@@ -194,13 +194,13 @@ au Bufread jojo.watch call Jojo_Key_TmpKeyMap()
 
 fun Latex_Format_TmpKeyMap() "{{{
 
-	call KeepPos_MoveCursor(0)
+	call move_cursor#KeepPos(0)
 
 	BuGlobalTW
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call KeepPos_MoveCursor(1)
+	call move_cursor#KeepPos(1)
 
 endfun "}}}
 
@@ -219,13 +219,13 @@ fun Ghost_Format_TmpKeyMap(mode) "{{{
 
 	if a:mode == 0
 
-		call KeepPos_MoveCursor(0)
+		call move_cursor#KeepPos(0)
 
 		call IndentFold_TmpKeyMap('笔记',4)
 		call DelSpace_TmpKeyMap()
 		call AddBlankLine_TmpKeyMap()
 
-		call KeepPos_MoveCursor(1)
+		call move_cursor#KeepPos(1)
 
 	elseif a:mode == 1
 
@@ -250,16 +250,16 @@ endfun "}}}
 au Bufread ghost.read call Ghost_Key_TmpKeyMap()
 
  "}}}3
-" aspects_of_the_novel.read "{{{3
+" aspects.read "{{{3
 
 fun Aspect_Format_TmpKeyMap() "{{{
 
-	call KeepPos_MoveCursor(0)
+	call move_cursor#KeepPos(0)
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call KeepPos_MoveCursor(1)
+	call move_cursor#KeepPos(1)
 
 endfun "}}}
 
@@ -269,19 +269,19 @@ fun Aspect_Key_TmpKeyMap() "{{{
 
 endfun "}}}
 
-au Bufread aspects_of_the_novel.read call Aspect_Key_TmpKeyMap()
+au Bufread aspects.read call Aspect_Key_TmpKeyMap()
 
  "}}}3
 " fisherman.write "{{{3
 
 fun Fisherman_Format_TmpKeyMap() "{{{
 
-	call KeepPos_MoveCursor(0)
+	call move_cursor#KeepPos(0)
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	call KeepPos_MoveCursor(1)
+	call move_cursor#KeepPos(1)
 
 endfun "}}}
 
