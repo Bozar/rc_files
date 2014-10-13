@@ -1,21 +1,5 @@
 " tmp key-mappings for specific files "{{{1
 
-" autoload "{{{2
-
-function s:KeepPos_IfLoaded() "{{{
-
-	let s:Loaded = 1
-	try
-		call move_cursor#KeepPos(2)
-		catch /E117/
-		let s:Loaded = 0
-	endtry
-
-endfunction "}}}
-
-autocmd VimEnter * call <sid>KeepPos_IfLoaded()
-
- "}}}2
 " global "{{{2
 
 fun AddBlankLine_TmpKeyMap() "{{{
@@ -149,16 +133,12 @@ endfun "}}}
 
 fun Jojo_Format_TmpKeyMap() "{{{
 
-	if s:Loaded == 1
-		call move_cursor#KeepPos(0)
-	endif
+	call move_cursor#KeepPos(0)
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	if s:Loaded == 1
-		call move_cursor#KeepPos(1)
-	endif
+	call move_cursor#KeepPos(1)
 
 endfun "}}}
 
@@ -175,17 +155,13 @@ au Bufread jojo.watch call Jojo_Key_TmpKeyMap()
 
 fun Latex_Format_TmpKeyMap() "{{{
 
-	if s:Loaded == 1
-		call move_cursor#KeepPos(0)
-	endif
+	call move_cursor#KeepPos(0)
 
 	BuGlobalTW
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	if s:Loaded == 1
-		call move_cursor#KeepPos(1)
-	endif
+	call move_cursor#KeepPos(1)
 
 endfun "}}}
 
@@ -204,17 +180,13 @@ fun Ghost_Format_TmpKeyMap(mode) "{{{
 
 	if a:mode == 0
 
-	if s:Loaded == 1
-		call move_cursor#KeepPos(0)
-	endif
+	call move_cursor#KeepPos(0)
 
 		call IndentFold_TmpKeyMap('笔记',4)
 		call DelSpace_TmpKeyMap()
 		call AddBlankLine_TmpKeyMap()
 
-	if s:Loaded == 1
-		call move_cursor#KeepPos(1)
-	endif
+	call move_cursor#KeepPos(1)
 
 	elseif a:mode == 1
 
@@ -243,16 +215,12 @@ au Bufread ghost.read call Ghost_Key_TmpKeyMap()
 
 fun Aspect_Format_TmpKeyMap() "{{{
 
-	if s:Loaded == 1
-		call move_cursor#KeepPos(0)
-	endif
+	call move_cursor#KeepPos(0)
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	if s:Loaded == 1
-		call move_cursor#KeepPos(1)
-	endif
+	call move_cursor#KeepPos(1)
 
 endfun "}}}
 
@@ -269,16 +237,12 @@ au Bufread aspects.read call Aspect_Key_TmpKeyMap()
 
 fun Fisherman_Format_TmpKeyMap() "{{{
 
-	if s:Loaded == 1
-		call move_cursor#KeepPos(0)
-	endif
+	call move_cursor#KeepPos(0)
 
 	call DelSpace_TmpKeyMap()
 	call AddBlankLine_TmpKeyMap()
 
-	if s:Loaded == 1
-		call move_cursor#KeepPos(1)
-	endif
+	call move_cursor#KeepPos(1)
 
 endfun "}}}
 
