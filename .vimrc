@@ -1282,7 +1282,19 @@ command SwModifiable call SwitchSettings(3)
 command SwColorColumn call SwitchSettings(4)
 
 " Chines word count
-command! Word %s/[^\x00-\xff]//gn
+
+function s:CountChineseWord() "{{{
+
+	if search('[^\x00-\xff]','n') == 0
+		echo 'NOTE: Chinese words not found!'
+		return
+	else
+		%s/[^\x00-\xff]//gn
+	endif
+
+endfunction "}}}
+
+command Word call <sid>CountChineseWord()
 
 " load key mappings
 command! KeVocab call Vocabulary()
@@ -1311,30 +1323,10 @@ execute 'autocmd BufRead ' . s:ColorColumn .
 execute 'autocmd BufRead ' . s:ColorColumn .
 \ ' setl fo+=1mBj'
 
-let g:FilePat_BufRead_Bullet = '*.read'
-let g:FilePat_BufRead_Bullet .= ',*.write'
+let g:FilePat_Bullet = '*.read'
+let g:FilePat_Bullet .= ',*.write'
 
-execute 'autocmd BufRead,BufNewFile ' .
-\ g:FilePat_BufRead_Bullet .
-\ ' setl tw=50'
-execute 'autocmd BufRead,BufNewFile ' .
-\ g:FilePat_BufRead_Bullet .
-\ ' setl fo+=ro12mBj'
-execute 'autocmd BufRead,BufNewFile ' .
-\ g:FilePat_BufRead_Bullet .
-\ ' setl comments='
-execute 'autocmd BufRead,BufNewFile ' .
-\ g:FilePat_BufRead_Bullet .
-\ ' setl comments+=s:==,m:--,ex:/'
-execute 'autocmd BufRead,BufNewFile ' .
-\ g:FilePat_BufRead_Bullet .
-\ ' setl comments+=s:=,m:-,ex:/'
-execute 'autocmd BufRead,BufNewFile ' .
-\ g:FilePat_BufRead_Bullet .
-\ ' setl comments+=b:*'
-execute 'autocmd BufRead,BufNewFile ' .
-\ g:FilePat_BufRead_Bullet .
-\ ' setl comments+=b:+'
+let g:SwitchBulletMode_Bullet = 1
 
 autocmd BufRead achieve.note setl comments+=:*,:~
 autocmd BufRead achieve.note setl fo+=ro
