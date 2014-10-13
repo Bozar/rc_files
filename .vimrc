@@ -1,5 +1,7 @@
 " Bozar's .vimrc file "{{{1
 
+" Last Update: Oct 13, Mon | 23:20:09 | 2014
+
 " Plugins "{{{2
 
 set nocompatible
@@ -1100,9 +1102,9 @@ endif "}}}
 set timeoutlen=0
 let mapleader='\'
 
-" format paragraph
-noremap ` gwip
-vnoremap ` gw
+" switch case 
+noremap ` ~
+vnoremap ` ~
 
 " set lines
 nnoremap <silent> <c-down> :set lines+=1<cr>
@@ -1316,11 +1318,11 @@ autocmd VimEnter * call ScratchBuffer(0)
 let s:ColorColumn = '*.vim'
 let s:ColorColumn .= ',*.vimrc'
 
-execute 'autocmd BufRead ' . s:ColorColumn .
+execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 \ ' setl tw=50'
-execute 'autocmd BufRead ' . s:ColorColumn .
+execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 \ ' setl colorcolumn=+0'
-execute 'autocmd BufRead ' . s:ColorColumn .
+execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 \ ' setl fo+=1mBj'
 
 let g:FilePat_Bullet = '*.read'
