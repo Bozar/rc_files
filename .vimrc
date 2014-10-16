@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Oct 14, Tue | 15:36:15 | 2014
+" Last Update: Oct 16, Thu | 16:27:47 | 2014
 
 " Plugins "{{{2
 
@@ -1327,9 +1327,8 @@ execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 
 let g:Pat_File_Bullet = '*.read'
 let g:Pat_File_Bullet .= ',*.write'
-let g:TextWidth_Opt_Bullet = 50
-
-let g:SwitchBulletMode_Bullet = 1
+let g:TextWidth_Bullet = 50
+let g:SwitchMode_Bullet = 1
 
 autocmd BufRead achieve.note setl comments+=:*,:~
 autocmd BufRead achieve.note setl fo+=ro
