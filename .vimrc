@@ -23,12 +23,6 @@ function! Var_Loc() "{{{
 endfunction
 call Var_Loc() "}}}
  "}}}4
-" hold position marker "{{{4
-function! Var_HoldPos() "{{{
-	let s:HoldPos='###HOLD_POSITION###'
-endfunction
-call Var_HoldPos() "}}}
- "}}}4
  "}}}3
 
 " windows or linux "{{{3
@@ -300,23 +294,6 @@ function! ChangeFoldLevel(level)  "{{{
 			call ChangeFoldLevel(6) "}}}
 		endif
 		call setpos('.', SaveCursor)
-endfunction "}}}
- "}}}3
-
-" delete lines "{{{3
-function! EmptyLines(line) "{{{
-	call search(s:HoldPos,'c') "{{{
-	if substitute(getline('.'),s:HoldPos,'','')!=getline('.')
-		echo "ERROR: '".s:HoldPos."' found!"
-		return
-	endif "}}}
-	if a:line==0 "{{{
-		execute '1,$-1g/^$/.+1s/^$/'.s:HoldPos.'/e'
-		execute 'g/^'.s:HoldPos.'$/delete'
-		$g/^$/delete
-	elseif a:line==1
-		g/^$/delete
-	endif "}}}
 endfunction "}}}
  "}}}3
 
@@ -1227,9 +1204,23 @@ command! Date call TimeStamp()
 command! NumNoFold call CreatNumber(0)
 command! NumFold call CreatNumber(1)
 
-" delete empty lines
-command! DelEmpty call EmptyLines(1)
-command! DelAdd call EmptyLines(0)
+" delete empty lines {{{3
+
+function s:DelLine(line) "{{{4
+
+	call space#DelSpace_Trail()
+	if a:line == 0
+		call space#DelLine(0)
+	elseif a:line == 1
+		call space#DelLine(1)
+	endif
+
+endfunction "}}}4
+
+command DelEmpty call <sid>DelLine(1)
+command DelAdd call <sid>DelLine(0)
+
+ "}}}3
 
 " a-b substitution
 command! ABSubs call SearchPattern(0)
@@ -1327,6 +1318,7 @@ execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 
 let g:Pat_File_Bullet = '*.read'
 let g:Pat_File_Bullet .= ',*.write'
+let g:Pat_File_Bullet .= ',*.note'
 let g:TextWidth_Bullet = 50
 let g:SwitchMode_Bullet = 1
 
