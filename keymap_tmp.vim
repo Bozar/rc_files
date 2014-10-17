@@ -214,26 +214,28 @@ au Bufread ghost.read call Ghost_Key_TmpKeyMap()
  "}}}3
 " aspects.read "{{{3
 
-fun Aspect_Format_TmpKeyMap() "{{{
+function s:Format_Aspect() "{{{
 
 	call move_cursor#KeepPos(0)
 
 	call space#DelSpace_Inner()
-	call AddBlankLine_TmpKeyMap()
+	call space#DelSpace_Trail()
+	BuWhole1TW
 
 	call move_cursor#KeepPos(1)
 
-endfun "}}}
+endfunction "}}}
 
-function s:Aspect() "{{{
+function s:KeyMap_Aspect() "{{{
 
-	nno <buffer> <silent> <f1> :BuWhole1TW<cr>
+	nno <buffer> <silent> <f1>
+	\ :call <sid>Format_Aspect<cr>
 	nno <buffer> <silent> <f12>
 	\ :call <sid>EditVimScript()<cr>
 
 endfunction "}}}
 
-au Bufread aspect.read call <sid>Aspect()
+au Bufread aspect.read call <sid>KeyMap_Aspect()
 
  "}}}3
 " fisherman.write "{{{3
