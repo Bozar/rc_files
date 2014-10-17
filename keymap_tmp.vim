@@ -1,8 +1,14 @@
-" tmp key-mappings for specific files "{{{1
+" tmp key-mappings "{{{1
 
-" Last Update: Oct 13, Mon | 20:42:45 | 2014
+" Last Update: Oct 17, Fri | 19:30:11 | 2014
 
 " global "{{{2
+
+function s:EditVimScript() "{{{
+
+	edit ~/.vim/plugin/keymap_tmp.vim
+
+endfunction "}}}
 
 fun AddBlankLine_TmpKeyMap() "{{{
 
@@ -108,13 +114,6 @@ fun SubsQuote_TmpKeyMap() "{{{
 
 endfun "}}}
 
-fun DelSpace_TmpKeyMap() "{{{
-
-	%s;\s\+$;;e
-	%s;\([^\x00-\xff]\) \+\([^\x00-\xff]\);\1\2;ge
-
-endfun "}}}
-
 fun JoinLines_TmpKeyMap() "{{{
 
 	exe 'normal {j'
@@ -123,7 +122,7 @@ fun JoinLines_TmpKeyMap() "{{{
 	mark k
 	'j,'kleft 0
 	'j,'kjoin
-	call DelSpace_TmpKeyMap()
+	call space#DelSpace_Inner()
 	s;^;\t;
 
 endfun "}}}
@@ -137,7 +136,7 @@ fun Jojo_Format_TmpKeyMap() "{{{
 
 	call move_cursor#KeepPos(0)
 
-	call DelSpace_TmpKeyMap()
+	call space#DelSpace_Inner()
 	call AddBlankLine_TmpKeyMap()
 
 	call move_cursor#KeepPos(1)
@@ -160,7 +159,7 @@ fun Latex_Format_TmpKeyMap() "{{{
 	call move_cursor#KeepPos(0)
 
 	BuGlobalTW
-	call DelSpace_TmpKeyMap()
+	call space#DelSpace_Inner()
 	call AddBlankLine_TmpKeyMap()
 
 	call move_cursor#KeepPos(1)
@@ -185,7 +184,7 @@ fun Ghost_Format_TmpKeyMap(mode) "{{{
 	call move_cursor#KeepPos(0)
 
 		call IndentFold_TmpKeyMap('笔记',4)
-		call DelSpace_TmpKeyMap()
+		call space#DelSpace_Inner()
 		call AddBlankLine_TmpKeyMap()
 
 	call move_cursor#KeepPos(1)
@@ -219,20 +218,22 @@ fun Aspect_Format_TmpKeyMap() "{{{
 
 	call move_cursor#KeepPos(0)
 
-	call DelSpace_TmpKeyMap()
+	call space#DelSpace_Inner()
 	call AddBlankLine_TmpKeyMap()
 
 	call move_cursor#KeepPos(1)
 
 endfun "}}}
 
-fun Aspect_Key_TmpKeyMap() "{{{
+function s:Aspect() "{{{
 
-	nno <buffer> <silent> <f1> :call Aspect_Format_TmpKeyMap()<cr>
+	nno <buffer> <silent> <f1> :BuWhole1TW<cr>
+	nno <buffer> <silent> <f12>
+	\ :call <sid>EditVimScript()<cr>
 
-endfun "}}}
+endfunction "}}}
 
-au Bufread aspects.read call Aspect_Key_TmpKeyMap()
+au Bufread aspect.read call <sid>Aspect()
 
  "}}}3
 " fisherman.write "{{{3
@@ -241,7 +242,7 @@ fun Fisherman_Format_TmpKeyMap() "{{{
 
 	call move_cursor#KeepPos(0)
 
-	call DelSpace_TmpKeyMap()
+	call space#DelSpace_Inner()
 	call AddBlankLine_TmpKeyMap()
 
 	call move_cursor#KeepPos(1)
