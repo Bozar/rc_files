@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Oct 17, Fri | 22:53:34 | 2014
+" Last Update: Oct 18, Sat | 14:32:26 | 2014
 
 " Plugins "{{{2
 
@@ -1299,7 +1299,10 @@ command! LocFormat call FileFormat_Loc()
 command! LocLine call LineBreak_Loc()
 
 " edit files
-command EdVimrc e $MYVIMRC
+command Ed1Vimrc e $MYVIMRC
+command Ed2Achieve e ~/documents/achieve.daily|
+\ cd ~/documents
+command Ed3KeyMap e ~/.vim/plugin/keymap_tmp.vim
 
 " autocommands
 autocmd BufRead *.loc call Localization()
@@ -1322,8 +1325,10 @@ let g:Pat_File_Bullet .= ',*.note'
 let g:TextWidth_Bullet = 50
 let g:Switch_Auto_Bullet = 1
 
-autocmd BufRead achieve.note setl comments+=:*,:~
-autocmd BufRead achieve.note setl fo+=ro
+autocmd BufRead achieve.daily setl comments+=:*,:~
+autocmd BufRead achieve.daily setl fo+=ro
+
+"let g:DelSpace_Bullet = 1
 
  "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
