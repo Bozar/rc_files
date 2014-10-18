@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Oct 16, Thu | 16:27:47 | 2014
+" Last Update: Oct 17, Fri | 22:53:34 | 2014
 
 " Plugins "{{{2
 
@@ -1320,10 +1320,10 @@ let g:Pat_File_Bullet = '*.read'
 let g:Pat_File_Bullet .= ',*.write'
 let g:Pat_File_Bullet .= ',*.note'
 let g:TextWidth_Bullet = 50
-let g:SwitchMode_Bullet = 1
+let g:Switch_Auto_Bullet = 1
 
 autocmd BufRead achieve.note setl comments+=:*,:~
 autocmd BufRead achieve.note setl fo+=ro
 
  "}}}2
-" vim: set nolinebreak number foldmethod=marker foldlevel=20: "}}}1
+" vim: set fdm=marker fdl=20: "}}}1
