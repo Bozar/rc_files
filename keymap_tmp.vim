@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 17, Fri | 19:30:11 | 2014
+" Last Update: Oct 18, Sat | 09:29:05 | 2014
 
 " global "{{{2
 
@@ -228,8 +228,7 @@ endfunction "}}}
 
 function s:KeyMap_Aspect() "{{{
 
-	nno <buffer> <silent> <f1>
-	\ :call <sid>Format_Aspect<cr>
+	nno <buffer> <silent> <f1> :BuWhole1TW<cr>
 	nno <buffer> <silent> <f12>
 	\ :call <sid>EditVimScript()<cr>
 
