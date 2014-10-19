@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Oct 18, Sat | 14:47:56 | 2014
+" Last Update: Oct 19, Sun | 14:52:16 | 2014
 
 " Plugins "{{{2
 
@@ -1325,10 +1325,8 @@ let g:Pat_File_Bullet .= ',*.note'
 let g:TextWidth_Bullet = 50
 let g:Switch_Auto_Bullet = 1
 
-autocmd BufRead achieve.daily setl comments+=:*,:~
+autocmd BufRead achieve.daily setl comments=:*,:~
 autocmd BufRead achieve.daily setl fo+=ro
-
-"let g:DelSpace_Bullet = 1
 
  "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
