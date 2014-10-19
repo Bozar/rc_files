@@ -1,13 +1,14 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 19, Sun | 09:42:50 | 2014
+" Last Update: Oct 19, Sun | 13:24:27 | 2014
 
 " global "{{{2
 
-fun s:WindowJump(align) "{{{3
+function s:WindowJump(align) "{{{3
 
 	if a:align == 0
 		wincmd w
+
 	elseif a:align == 1
 		let l:top = getpos('w0')
 		let l:pos = getpos('.')
@@ -15,9 +16,10 @@ fun s:WindowJump(align) "{{{3
 		call setpos('.',l:top)
 		execute 'normal zt'
 		call setpos('.',l:pos)
+
 	endif
 
-endfun "}}}3
+endfunction "}}}3
 
 fun s:SearchFold(level,direction) "{{{3
 
@@ -144,7 +146,7 @@ fun JoinLines_TmpKeyMap() "{{{3
 	mark k
 	'j,'kleft 0
 	'j,'kjoin
-	call space#DelSpace_Inner()
+	call space#DelSpace_CJK()
 	s;^;\t;
 
 endfun "}}}3
@@ -158,7 +160,7 @@ fun Jojo_Format_TmpKeyMap() "{{{4
 
 	call move_cursor#KeepPos(0)
 
-	call space#DelSpace_Inner()
+	call space#DelSpace_CJK()
 	call AddBlankLine_TmpKeyMap()
 
 	call move_cursor#KeepPos(1)
@@ -181,7 +183,7 @@ fun Latex_Format_TmpKeyMap() "{{{4
 	call move_cursor#KeepPos(0)
 
 	BuGlobalTW
-	call space#DelSpace_Inner()
+	call space#DelSpace_CJK()
 	call AddBlankLine_TmpKeyMap()
 
 	call move_cursor#KeepPos(1)
@@ -206,7 +208,7 @@ fun Ghost_Format_TmpKeyMap(mode) "{{{4
 	call move_cursor#KeepPos(0)
 
 		call IndentFold_TmpKeyMap('笔记',4)
-		call space#DelSpace_Inner()
+		call space#DelSpace_CJK()
 		call AddBlankLine_TmpKeyMap()
 
 	call move_cursor#KeepPos(1)
@@ -311,6 +313,24 @@ endfun "}}}4
 
 au Bufread fisherman.write
 \ call <sid>Key_Fisherman()
+
+ "}}}4
+ "}}}3
+" echo_lines.write "{{{3
+
+fun s:Key_Echo() "{{{4
+
+	nno <buffer> <silent> <f1>
+	\ :call <sid>WindowJump(0)<cr>
+	nno <buffer> <silent> <s-f1>
+	\ :call <sid>WindowJump(1)<cr>
+
+endfun "}}}4
+
+" command "{{{4
+
+au Bufread echo_lines.write
+\ call <sid>Key_Echo()
 
  "}}}4
  "}}}3
