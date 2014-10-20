@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 19, Sun | 13:24:27 | 2014
+" Last Update: Oct 20, Mon | 10:51:54 | 2014
 
 " global "{{{2
 
@@ -274,7 +274,7 @@ au Bufread ghost.write call <sid>Key_Ghost_Write()
 
 fun s:Key_Aspect() "{{{4
 
-	nno <buffer> <silent> <f1> :BuWhole1TW<cr>
+	nno <buffer> <silent> <f1> :BuWhole0TW<cr>
 
 endfun "}}}4
 
