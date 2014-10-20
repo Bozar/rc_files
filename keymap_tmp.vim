@@ -1,8 +1,31 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 20, Mon | 10:54:56 | 2014
+" Last Update: Oct 20, Mon | 19:18:41 | 2014
 
 " global "{{{2
+
+function s:AddNum4Note(note) "{{{3
+
+	call move_cursor#ToColumn1("'j",0)
+
+	let l:pattern = '^' . a:note . '\d\{0,2}'
+
+	if search(l:pattern,'c',line("'k"))
+
+		execute "'j,'k" . 's;' . l:pattern . ';' .
+		\ a:note . ';'
+
+		execute 'let i=1|' . "'j,'k" . 'g;\(' .
+		\ a:note . '\)\@<=;s;;\=i;|let i=i+1'
+
+	else
+
+		echo "ERROR: '" . a:note . "' not found!"
+		return 1
+
+	endif
+
+endfunction "}}}3
 
 function s:WindowJump(align) "{{{3
 
@@ -96,9 +119,13 @@ fun GlossaryIab_TmpKeyMap(title) "{{{3
 
 endfun "}}}3
 
-fun AddNote_TmpKeyMap(pattern,foldlevel) "{{{3
+fun s:AddNote(pattern) "{{{3
 
-	exe 's;$;\r' . a:pattern . ' {{{' . a:foldlevel . '\r\r\r }}}' . a:foldlevel . '\r;'
+	let l:foldlevel = foldlevel('.') + 1
+
+	exe 's;$;\r' . a:pattern . ' {{{' .
+	\ l:foldlevel . '\r\r\r }}}' . l:foldlevel .
+	\ '\r;'
 	-1
 	exe 'normal [zj'
 
@@ -154,28 +181,6 @@ endfun "}}}3
  "}}}2
 " files "{{{2
 
-" jojo.watch "{{{3
-
-fun Jojo_Format_TmpKeyMap() "{{{4
-
-	call move_cursor#KeepPos(0)
-
-	call space#DelSpace_CJK()
-	call AddBlankLine_TmpKeyMap()
-
-	call move_cursor#KeepPos(1)
-
-endfun "}}}4
-
-fun Jojo_Key_TmpKeyMap() "{{{4
-
-	nno <buffer> <silent> <f1> :call Jojo_Format_TmpKeyMap()<cr>
-
-endfun "}}}4
-
-au Bufread jojo.watch call Jojo_Key_TmpKeyMap()
-
- "}}}3
 " latex.read "{{{3
 
 fun Latex_Format_TmpKeyMap() "{{{4
@@ -215,7 +220,7 @@ fun Ghost_Format_TmpKeyMap(mode) "{{{4
 
 	elseif a:mode == 1
 
-		call AddNote_TmpKeyMap('笔记',4)
+		call <sid>AddNote('笔记')
 
 	elseif a:mode == 2
 
@@ -245,22 +250,22 @@ fun s:Key_Ghost_Write() "{{{4
 	nno <buffer> <silent> <s-f1>
 	\ :call <sid>WindowJump(1)<cr>
 
-	nno <buffer> <silent> <f2> 
+	nno <buffer> <silent> <f2>
 	\ :call <sid>SearchFold(2,0)<cr>
-	nno <buffer> <silent> <s-f2> 
+	nno <buffer> <silent> <s-f2>
 	\ :call <sid>SearchFold(2,1)<cr>
 
-	nno <buffer> <silent> <f3> 
+	nno <buffer> <silent> <f3>
 	\ :call <sid>SearchFold(3,0)<cr>
-	nno <buffer> <silent> <s-f3> 
+	nno <buffer> <silent> <s-f3>
 	\ :call <sid>SearchFold(3,1)<cr>
 
-	nno <buffer> <silent> <f4> 
+	nno <buffer> <silent> <f4>
 	\ :call <sid>SearchFold(4,0)<cr>
-	nno <buffer> <silent> <s-f4> 
+	nno <buffer> <silent> <s-f4>
 	\ :call <sid>SearchFold(4,1)<cr>
 
-	nno <buffer> <silent> <f5> :BuWhole0TW<cr>
+	nno <buffer> <silent> <f12> :BuWhole0TW<cr>
 
 endfun "}}}4
 
@@ -279,12 +284,12 @@ fun s:Key_Aspect() "{{{4
 	nno <buffer> <silent> <s-f1>
 	\ :call <sid>WindowJump(1)<cr>
 
-	nno <buffer> <silent> <f2> 
+	nno <buffer> <silent> <f2>
 	\ :call <sid>SearchFold(2,0)<cr>
-	nno <buffer> <silent> <s-f2> 
+	nno <buffer> <silent> <s-f2>
 	\ :call <sid>SearchFold(2,1)<cr>
 
-	nno <buffer> <silent> <f5> :BuWhole0TW<cr>
+	nno <buffer> <silent> <f12> :BuWhole0TW<cr>
 
 endfun "}}}4
 
@@ -293,6 +298,28 @@ au Bufread aspect.read call <sid>Key_Aspect()
  "}}}3
 " fisherman.write "{{{3
 
+fun s:Format_Fisherman(mode) "{{{4
+
+	call move_cursor#KeepPos(0)
+
+	if a:mode == 0
+
+		if search(' {\{3}4$','bW')
+			call move_cursor#SetMarkJK_Fold()
+		else
+			echo "ERROR: Level 4 fold not found!"
+			call move_cursor#KeepPos(1)
+			return
+		endif
+
+		call <sid>AddNum4Note('片段 ')
+
+	endif
+
+	call move_cursor#KeepPos(1)
+
+endfun "}}}4
+
 fun s:Key_Fisherman() "{{{4
 
 	nno <buffer> <silent> <f1>
@@ -300,22 +327,27 @@ fun s:Key_Fisherman() "{{{4
 	nno <buffer> <silent> <s-f1>
 	\ :call <sid>WindowJump(1)<cr>
 
-	nno <buffer> <silent> <f2> 
+	nno <buffer> <silent> <f2>
 	\ :call <sid>SearchFold(2,0)<cr>
-	nno <buffer> <silent> <s-f2> 
+	nno <buffer> <silent> <s-f2>
 	\ :call <sid>SearchFold(2,1)<cr>
 
-	nno <buffer> <silent> <f3> 
+	nno <buffer> <silent> <f3>
 	\ :call <sid>SearchFold(3,0)<cr>
-	nno <buffer> <silent> <s-f3> 
+	nno <buffer> <silent> <s-f3>
 	\ :call <sid>SearchFold(3,1)<cr>
 
-	nno <buffer> <silent> <f4> 
+	nno <buffer> <silent> <f4>
 	\ :call <sid>SearchFold(4,0)<cr>
-	nno <buffer> <silent> <s-f4> 
+	nno <buffer> <silent> <s-f4>
 	\ :call <sid>SearchFold(4,1)<cr>
 
-	nno <buffer> <silent> <f5> :BuWhole0TW<cr>
+	nno <buffer> <silent> <f5>
+	\ :call <sid>AddNote('片段 ')<cr>
+	nno <buffer> <silent> <s-f5>
+	\ :call <sid>Format_Fisherman(0)<cr>
+
+	nno <buffer> <silent> <f12> :BuWhole0TW<cr>
 
 endfun "}}}4
 
