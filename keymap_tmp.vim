@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 20, Mon | 10:51:54 | 2014
+" Last Update: Oct 20, Mon | 10:54:56 | 2014
 
 " global "{{{2
 
@@ -274,7 +274,17 @@ au Bufread ghost.write call <sid>Key_Ghost_Write()
 
 fun s:Key_Aspect() "{{{4
 
-	nno <buffer> <silent> <f1> :BuWhole0TW<cr>
+	nno <buffer> <silent> <f1>
+	\ :call <sid>WindowJump(0)<cr>
+	nno <buffer> <silent> <s-f1>
+	\ :call <sid>WindowJump(1)<cr>
+
+	nno <buffer> <silent> <f2> 
+	\ :call <sid>SearchFold(2,0)<cr>
+	nno <buffer> <silent> <s-f2> 
+	\ :call <sid>SearchFold(2,1)<cr>
+
+	nno <buffer> <silent> <f5> :BuWhole0TW<cr>
 
 endfun "}}}4
 
