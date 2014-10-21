@@ -1,8 +1,27 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 20, Mon | 19:18:41 | 2014
+" Last Update: Oct 21, Tue | 22:22:21 | 2014
 
 " global "{{{2
+
+function s:KeyMapLoop(begin,end) "{{{3
+
+	let l:i = a:begin
+
+	while l:i < a:end
+
+		execute 'nno <buffer> <silent> <f' . l:i .
+		\ '> :call <sid>SearchFold(' . l:i .
+		\ ',0)<cr>'
+		execute 'nno <buffer> <silent> <s-f' .
+		\ l:i . '> :call <sid>SearchFold(' . l:i .
+		\ ',1)<cr>'
+
+		let l:i = l:i + 1
+
+	endwhile
+
+endfunction "}}}3
 
 function s:AddNum4Note(note) "{{{3
 
@@ -250,20 +269,7 @@ fun s:Key_Ghost_Write() "{{{4
 	nno <buffer> <silent> <s-f1>
 	\ :call <sid>WindowJump(1)<cr>
 
-	nno <buffer> <silent> <f2>
-	\ :call <sid>SearchFold(2,0)<cr>
-	nno <buffer> <silent> <s-f2>
-	\ :call <sid>SearchFold(2,1)<cr>
-
-	nno <buffer> <silent> <f3>
-	\ :call <sid>SearchFold(3,0)<cr>
-	nno <buffer> <silent> <s-f3>
-	\ :call <sid>SearchFold(3,1)<cr>
-
-	nno <buffer> <silent> <f4>
-	\ :call <sid>SearchFold(4,0)<cr>
-	nno <buffer> <silent> <s-f4>
-	\ :call <sid>SearchFold(4,1)<cr>
+	call <sid>KeyMapLoop(2,5)
 
 	nno <buffer> <silent> <f12> :BuWhole0TW<cr>
 
@@ -284,10 +290,7 @@ fun s:Key_Aspect() "{{{4
 	nno <buffer> <silent> <s-f1>
 	\ :call <sid>WindowJump(1)<cr>
 
-	nno <buffer> <silent> <f2>
-	\ :call <sid>SearchFold(2,0)<cr>
-	nno <buffer> <silent> <s-f2>
-	\ :call <sid>SearchFold(2,1)<cr>
+	call <sid>KeyMapLoop(2,3)
 
 	nno <buffer> <silent> <f12> :BuWhole0TW<cr>
 
@@ -327,20 +330,7 @@ fun s:Key_Fisherman() "{{{4
 	nno <buffer> <silent> <s-f1>
 	\ :call <sid>WindowJump(1)<cr>
 
-	nno <buffer> <silent> <f2>
-	\ :call <sid>SearchFold(2,0)<cr>
-	nno <buffer> <silent> <s-f2>
-	\ :call <sid>SearchFold(2,1)<cr>
-
-	nno <buffer> <silent> <f3>
-	\ :call <sid>SearchFold(3,0)<cr>
-	nno <buffer> <silent> <s-f3>
-	\ :call <sid>SearchFold(3,1)<cr>
-
-	nno <buffer> <silent> <f4>
-	\ :call <sid>SearchFold(4,0)<cr>
-	nno <buffer> <silent> <s-f4>
-	\ :call <sid>SearchFold(4,1)<cr>
+	call <sid>KeyMapLoop(2,5)
 
 	nno <buffer> <silent> <f5>
 	\ :call <sid>AddNote('片段 ')<cr>
@@ -355,24 +345,6 @@ endfun "}}}4
 
 au Bufread fisherman.write
 \ call <sid>Key_Fisherman()
-
- "}}}4
- "}}}3
-" echo_lines.write "{{{3
-
-fun s:Key_Echo() "{{{4
-
-	nno <buffer> <silent> <f1>
-	\ :call <sid>WindowJump(0)<cr>
-	nno <buffer> <silent> <s-f1>
-	\ :call <sid>WindowJump(1)<cr>
-
-endfun "}}}4
-
-" command "{{{4
-
-au Bufread echo_lines.write
-\ call <sid>Key_Echo()
 
  "}}}4
  "}}}3
