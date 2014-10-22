@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 21, Tue | 22:22:21 | 2014
+" Last Update: Oct 22, Wed | 09:23:49 | 2014
 
 " global "{{{2
 
@@ -23,26 +23,28 @@ function s:KeyMapLoop(begin,end) "{{{3
 
 endfunction "}}}3
 
-function s:AddNum4Note(note) "{{{3
+function s:AddNum4Note(note,fold) "{{{3
 
-	call move_cursor#ToColumn1("'j",0)
+	call move_cursor#ToColumn1(1,1)
 
-	let l:pattern = '^' . a:note . '\d\{0,2}'
+	while search(' {\{3}'.a:fold.'$','W')
 
-	if search(l:pattern,'c',line("'k"))
+		call move_cursor#SetMarkJK_Fold()
+		call move_cursor#ToColumn1("'j",0)
 
-		execute "'j,'k" . 's;' . l:pattern . ';' .
-		\ a:note . ';'
+		let l:pattern = '^' . a:note . '\d\{0,2}'
 
-		execute 'let i=1|' . "'j,'k" . 'g;\(' .
-		\ a:note . '\)\@<=;s;;\=i;|let i=i+1'
+		if search(l:pattern,'c',line("'k"))
+			execute "'j,'k" . 's;' . l:pattern .
+			\ ';' . a:note . ';'
+			execute 'let i=1|' . "'j,'k" .
+			\ 'g;\(' . a:note .
+			\ '\)\@<=;s;;\=i;|let i=i+1'
+		endif
 
-	else
+		call move_cursor#ToColumn1("'k",0)
 
-		echo "ERROR: '" . a:note . "' not found!"
-		return 1
-
-	endif
+	endwhile
 
 endfunction "}}}3
 
@@ -315,7 +317,7 @@ fun s:Format_Fisherman(mode) "{{{4
 			return
 		endif
 
-		call <sid>AddNum4Note('片段 ')
+		call <sid>AddNum4Note('片段 ',4)
 
 	endif
 
@@ -349,4 +351,4 @@ au Bufread fisherman.write
  "}}}4
  "}}}3
  "}}}2
- "}}}1
+ "}}}
