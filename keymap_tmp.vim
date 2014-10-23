@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 23, Thu | 16:23:53 | 2014
+" Last Update: Oct 23, Thu | 22:43:49 | 2014
 
 " global "{{{2
 
@@ -8,7 +8,7 @@ function s:KeyMapLoop(begin,end) "{{{3
 
 	let l:i = a:begin
 
-	while l:i < a:end
+	while l:i < a:end + 1
 
 		execute 'nno <buffer> <silent> <f' . l:i .
 		\ '> :call <sid>SearchFold(' . l:i .
@@ -252,7 +252,7 @@ function s:Key_Aspect() "{{{4
 	nno <buffer> <silent> <s-f1>
 	\ :call <sid>WindowJump(1)<cr>
 
-	call <sid>KeyMapLoop(2,3)
+	call <sid>KeyMapLoop(2,2)
 
 	nno <buffer> <silent> <f12> :BuWhole0TW<cr>
 
@@ -263,19 +263,14 @@ au Bufread aspect.read call <sid>Key_Aspect()
  "}}}3
 " fisherman.write "{{{3
 
-function s:Format_Fisherman(mode) "{{{4
+function s:Format_Fisherman() "{{{4
 
 	call move_cursor#KeepPos(0)
 
-	if a:mode == 0
-
-		call <sid>AddNum4Note('片段 ',4)
-		call <sid>AddNum4Note('摘要 ',4)
-
-		call move_cursor#KeepPos(1)
-		BuWhole0TW
-
-	endif
+	call <sid>AddNum4Note('片段 ',4)
+	call <sid>AddNum4Note('摘要 ',4)
+	call move_cursor#KeepPos(1)
+	BuWhole0TW
 
 	call move_cursor#KeepPos(1)
 
@@ -290,11 +285,11 @@ function s:Key_Fisherman() "{{{4
 
 	call <sid>KeyMapLoop(2,5)
 
-	nno <buffer> <silent> <f5>
+	nno <buffer> <silent> <f6>
 	\ :call <sid>AddNote('片段 ')<cr>
 
 	nno <buffer> <silent> <f12>
-	\ :call <sid>Format_Fisherman(0)<cr>
+	\ :call <sid>Format_Fisherman()<cr>
 
 endfunction "}}}4
 
