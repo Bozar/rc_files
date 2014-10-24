@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 23, Thu | 22:43:49 | 2014
+" Last Update: Oct 24, Fri | 09:49:40 | 2014
 
 " global "{{{2
 
@@ -154,15 +154,23 @@ function s:GlossaryIab(title) "{{{3
 
 endfunction "}}}3
 
-function s:AddNote(pattern) "{{{3
+function s:AddNote(pattern,level) "{{{3
 
-	let l:foldlevel = foldlevel('.') + 1
+	if a:level == foldlevel('.')
+		call move_cursor#SetMarkJK_Fold()
+		call move_cursor#ToColumn1("'k",0)
+	endif
 
-	exe 's;$;\r' . a:pattern . ' {{{' .
-	\ l:foldlevel . '\r\r\r }}}' . l:foldlevel .
-	\ '\r;'
-	-1
-	exe 'normal [zj'
+	exe 's;$;\r\r' . a:pattern . ' {{{' .
+	\ a:level . '\r\r\r }}}' . a:level . ';'
+
+	if search('}}}\d\{0,2}$','nW')
+	\ == line('.') + 2 && search('^$','nW')
+	\ == line('.') + 1
+		+1g/^$/delete
+	endif
+
+	exe 'normal k[zj'
 
 endfunction "}}}3
 
@@ -286,7 +294,7 @@ function s:Key_Fisherman() "{{{4
 	call <sid>KeyMapLoop(2,5)
 
 	nno <buffer> <silent> <f6>
-	\ :call <sid>AddNote('片段 ')<cr>
+	\ :call <sid>AddNote('片段 ',5)<cr>
 
 	nno <buffer> <silent> <f12>
 	\ :call <sid>Format_Fisherman()<cr>
