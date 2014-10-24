@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 24, Fri | 09:49:40 | 2014
+" Last Update: Oct 24, Fri | 22:56:48 | 2014
 
 " global "{{{2
 
@@ -161,7 +161,7 @@ function s:AddNote(pattern,level) "{{{3
 		call move_cursor#ToColumn1("'k",0)
 	endif
 
-	exe 's;$;\r\r' . a:pattern . ' {{{' .
+	exe 's;$;\r' . a:pattern . ' {{{' .
 	\ a:level . '\r\r\r }}}' . a:level . ';'
 
 	if search('}}}\d\{0,2}$','nW')
