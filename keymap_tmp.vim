@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 25, Sat | 12:16:57 | 2014
+" Last Update: Oct 25, Sat | 12:43:41 | 2014
 
 " global "{{{2
 
@@ -335,7 +335,7 @@ function s:Key_bullet_en() "{{{4
 	nno <buffer> <silent> <s-f1>
 	\ :call <sid>WindowJump(1)<cr>
 
-	call <sid>KeyMapLoop(2,3)
+	call <sid>KeyMapLoop(2,4)
 
 	nno <buffer> <silent> <f12> :BuWhole0TW<cr>
 
