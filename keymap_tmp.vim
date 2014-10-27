@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 25, Sat | 12:43:41 | 2014
+" Last Update: Oct 27, Mon | 09:21:28 | 2014
 
 " global "{{{2
 
@@ -310,24 +310,6 @@ au Bufread fisherman.write
  "}}}3
 " bullet_en.write "{{{3
 
-function s:Format_bullet_en(mode) "{{{4
-
-	call move_cursor#KeepPos(0)
-
-	if a:mode == 0
-
-		call <sid>AddNum4Note('片段 ',4)
-		call <sid>AddNum4Note('摘要 ',4)
-
-		call move_cursor#KeepPos(1)
-		BuWhole0TW
-
-	endif
-
-	call move_cursor#KeepPos(1)
-
-endfunction "}}}4
-
 function s:Key_bullet_en() "{{{4
 
 	nno <buffer> <silent> <f1>
@@ -349,4 +331,4 @@ au Bufread bullet_en.write
  "}}}4
  "}}}3
  "}}}2
- "}}}1
+ "}}}
