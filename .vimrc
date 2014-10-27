@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Oct 19, Sun | 14:52:16 | 2014
+" Last Update: Oct 27, Mon | 09:34:20 | 2014
 
 " Plugins "{{{2
 
@@ -456,10 +456,12 @@ endfunction "}}}
 " Function key: <F1> "{{{4
 " search bracket '['
 function! F1_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <f1> /[<cr>"+yi[
+	nnoremap <buffer> <silent> <f1>
+	\ /[<cr>"+yi[
 endfunction "}}}
 function! F1_Shift_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <s-f1> 2?[<cr>"+yi[
+	nnoremap <buffer> <silent> <s-f1>
+	\ 2?[<cr>"+yi[
 endfunction "}}}
 
 function! F1_Vocab() "{{{
@@ -1185,10 +1187,10 @@ vnoremap <silent> <a-backspace> zi<esc>:ScrVMove<cr>
 inoremap <silent> <c-l> []()T[
 
 " command range
-inoremap <c-j> 'j,'k
-cnoremap <c-j> 'j,'k
-inoremap <c-k> 1,$
-cnoremap <c-k> 1,$
+inoremap <a-j> 'j,'k
+cnoremap <a-j> 'j,'k
+inoremap <a-k> 1,$
+cnoremap <a-k> 1,$
 
  "}}}2
 
