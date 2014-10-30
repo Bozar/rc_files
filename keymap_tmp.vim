@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 27, Mon | 09:21:28 | 2014
+" Last Update: Oct 29, Wed | 21:44:11 | 2014
 
 " global "{{{2
 
@@ -251,9 +251,9 @@ endfunction "}}}4
 au Bufread latex.read call <sid>Key_Latex()
 
  "}}}3
-" aspect.read "{{{3
+" workshop.read "{{{3
 
-function s:Key_Aspect() "{{{4
+function s:Key_Workshop() "{{{4
 
 	nno <buffer> <silent> <f1>
 	\ :call <sid>WindowJump(0)<cr>
@@ -266,7 +266,7 @@ function s:Key_Aspect() "{{{4
 
 endfunction "}}}4
 
-au Bufread aspect.read call <sid>Key_Aspect()
+au Bufread workshop.read call <sid>Key_Workshop()
 
  "}}}3
 " fisherman.write "{{{3
@@ -331,4 +331,4 @@ au Bufread bullet_en.write
  "}}}4
  "}}}3
  "}}}2
- "}}}
+ "}}}1
