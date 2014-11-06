@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Oct 29, Wed | 21:44:11 | 2014
+" Last Update: Nov 06, Thu | 19:28:29 | 2014
 
 " global "{{{2
 
@@ -60,12 +60,20 @@ endfunction "}}}3
 function s:WindowJump(align) "{{{3
 
 	if a:align == 0
+
 		wincmd w
 
 	elseif a:align == 1
+
 		let l:top = getpos('w0')
 		let l:pos = getpos('.')
+		let l:bufnr = bufnr('%')
+
 		wincmd w
+
+		if bufnr('%') != l:bufnr
+			execute 'buffer' . l:bufnr
+		endif
 		call setpos('.',l:top)
 		execute 'normal zt'
 		call setpos('.',l:pos)
