@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Nov 06, Thu | 19:28:29 | 2014
+" Last Update: Nov 07, Fri | 20:30:49 | 2014
 
 " global "{{{2
 
@@ -69,6 +69,9 @@ function s:WindowJump(align) "{{{3
 		let l:pos = getpos('.')
 		let l:bufnr = bufnr('%')
 
+		if winnr('$') == 1
+			wincmd v
+		endif
 		wincmd w
 
 		if bufnr('%') != l:bufnr
