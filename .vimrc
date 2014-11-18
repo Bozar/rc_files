@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Nov 18, Tue | 14:46:05 | 2014
+" Last Update: Nov 18, Tue | 23:55:16 | 2014
 
 " Plugins "{{{2
 
@@ -794,7 +794,7 @@ set nosmartcase
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-set noexpandtab
+set expandtab
 
 set autoindent
 set smartindent
