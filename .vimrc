@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Nov 18, Tue | 23:55:16 | 2014
+" Last Update: Nov 20, Thu | 09:27:54 | 2014
 
 " Plugins "{{{2
 
@@ -860,7 +860,7 @@ noremap - $
 noremap ^ 0
 
 " jump between brackets
-noremap q %
+" noremap q %
 
 " jump between marks
 " seperate <c-i> between <tab>
