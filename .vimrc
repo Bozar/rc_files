@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Nov 20, Thu | 09:27:54 | 2014
+" Last Update: Nov 21, Fri | 21:55:16 | 2014
 
 " Plugins "{{{2
 
@@ -943,7 +943,7 @@ command! NumFold call CreatNumber(1)
 
 function s:DelLine(line) "{{{4
 
-	call space#DelSpace_Trail()
+	call space#DelSpaceTrail()
 	if a:line == 0
 		call space#DelLine(0)
 	elseif a:line == 1
@@ -1048,14 +1048,40 @@ execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 \ ' setl fo+=1mBj'
 
-let g:Pat_File_Bullet = '*.read'
-let g:Pat_File_Bullet .= ',*.write'
-let g:Pat_File_Bullet .= ',*.note'
+let g:PatFile_Bullet = '*.read'
+let g:PatFile_Bullet .= ',*.write'
+let g:PatFile_Bullet .= ',*.note'
 let g:TextWidth_Bullet = 50
-let g:Switch_Auto_Bullet = 1
+let g:SwitchAuto_Bullet = 1
 
 autocmd BufRead achieve.daily setl comments=:*,:~
 autocmd BufRead achieve.daily setl fo+=ro
+
+function s:GotoSameLine() "{{{3
+
+    let l:bufNr = bufnr('%')
+
+    let l:cursor = getpos('.')
+
+    call moveCursor#GotoColumn1('w0','str')
+    let l:top = getpos('.')
+
+    call setpos('.',l:cursor)
+
+    wincmd w
+
+    execute 'buffer' . ' ' . l:bufNr
+
+    call setpos('.',l:top)
+    execute 'normal zt'
+
+    call setpos('.',l:cursor)
+
+    wincmd W
+
+endfunction "}}}3
+
+command SameLine call <sid>GotoSameLine()
 
  "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
