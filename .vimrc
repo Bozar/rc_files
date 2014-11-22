@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Nov 21, Fri | 23:37:10 | 2014
+" Last Update: Nov 22, Sat | 09:16:07 | 2014
 
 " Plugins "{{{2
 
@@ -1057,7 +1057,6 @@ let g:TextWidth_Bullet = 50
 autocmd BufRead achieve.daily setl comments=:*,:~
 autocmd BufRead achieve.daily setl fo+=ro
 
-"let g:AutoLoad_Achieve = 'achieve.daily'
 let g:AutoLoad_Achieve = '*.daily'
 
 function s:GotoSameLine() "{{{3
