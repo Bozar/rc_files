@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Nov 22, Sat | 09:16:07 | 2014
+" Last Update: Nov 22, Sat | 12:49:01 | 2014
 
 " Plugins "{{{2
 
@@ -1053,6 +1053,15 @@ let g:AutoLoad_Bullet .= ',*.write'
 let g:AutoLoad_Bullet .= ',*.note'
 
 let g:TextWidth_Bullet = 50
+
+command BuP0TW Bullet p
+command BuP1NoTW Bullet pn
+
+command BuW0TW Bullet w
+command BuW1NoTW Bullet wn
+
+command BuE0Set Bullet s
+command BuE1Bul Bullet b
 
 autocmd BufRead achieve.daily setl comments=:*,:~
 autocmd BufRead achieve.daily setl fo+=ro
