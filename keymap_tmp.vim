@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Nov 21, Fri | 23:47:58 | 2014
+" Last Update: Nov 23, Sun | 07:43:59 | 2014
 
 " global "{{{2
 
@@ -34,8 +34,9 @@ function s:AddNum4Note(note,fold) "{{{3
         let l:num_scene = substitute(getline('.'),
         \ '^\(\d\{1,2}\).*$','\1','')
 
-        call moveCursor#SetMarkJKFold()
-        call moveCursor#GotoColumn1("'j",'str')
+        call moveCursor#SetLineJKFold()
+        call moveCursor#GotoColumn1(
+        \ g:LineRange_moveCursor,'num')
 
         let l:pat_note = '^' . a:note
         let l:pat_note .= '\d\{0,2}\.\{0,1}'
@@ -43,15 +44,24 @@ function s:AddNum4Note(note,fold) "{{{3
 
         let l:new = a:note . l:num_scene . '\.'
 
-        if search(l:pat_note,'c',line("'k"))
-            execute "'j,'k" . 's/' . l:pat_note .
-            \ '/' . l:new . '/'
-            execute 'let i=1|' . "'j,'k" .
-            \ 'g/\(' . l:new . '\)\@<=/'
+        if search(l:pat_note,'c',
+        \ line(g:LineNrK_moveCursor))
+
+            call moveCursor#SetRange('J','K')
+
+            execute g:LineRange_moveCursor .
+            \ 's/' . l:pat_note . '/' . 
+            \ l:new . '/'
+
+            execute 'let i=1|' .
+            \ g:LineRange_moveCursor . 'g/' .
+            \ '\(' . l:new . '\)\@<=/'
             \ 's//\=i/|let i=i+1'
+
         endif
 
-        call moveCursor#GotoColumn1("'k",'str')
+        call moveCursor#GotoColumn1(
+        \ g:LineNrK_moveCursor,'num')
 
     endwhile
 
@@ -140,14 +150,22 @@ function s:GlossaryIab(title) "{{{3
 
     1
     call search(a:title . ' {\{3}\d$')
-    +2
-    mark j
-    '}
-    mark k
-    'j,'ks;^\s\+;;e
-    'j
 
-    while line('.') < line("'k")
+    +2
+    call moveCursor#GetLineNr('.','J')
+
+    '}
+    call moveCursor#GetLineNr('.','K')
+
+    call moveCursor#SetRange('J','K')
+
+    execute g:LineRange_moveCursor .'s/' .
+    \ '^\s\+//e'
+
+    execute g:LineNrJ_moveCursor
+
+    while line('.') <
+    \ line(g:LineNrK_moveCursor)
         if substitute(getline('.'),'\t','','')
         \ == getline('.')
             echo 'ERROR: Tab not found in Line ' .
@@ -168,8 +186,9 @@ endfunction "}}}3
 function s:AddNote(pattern,level) "{{{3
 
     if a:level == foldlevel('.')
-        call moveCursor#SetMarkJKFold()
-        call moveCursor#GotoColumn1("'k",'str')
+        call moveCursor#SetLineJKFold()
+        call moveCursor#GotoColumn1(
+        \ g:LineNrK_moveCursor,'num')
     endif
 
     exe 's;$;\r' . a:pattern . ' {{{' .
@@ -202,13 +221,20 @@ function s:IndentFold(pattern,foldlevel) "{{{3
         call search(combine,'W')
         if substitute(getline('.'),combine,'','')
         \ != getline('.')
-            mark j
+            call moveCursor#GetLineNr('.','J')
             exe 'normal ]z'
-            mark k
-            execute "'j+1,'k-1" . 's;' .
-            \ '^\(\t\{0,1}\)\(\S\);\t\t\2;e'
-            'k+1
+            call moveCursor#GetLineNr('.','K')
+
+            call moveCursor#SetRange('J','K',1,-1)
+
+            execute
+            \ g:LineRange_moveCursor . 's/' .
+            \ '^\(\t\{0,1}\)\(\S\)/\t\t\2/e'
+
+            execute g:LineNrK_moveCursor + 1
+
         else
+
             $
         endif
     endwhile
@@ -225,11 +251,16 @@ endfunction "}}}3
 function s:JoinLines() "{{{3
 
     exe 'normal {j'
-    mark j
+    call moveCursor#GetLineNr('.','J')
     exe 'normal }k'
-    mark k
-    'j,'kleft 0
-    'j,'kjoin
+    call moveCursor#GetLineNr('.','K')
+
+    call moveCursor#SetRange('J','K')
+
+    execute g:LineRange_moveCursor . 'left 0'
+
+    execute g:LineRange_moveCursor . 'join'
+
     call space#DelSpaceCJK()
     s;^;\t;
 
@@ -273,7 +304,7 @@ function s:Key_Workshop() "{{{4
 
     call <sid>KeyMapLoop(2,3)
 
-    nno <buffer> <silent> <f12> :BuWhole0TW<cr>
+    nno <buffer> <silent> <f12> :Bullet w<cr>
 
 endfunction "}}}4
 
@@ -289,7 +320,7 @@ function s:Format_Fisherman() "{{{4
     call <sid>AddNum4Note('片段 ',4)
     call <sid>AddNum4Note('摘要 ',4)
     call moveCursor#KeepPos(1)
-    BuWhole0TW
+    Bullet w
 
     call moveCursor#KeepPos(1)
 
@@ -330,7 +361,7 @@ function s:Key_bullet_en() "{{{4
 
     call <sid>KeyMapLoop(2,5)
 
-    nno <buffer> <silent> <f12> :BuWhole0TW<cr>
+    nno <buffer> <silent> <f12> :Bullet w<cr>
 
 endfunction "}}}4
 
