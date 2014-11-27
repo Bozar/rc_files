@@ -1,0 +1,250 @@
+" localization scripts "{{{1
+
+" Last Update: Nov 28, Fri | 07:51:39 | 2014
+
+" ************************************************
+" say hello to the original localization script!
+" ************************************************
+
+" need to tweak the Excel table first
+" insert #MARK# before English column | #END# after the last column
+
+" [tmp | English = glossary] = Chinese
+" [up-left | up-right-above = up-right-below] = down
+" split window equally between all buffers except for glossary
+" :resize 3
+
+" function! LineBreak_Loc() "{{{2
+" 	1s/$/\r
+" 	call cursor(1,1)
+" 	while line('.')<line('$')
+" 		call search('#MARK#')
+" 		if substitute(getline('.'),'#MARK#.*#END#','','')==getline('.')
+" 			mark j
+" 			/#END#/mark k
+" 			'j,'k-1s/$/<br10>/
+" 			'j,'kjoin!
+" 		endif
+" 	endwhile
+" endfunction
+"  "}}}2
+
+" " Function key: <F1> "{{{2
+" " put cursor after the first \t
+" function! F1_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <f1> ^f	
+" endfunction "}}}3
+" " search GUID (short line) in English buffer
+" " let @d='GUID'
+" function! F1_Shift_Normal_Loc() "{{{3
+"   nnoremap <buffer> <silent> <s-f1>
+" 		\ $2F	l"dyt	
+" 		\ :1wincmd w<cr>gg
+" 		\ :%s/<c-r>d\c//n<cr>
+" 		\ /<c-r>/<cr>
+" endfunction "}}} 
+" 
+" function! F1_Loc() "{{{3
+" 	call F1_Normal_Loc()
+" 	call F1_Shift_Normal_Loc()
+" endfunction "}}}3
+"  "}}}2
+" 
+" " Function key: <F2> "{{{2
+" " switch between windows
+" function! F2_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <f2> :call SwitchWindow_Trans(4,2,3,4,'loc')<cr>
+" endfunction "}}}3
+" " search glossary
+" function! F2_Visual_Loc() "{{{3
+" 	vnoremap <buffer> <silent> <f2> y:call SearchGlossary_Trans(4,4,'loc')<cr>
+" endfunction "}}}3
+" " search English buffer
+" function! F2_Shift_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <s-f2> 
+" 		\ ^yt	
+" 		\ :1wincmd w<cr>gg
+" 		\ :%s/\(\t#MARK#\t.\{-\}\)\@<=<c-r>"\c//n<cr>
+" 		\ /<c-r>/<cr>
+" endfunction "}}}3
+" function! F2_Shift_Visual_Loc() "{{{3
+" 	vnoremap <buffer> <silent> <s-f2> 
+" 		\ y
+" 		\ :1wincmd w<cr>gg
+" 		\ :%s/\(\t#MARK#\t.\{-\}\)\@<=<c-r>"\c//n<cr>
+" 		\ /<c-r>/<cr>
+" endfunction "}}}3
+" 
+" function! F2_Loc() "{{{3
+" 	call F2_Normal_Loc()
+" 	call F2_Visual_Loc()
+" 	call F2_Shift_Normal_Loc()
+" 	call F2_Shift_Visual_Loc()
+" endfunction "}}}3
+"  "}}}2
+" 
+" " Function key: <F3> "{{{2
+" " put '<c-r>/' text into tmp buffer
+" " let @d='search pattern'
+" " note: it seems that when a command will delete all characters in one buffer,
+" " and it is at the end of a script line,
+" " it will break the key mapping
+" " compare these two mappings
+" " nnoremap <f12> ggdG
+" " \ oTEST<esc>
+" " nnoremap <f12> ggdGoTEST<esc>
+" function! F3_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <f3>
+" 		\ :let @d=''\|:g/<c-r>//y D<cr>
+" 		\ :2wincmd w<cr>
+" 		\ :call OverwriteBuffer()<cr>
+" 		\ :1<cr>
+" endfunction "}}}3
+" " search wrong translation
+" " let @c='English'
+" " let @b='Chinese correction'
+" function! F3_Shift_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <s-f3>
+" 		\ :%s/<c-r>c\(.\{-\}\t.\{-\}<c-r>b\)\@!\c//n<cr>
+" endfunction "}}}3
+" 
+" function! F3_Loc() "{{{3
+" 	call F3_Normal_Loc()
+" 	call F3_Shift_Normal_Loc()
+" endfunction "}}}3
+"  "}}}2
+" 
+" " Function key: <F4> "{{{2
+" " switch buffer
+" function! F4_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <f4> <c-w>w
+" endfunction "}}}3
+" function! F4_Shift_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <s-f4> :call SwitchBuffer_Trans('l')<cr>
+" endfunction "}}}3
+" 
+" function! F4_Loc() "{{{3
+" 	call F4_Normal_Loc()
+" 	call F4_Shift_Normal_Loc()
+" endfunction "}}}3
+"  "}}}2
+" 
+" " Function key: <F5> "{{{2
+" " search and complete missing lines
+" " when there are more than one lines in an Excel cell
+" " let @d='search pattern'
+" " let @e='completion'
+" " mark S (shared between buffers): search line
+" function! F5_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <f5>
+" 		\ mS^"dy6t	
+" 		\ :1wincmd w<cr>gg/<c-r>d/+1<cr>
+" 		\ :let @e=''<cr>
+" 		\ :?#MARK#?;/#END#/y E<cr>
+" 		\ :3wincmd w<cr>'Scc<c-r>e<esc>gg
+" 		\ :g/^$/d<cr>/<c-r>d<cr>/#END#/+1<cr>
+" endfunction "}}}3
+" function! F5_Visual_Loc() "{{{3
+" 	vnoremap <buffer> <silent> <f5>
+" 		\ mS"dy
+" 		\ :1wincmd w<cr>gg/<c-r>d/+1<cr>
+" 		\ :let @e=''<cr>
+" 		\ :?#MARK#?;/#END#/y E<cr>
+" 		\ :3wincmd w<cr>'Scc<c-r>e<esc>gg
+" 		\ :g/^$/d<cr>/<c-r>d<cr>/#END#/+1<cr>
+" endfunction "}}}3
+" " put broken lines into Scratch (left)
+" function! F5_Shift_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <s-f5>
+" 		\ :let @d=''<cr>
+" 		\ :g/\(#END#\)\@<!$/d D<cr>
+" 		\ :let @"=@d<cr>
+" 		\ :3wincmd w<cr>:b 2<cr>:call OverwriteBuffer()<cr>
+" 		\ :1<cr>
+" endfunction "}}}3
+" 
+" function! F5_Loc() "{{{3
+" 	call F5_Normal_Loc()
+" 	call F5_Visual_Loc()
+" 	call F5_Shift_Normal_Loc()
+" endfunction "}}}3
+"  "}}}2
+" 
+" " Function key: <F6> "{{{2
+" " add text to bug fix
+" function! F6_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <f6>
+" 		\ :2wincmd w<cr>
+" 		\ :1,$yank<cr>:3wincmd w<cr>
+" 		\ :b chinese.loc<cr>
+" 		\ :$-1put! "<cr>'a
+" 		\ :2wincmd w<cr>
+" endfunction "}}}3
+" " search GUID (long line) in English buffer
+" function! F6_Shift_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <s-f6>
+" 		\ $F-T	yt	
+" 		\ :1wincmd w<cr>gg
+" 		\ :%s/<c-r>"\c//n<cr>
+" 		\ /<c-r>/<cr>
+" endfunction "}}}3
+" 
+" function! F6_Loc() "{{{3
+" 	call F6_Normal_Loc()
+" 	call F6_Shift_Normal_Loc()
+" endfunction "}}}3
+"  "}}}2
+" 
+" " Function key: <F7> "{{{2
+" " put text into the lower-right buffer
+" " overwrite buffer
+" function! F7_Normal_Loc() "{{{3
+" 	" put text into buffer where tmp buffer is
+" 	nnoremap <buffer> <silent> <f7>
+" 		\ :y<cr>:2wincmd w<cr>
+" 		\ :call OverwriteBuffer()<cr>
+" 		\ :1<cr>
+" endfunction "}}}3
+" function! F7_Visual_Loc() "{{{3
+" 	vnoremap <buffer> <silent> <f7>
+" 		\ :y<cr>:2wincmd w<cr>
+" 		\ :call OverwriteBuffer()<cr>
+" 		\ :1<cr>
+" endfunction "}}}3
+" " append to buffer
+" function! F7_Shift_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <s-f7>
+" 		\ :y<cr>:2wincmd w<cr>
+" 		\ :$put<cr>
+" endfunction "}}}3
+" function! F7_Shift_Visual_Loc() "{{{3
+" 	vnoremap <buffer> <silent> <s-f7>
+" 		\ :y<cr>:2wincmd w<cr>
+" 		\ :$put<cr>
+" endfunction "}}}3
+" function! F7_Loc() "{{{3
+" 	call F7_Normal_Loc()
+" 	call F7_Visual_Loc()
+" 	call F7_Shift_Normal_Loc()
+" 	call F7_Shift_Visual_Loc()
+" endfunction "}}}3
+"  "}}}2
+" 
+" " Function key: <F8> "{{{2
+" " move cursor to Chinese in an Excel line
+" function! F8_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <f8>
+" 		\ ^5/\t<cr>l
+" endfunction "}}}3
+" " move cursor into the top-right buffer
+" function! F8_Shift_Normal_Loc() "{{{3
+" 	nnoremap <buffer> <silent> <s-f8>
+" 		\ :1wincmd w<cr>
+" endfunction "}}}3
+" function! F8_Loc() "{{{3
+" 	call F8_Normal_Loc()
+" 	call F8_Shift_Normal_Loc()
+" endfunction "}}}3
+"  "}}}2
+" 
+ "}}}1
