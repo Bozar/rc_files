@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Nov 23, Sun | 07:43:59 | 2014
+" Last Update: Nov 28, Fri | 07:29:55 | 2014
 
 " global "{{{2
 
@@ -369,6 +369,23 @@ endfunction "}}}4
 
 au Bufread bullet_en.write
 \ call <sid>Key_bullet_en()
+
+ "}}}4
+ "}}}3
+" plan.write "{{{3
+
+function s:KeyPlan() "{{{4
+
+    nno <buffer> <silent> <cr>
+    \ :call <sid>WindowJump(0)<cr>
+    nno <buffer> <silent> <c-cr>
+    \ :call <sid>WindowJump(1)<cr>
+
+endfunction "}}}4
+
+" command "{{{4
+
+au Bufread plan.write call <sid>KeyPlan()
 
  "}}}4
  "}}}3
