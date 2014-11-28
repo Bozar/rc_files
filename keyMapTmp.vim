@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Nov 28, Fri | 22:16:10 | 2014
+" Last Update: Nov 28, Fri | 22:24:01 | 2014
 
 " global "{{{2
 
@@ -112,13 +112,13 @@ function s:SearchFold(level,move) "{{{3
 
     if a:move == 'f'
 
-        call moveCursor#GotoColumnEnd('.')
         call search(l:pattern,'w')
+        call moveCursor#GotoColumnEnd('.')
 
     elseif a:move == 'b'
 
-        call moveCursor#GotoColumn1('.')
         call search(l:pattern,'bw')
+        call moveCursor#GotoColumn1('.')
 
     endif
 
