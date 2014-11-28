@@ -1,6 +1,6 @@
 " tmp key-mappings "{{{1
 
-" Last Update: Nov 28, Fri | 07:29:55 | 2014
+" Last Update: Nov 28, Fri | 18:00:58 | 2014
 
 " global "{{{2
 
@@ -36,7 +36,7 @@ function s:AddNum4Note(note,fold) "{{{3
 
         call moveCursor#SetLineJKFold()
         call moveCursor#GotoColumn1(
-        \ g:LineRange_moveCursor,'num')
+        \ moveCursor#TakeLineNr('J'),'num')
 
         let l:pat_note = '^' . a:note
         let l:pat_note .= '\d\{0,2}\.\{0,1}'
@@ -45,23 +45,22 @@ function s:AddNum4Note(note,fold) "{{{3
         let l:new = a:note . l:num_scene . '\.'
 
         if search(l:pat_note,'c',
-        \ line(g:LineNrK_moveCursor))
+        \ line(moveCursor#TakeLineNr('K'))
+        \ )
 
-            call moveCursor#SetRange('J','K')
-
-            execute g:LineRange_moveCursor .
+            execute moveCursor#TakeLineNr('J','K') .
             \ 's/' . l:pat_note . '/' . 
             \ l:new . '/'
 
             execute 'let i=1|' .
-            \ g:LineRange_moveCursor . 'g/' .
+            \ moveCursor#TakeLineNr('J','K') . 'g/' .
             \ '\(' . l:new . '\)\@<=/'
             \ 's//\=i/|let i=i+1'
 
         endif
 
         call moveCursor#GotoColumn1(
-        \ g:LineNrK_moveCursor,'num')
+        \ moveCursor#TakeLineNr('K'),'num')
 
     endwhile
 
@@ -157,15 +156,13 @@ function s:GlossaryIab(title) "{{{3
     '}
     call moveCursor#GetLineNr('.','K')
 
-    call moveCursor#SetRange('J','K')
-
-    execute g:LineRange_moveCursor .'s/' .
+    execute moveCursor#TakeLineNr('J','K') .'s/' .
     \ '^\s\+//e'
 
-    execute g:LineNrJ_moveCursor
+    execute moveCursor#TakeLineNr('J')
 
     while line('.') <
-    \ line(g:LineNrK_moveCursor)
+    \ line(moveCursor#TakeLineNr('K'))
         if substitute(getline('.'),'\t','','')
         \ == getline('.')
             echo 'ERROR: Tab not found in Line ' .
@@ -188,7 +185,7 @@ function s:AddNote(pattern,level) "{{{3
     if a:level == foldlevel('.')
         call moveCursor#SetLineJKFold()
         call moveCursor#GotoColumn1(
-        \ g:LineNrK_moveCursor,'num')
+        \ moveCursor#TakeLineNr('K'),'num')
     endif
 
     exe 's;$;\r' . a:pattern . ' {{{' .
@@ -225,13 +222,11 @@ function s:IndentFold(pattern,foldlevel) "{{{3
             exe 'normal ]z'
             call moveCursor#GetLineNr('.','K')
 
-            call moveCursor#SetRange('J','K',1,-1)
-
             execute
-            \ g:LineRange_moveCursor . 's/' .
+            \ moveCursor#TakeLineNr('J','K',1,-1) . 's/' .
             \ '^\(\t\{0,1}\)\(\S\)/\t\t\2/e'
 
-            execute g:LineNrK_moveCursor + 1
+            execute moveCursor#TakeLineNr('K') + 1
 
         else
 
@@ -255,11 +250,9 @@ function s:JoinLines() "{{{3
     exe 'normal }k'
     call moveCursor#GetLineNr('.','K')
 
-    call moveCursor#SetRange('J','K')
+    execute moveCursor#TakeLineNr('J','K') . 'left 0'
 
-    execute g:LineRange_moveCursor . 'left 0'
-
-    execute g:LineRange_moveCursor . 'join'
+    execute moveCursor#TakeLineNr('J','K') . 'join'
 
     call space#DelSpaceCJK()
     s;^;\t;
