@@ -1,21 +1,26 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Nov 28, Fri | 19:09:43 | 2014
+" Last Update: Nov 28, Fri | 22:16:10 | 2014
 
 " global "{{{2
 
-function s:KeyMapLoop(begin,end) "{{{3
+function s:KeyFuncLoop(begin,end) "{{{3
 
     let l:i = a:begin
 
-    while l:i < a:end + 1
+    while l:i <= a:end
 
-        execute 'nno <buffer> <silent> <f' . l:i .
-        \ '> :call <sid>SearchFold(' . l:i .
-        \ ',0)<cr>'
-        execute 'nno <buffer> <silent> <s-f' .
-        \ l:i . '> :call <sid>SearchFold(' . l:i .
-        \ ',1)<cr>'
+        execute 'nnoremap <buffer> <silent>'
+        \ ' <f' . l:i . '>'
+        \ ' :call <sid>SearchFold(' . l:i . ',' .
+        \ "'f'" . ')' .
+        \ '<cr>'
+
+        execute 'nnoremap <buffer> <silent>'
+        \ ' <s-f' . l:i . '>'
+        \ ' :call <sid>SearchFold(' . l:i . ',' .
+        \ "'b'" . ')' .
+        \ '<cr>'
 
         let l:i = l:i + 1
 
@@ -66,7 +71,7 @@ function s:AddNum4Note(note,fold) "{{{3
 
 endfunction "}}}3
 
-function s:WindowJump(align) "{{{3
+function s:SwitchWindow(align) "{{{3
 
     if a:align == 0
 
@@ -79,29 +84,42 @@ function s:WindowJump(align) "{{{3
         let l:bufnr = bufnr('%')
 
         if winnr('$') == 1
+
             wincmd v
+
         endif
+
         wincmd w
 
         if bufnr('%') != l:bufnr
+
             execute 'buffer' . l:bufnr
+
         endif
+
         call setpos('.',l:top)
         execute 'normal zt'
+
         call setpos('.',l:pos)
 
     endif
 
 endfunction "}}}3
 
-function s:SearchFold(level,direction) "{{{3
+function s:SearchFold(level,move) "{{{3
 
-    let l:pattern = '^.* {{{' . a:level . '$'
-    " }}}
-    if a:direction == 0
+    let l:pattern = ' {\{3\}' . a:level . '$'
+
+    if a:move == 'f'
+
+        call moveCursor#GotoColumnEnd('.')
         call search(l:pattern,'w')
-    elseif a:direction == 1
+
+    elseif a:move == 'b'
+
+        call moveCursor#GotoColumn1('.')
         call search(l:pattern,'bw')
+
     endif
 
     execute 'normal zt'
@@ -259,6 +277,16 @@ function s:JoinLines() "{{{3
 
 endfunction "}}}3
 
+function s:KeyEnter() "{{{3
+
+    nnoremap <buffer> <silent> <cr>
+    \ :call <sid>SwitchWindow(0)<cr>
+
+    nnoremap <buffer> <silent> <c-cr>
+    \ :call <sid>SwitchWindow(1)<cr>
+
+endfunction "}}}3
+
  "}}}2
 " files "{{{2
 
@@ -288,20 +316,14 @@ au Bufread latex.read call <sid>Key_Latex()
  "}}}3
 " workshop.read "{{{3
 
-function s:Key_Workshop() "{{{4
+function s:KeyWorkshop() "{{{4
 
-    nno <buffer> <silent> <f1>
-    \ :call <sid>WindowJump(0)<cr>
-    nno <buffer> <silent> <s-f1>
-    \ :call <sid>WindowJump(1)<cr>
-
-    call <sid>KeyMapLoop(2,3)
-
-    nno <buffer> <silent> <f12> :Bullet w<cr>
+    call <sid>KeyEnter()
+    call <sid>KeyFuncLoop(1,3)
 
 endfunction "}}}4
 
-au Bufread workshop.read call <sid>Key_Workshop()
+au Bufread workshop.read call <sid>KeyWorkshop()
 
  "}}}3
 " fisherman.write "{{{3
@@ -322,11 +344,11 @@ endfunction "}}}4
 function s:Key_Fisherman() "{{{4
 
     nno <buffer> <silent> <f1>
-    \ :call <sid>WindowJump(0)<cr>
+    \ :call <sid>SwitchWindow(0)<cr>
     nno <buffer> <silent> <s-f1>
-    \ :call <sid>WindowJump(1)<cr>
+    \ :call <sid>SwitchWindow(1)<cr>
 
-    call <sid>KeyMapLoop(2,5)
+    call <sid>KeyFuncLoop(2,5)
 
     nno <buffer> <silent> <f6>
     \ :call <sid>AddNote('片段 ',5)<cr>
@@ -348,11 +370,11 @@ au Bufread fisherman.write
 function s:Key_bullet_en() "{{{4
 
     nno <buffer> <silent> <f1>
-    \ :call <sid>WindowJump(0)<cr>
+    \ :call <sid>SwitchWindow(0)<cr>
     nno <buffer> <silent> <s-f1>
-    \ :call <sid>WindowJump(1)<cr>
+    \ :call <sid>SwitchWindow(1)<cr>
 
-    call <sid>KeyMapLoop(2,5)
+    call <sid>KeyFuncLoop(2,5)
 
     nno <buffer> <silent> <f12> :Bullet w<cr>
 
@@ -370,9 +392,9 @@ au Bufread bullet_en.write
 function s:KeyPlan() "{{{4
 
     nno <buffer> <silent> <cr>
-    \ :call <sid>WindowJump(0)<cr>
+    \ :call <sid>SwitchWindow(0)<cr>
     nno <buffer> <silent> <c-cr>
-    \ :call <sid>WindowJump(1)<cr>
+    \ :call <sid>SwitchWindow(1)<cr>
 
 endfunction "}}}4
 
