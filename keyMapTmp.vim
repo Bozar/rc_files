@@ -1,6 +1,6 @@
-" tmp key-mappings "{{{1
+" keyMapTmp.vim "{{{1
 
-" Last Update: Nov 28, Fri | 18:00:58 | 2014
+" Last Update: Nov 28, Fri | 19:09:43 | 2014
 
 " global "{{{2
 
@@ -27,7 +27,7 @@ function s:AddNum4Note(note,fold) "{{{3
 
     let l:scene = '^\d\{1,2} {\{3}' . a:fold . '$'
 
-    call moveCursor#GotoColumn1(1,'num')
+    call moveCursor#GotoColumn1(1)
 
     while search(l:scene,'W')
 
@@ -36,7 +36,7 @@ function s:AddNum4Note(note,fold) "{{{3
 
         call moveCursor#SetLineJKFold()
         call moveCursor#GotoColumn1(
-        \ moveCursor#TakeLineNr('J'),'num')
+        \ moveCursor#TakeLineNr('J','')num')
 
         let l:pat_note = '^' . a:note
         let l:pat_note .= '\d\{0,2}\.\{0,1}'
@@ -45,7 +45,7 @@ function s:AddNum4Note(note,fold) "{{{3
         let l:new = a:note . l:num_scene . '\.'
 
         if search(l:pat_note,'c',
-        \ line(moveCursor#TakeLineNr('K'))
+        \ line(moveCursor#TakeLineNr('K',''))
         \ )
 
             execute moveCursor#TakeLineNr('J','K') .
@@ -60,7 +60,7 @@ function s:AddNum4Note(note,fold) "{{{3
         endif
 
         call moveCursor#GotoColumn1(
-        \ moveCursor#TakeLineNr('K'),'num')
+        \ moveCursor#TakeLineNr('K',''))
 
     endwhile
 
@@ -159,10 +159,10 @@ function s:GlossaryIab(title) "{{{3
     execute moveCursor#TakeLineNr('J','K') .'s/' .
     \ '^\s\+//e'
 
-    execute moveCursor#TakeLineNr('J')
+    execute moveCursor#TakeLineNr('J','')
 
     while line('.') <
-    \ line(moveCursor#TakeLineNr('K'))
+    \ line(moveCursor#TakeLineNr('K',''))
         if substitute(getline('.'),'\t','','')
         \ == getline('.')
             echo 'ERROR: Tab not found in Line ' .
@@ -185,7 +185,7 @@ function s:AddNote(pattern,level) "{{{3
     if a:level == foldlevel('.')
         call moveCursor#SetLineJKFold()
         call moveCursor#GotoColumn1(
-        \ moveCursor#TakeLineNr('K'),'num')
+        \ moveCursor#TakeLineNr('K',''))
     endif
 
     exe 's;$;\r' . a:pattern . ' {{{' .
@@ -226,7 +226,7 @@ function s:IndentFold(pattern,foldlevel) "{{{3
             \ moveCursor#TakeLineNr('J','K',1,-1) . 's/' .
             \ '^\(\t\{0,1}\)\(\S\)/\t\t\2/e'
 
-            execute moveCursor#TakeLineNr('K') + 1
+            execute moveCursor#TakeLineNr('K','') + 1
 
         else
 
