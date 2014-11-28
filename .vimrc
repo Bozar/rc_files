@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Nov 22, Sat | 12:49:01 | 2014
+" Last Update: Nov 28, Fri | 20:45:41 | 2014
 
 " Plugins "{{{2
 
@@ -830,7 +830,7 @@ nnoremap <silent> <a-j> <c-w>w
 nnoremap <silent> <a-k> <c-w>W
 
 " save
-nnoremap <silent> <cr> :wa<cr>
+" nnoremap <silent> <cr> :wa<cr>
 
 " open or close fold
 nnoremap <space> za
@@ -1032,7 +1032,7 @@ command! KeTranslation call Translation()
 command Ed0Vimrc e $MYVIMRC
 command Ed1Achieve e ~/documents/achieve.daily|
 \ cd ~/documents
-command Ed2KeyMap e ~/.vim/plugin/keymap_tmp.vim
+command Ed2KeyMap e ~/.vim/plugin/keyMapTmp.vim
 
 " autocommands
 autocmd BufRead *.vocab call Vocabulary()
@@ -1074,7 +1074,7 @@ function s:GotoSameLine() "{{{3
 
     let l:cursor = getpos('.')
 
-    call moveCursor#GotoColumn1('w0','str')
+    call moveCursor#GotoColumn1('w0')
     let l:top = getpos('.')
 
     call setpos('.',l:cursor)
