@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Nov 28, Fri | 22:24:01 | 2014
+" Last Update: Nov 29, Sat | 11:24:32 | 2014
 
 " global "{{{2
 
@@ -24,7 +24,16 @@ function s:KeyFuncLoop(begin,end) "{{{3
 
         let l:i = l:i + 1
 
-    endwhile
+    endwhile 
+endfunction "}}}3
+
+function s:KeyCR() "{{{3
+
+    nnoremap <buffer> <silent> <cr> <c-w>w
+
+    nnoremap <buffer> <silent> <s-cr> <c-w>W
+
+    nnoremap <buffer> <silent> <c-cr> <c-w>o<c-w>v
 
 endfunction "}}}3
 
@@ -68,41 +77,6 @@ function s:AddNum4Note(note,fold) "{{{3
         \ moveCursor#TakeLineNr('K',''))
 
     endwhile
-
-endfunction "}}}3
-
-function s:SwitchWindow(align) "{{{3
-
-    if a:align == 0
-
-        wincmd w
-
-    elseif a:align == 1
-
-        let l:top = getpos('w0')
-        let l:pos = getpos('.')
-        let l:bufnr = bufnr('%')
-
-        if winnr('$') == 1
-
-            wincmd v
-
-        endif
-
-        wincmd w
-
-        if bufnr('%') != l:bufnr
-
-            execute 'buffer' . l:bufnr
-
-        endif
-
-        call setpos('.',l:top)
-        execute 'normal zt'
-
-        call setpos('.',l:pos)
-
-    endif
 
 endfunction "}}}3
 
@@ -277,16 +251,6 @@ function s:JoinLines() "{{{3
 
 endfunction "}}}3
 
-function s:KeyEnter() "{{{3
-
-    nnoremap <buffer> <silent> <cr>
-    \ :call <sid>SwitchWindow(0)<cr>
-
-    nnoremap <buffer> <silent> <c-cr>
-    \ :call <sid>SwitchWindow(1)<cr>
-
-endfunction "}}}3
-
  "}}}2
 " files "{{{2
 
@@ -318,8 +282,8 @@ au Bufread latex.read call <sid>Key_Latex()
 
 function s:KeyWorkshop() "{{{4
 
-    call <sid>KeyEnter()
     call <sid>KeyFuncLoop(1,3)
+    call <sid>KeyCR()
 
 endfunction "}}}4
 
@@ -343,11 +307,7 @@ endfunction "}}}4
 
 function s:Key_Fisherman() "{{{4
 
-    nno <buffer> <silent> <f1>
-    \ :call <sid>SwitchWindow(0)<cr>
-    nno <buffer> <silent> <s-f1>
-    \ :call <sid>SwitchWindow(1)<cr>
-
+    call <sid>KeyCR()
     call <sid>KeyFuncLoop(2,5)
 
     nno <buffer> <silent> <f6>
@@ -369,11 +329,7 @@ au Bufread fisherman.write
 
 function s:Key_bullet_en() "{{{4
 
-    nno <buffer> <silent> <f1>
-    \ :call <sid>SwitchWindow(0)<cr>
-    nno <buffer> <silent> <s-f1>
-    \ :call <sid>SwitchWindow(1)<cr>
-
+    call <sid>KeyCR()
     call <sid>KeyFuncLoop(2,5)
 
     nno <buffer> <silent> <f12> :Bullet w<cr>
@@ -391,10 +347,7 @@ au Bufread bullet_en.write
 
 function s:KeyPlan() "{{{4
 
-    nno <buffer> <silent> <cr>
-    \ :call <sid>SwitchWindow(0)<cr>
-    nno <buffer> <silent> <c-cr>
-    \ :call <sid>SwitchWindow(1)<cr>
+    call <sid>KeyCR()
 
 endfunction "}}}4
 
