@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Nov 29, Sat | 11:24:32 | 2014
+" Last Update: Nov 29, Sat | 13:35:34 | 2014
 
 " global "{{{2
 
@@ -354,6 +354,21 @@ endfunction "}}}4
 " command "{{{4
 
 au Bufread plan.write call <sid>KeyPlan()
+
+ "}}}4
+ "}}}3
+" hhkb.write "{{{3
+
+function s:KeyHHKB() "{{{4
+
+    call <sid>KeyCR()
+    call <sid>KeyFuncLoop(2,3)
+
+endfunction "}}}4
+
+" command "{{{4
+
+au Bufread hhkb.write call <sid>KeyHHKB()
 
  "}}}4
  "}}}3
