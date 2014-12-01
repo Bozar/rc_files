@@ -1,10 +1,13 @@
 " convertPost.vim "{{{1
 
-" Last Update: Nov 30, Sun | 21:00:43 | 2014
+" Last Update: Dec 01, Mon | 13:34:06 | 2014
 
 " variables "{{{2
 
-let s:Block = 'CODE {\{3}\d\{0,1}'
+let s:BlockCode = 'CODE {\{3}\d\{0,1}'
+
+let s:BlockAll = s:BlockCode
+
 let s:FoldBegin = '{\{3}'
 let s:FoldEnd = '}\{3}\d\{0,1}'
 
@@ -13,10 +16,10 @@ let s:FoldEnd = '}\{3}\d\{0,1}'
 
 function s:ProtectBlock() "{{{3
 
-    if search(s:Block . '$','cw')
+    if search(s:BlockAll . '$','cw')
 
-        execute 'g;' . s:Block . ';' .
-        \ '/' . s:Block . '$/+1' . ';' .
+        execute 'g;' . s:BlockAll . ';' .
+        \ '/' . s:BlockAll . '$/+1' . ';' .
         \ '/^' . ' ' . s:FoldEnd . '$/-1' .
         \ 's;^;@;'
 
@@ -38,31 +41,75 @@ function s:ShiftLeft() "{{{
 
     1,$<
 
-    execute 'g;' . s:Block . ';' .
-    \ '/' . s:Block . '$/+1;' .
+    execute 'g;' . s:BlockAll . ';' .
+    \ '/' . s:BlockAll . '$/+1;' .
     \ '/' . s:FoldEnd . '$/-1>'
 
 endfunction "}}}
 
 function s:DeleteBlock() "{{{
 
-    execute 'g/' . s:Block . '/delete'
+    execute 'g/' . s:BlockAll . '/delete'
 
 endfunction "}}}
 
-function s:SubsTitle() "{{{
+function s:SubsBlockCode() "{{{
+
+    while search('^' . s:BlockCode . '$','cw')
+
+        if moveCursor#SetLineJKFold() == 1
+
+            return
+
+        else
+
+            execute
+            \ moveCursor#TakeLineNr('J','') .
+            \ 's/^.*$/[code]/'
+
+            execute
+            \ moveCursor#TakeLineNr('K','') .
+            \ 's/^.*$/[\/code]/'
+
+        endif
+
+    endwhile
+
+endfunction "}}}
+
+function s:SubsTitle(forum) "{{{
 
     if search(s:FoldBegin . '3$','cw')
 
-        execute 'g/' . s:FoldBegin . '3$' . '/' .
-        \ 's/^/## /'
+        if a:forum == 'trow'
+
+            execute 'g/' . s:FoldBegin . '3$' .
+            \ '/s/^/## /'
+
+        elseif a:forum == 'suse'
+
+            execute '%s/^\(.*\)' . ' ' .
+            \ s:FoldBegin . '3$/' .
+            \ '[size=200]\1[\/size]/'
+
+        endif
 
     endif
 
     if search(s:FoldBegin . '4$','cw')
 
-        execute 'g/' . s:FoldBegin . '4$' . '/' .
-        \ 's/^/### /'
+        if a:forum == 'trow'
+
+            execute 'g/' . s:FoldBegin . '4$' .
+            \ '/s/^/### /'
+
+        elseif a:forum == 'suse'
+
+            execute '%s/^\(.*\)' . ' ' .
+            \ s:FoldBegin . '4$/' .
+            \ '[size=150]\1[\/size]/'
+
+        endif
 
     endif
 
@@ -86,6 +133,7 @@ function s:AddMarkdown() "{{{
     $s/$/\r\r[\/markdown]/
 
 endfunction "}}}
+
  "}}}2
 " main "{{{2
 
@@ -97,10 +145,11 @@ function s:Convert2Trow() "{{{3
     call <sid>ShiftLeft()
 
     call <sid>DeleteBlock()
-    call <sid>DeleteFoldEnd()
 
-    call <sid>SubsTitle()
+    call <sid>SubsTitle('trow')
+
     call <sid>SubsFoldBegin()
+    call <sid>DeleteFoldEnd()
 
     call <sid>AddMarkdown()
 
@@ -108,7 +157,26 @@ function s:Convert2Trow() "{{{3
 
 endfunction "}}}3
 
+function s:Convert2SUSE() "{{{4
+
+    call <sid>ProtectBlock()
+    call <sid>JoinLines()
+
+    call <sid>ShiftLeft()
+
+    call <sid>SubsBlockCode()
+
+    call <sid>DeleteFoldEnd()
+
+    call <sid>SubsTitle('suse')
+    call <sid>SubsFoldBegin()
+
+    DelAdd
+
+endfunction "}}}4
+
 "call <sid>Convert2Trow()
+"call <sid>Convert2SUSE()
 
  "}}}2
 " vim: set fdm=marker fdl=20 "}}}1
