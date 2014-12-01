@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Dec 01, Mon | 15:57:06 | 2014
+" Last Update: Dec 01, Mon | 18:17:42 | 2014
 
 " variables "{{{2
 
@@ -12,6 +12,9 @@ let s:FoldBegin = '{\{3}'
 let s:FoldEnd = '}\{3}\d\{0,1}'
 
 let s:Bullet = '^\* \{3}\( \)\@!'
+
+let s:URL = '\(\[' . '[^\]]\{-}\]\)'
+let s:URL .= '\((http.\{-})\)'
 
  "}}}2
 " parts "{{{2
@@ -89,6 +92,16 @@ function! s:SubsBullet() "{{{
 
         execute 'g/' . s:Bullet . '/s/$/[\/list]/'
         execute '%s/' . s:Bullet . '/[list]/'
+
+    endif
+
+endfunction "}}}
+
+function! s:SubsURL() "{{{
+
+    if search(s:URL,'cw')
+
+        execute '%s/' . s:URL . '/\r\1\r\2\r/'
 
     endif
 
@@ -183,18 +196,19 @@ function! s:Convert2SUSE() "{{{4
 
     call <sid>SubsBlockCode()
     call <sid>SubsBullet()
-
-    call <sid>DeleteFoldEnd()
+    call <sid>SubsURL()
 
     call <sid>SubsTitle('suse')
+
     call <sid>SubsFoldBegin()
+    call <sid>DeleteFoldEnd()
 
     DelAdd
 
 endfunction "}}}4
 
 "call <sid>Convert2Trow()
-"call <sid>Convert2SUSE()
+call <sid>Convert2SUSE()
 
  "}}}2
 " vim: set fdm=marker fdl=20 "}}}1
