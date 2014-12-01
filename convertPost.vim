@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Dec 01, Mon | 18:17:42 | 2014
+" Last Update: Dec 01, Mon | 20:21:02 | 2014
 
 " variables "{{{2
 
@@ -13,13 +13,20 @@ let s:FoldEnd = '}\{3}\d\{0,1}'
 
 let s:Bullet = '^\* \{3}\( \)\@!'
 
-let s:URL = '\(\[' . '[^\]]\{-}\]\)'
-let s:URL .= '\((http.\{-})\)'
+let s:LinkText = '\(\['
+let s:LinkText .= '[^\]]\{-}'
+let s:LinkText .= '\]\)'
+
+let s:LinkURL = '\((http.\{-})\)'
+
+let s:LinkAll = s:LinkText . s:LinkURL
+
+let s:LinkPart = '\[url='
 
  "}}}2
 " parts "{{{2
 
-function! s:ProtectBlock() "{{{3
+function s:ProtectBlock() "{{{3
 
     if search(s:BlockAll . '$','cw')
 
@@ -32,7 +39,7 @@ function! s:ProtectBlock() "{{{3
 
 endfunction "}}}3
 
-function! s:JoinLines() "{{{3
+function s:JoinLines() "{{{3
 
     let g:TextWidth_Bullet = 9999
 
@@ -42,7 +49,7 @@ function! s:JoinLines() "{{{3
 
 endfunction "}}}3
 
-function! s:ShiftLeft() "{{{
+function s:ShiftLeft() "{{{
 
     1,$<
 
@@ -56,13 +63,13 @@ function! s:ShiftLeft() "{{{
 
 endfunction "}}}
 
-function! s:DeleteBlock() "{{{
+function s:DeleteBlock() "{{{
 
     execute 'g/' . s:BlockAll . '/delete'
 
 endfunction "}}}
 
-function! s:SubsBlockCode() "{{{
+function s:SubsBlockCode() "{{{
 
     while search('^' . s:BlockCode . '$','cw')
 
@@ -86,7 +93,7 @@ function! s:SubsBlockCode() "{{{
 
 endfunction "}}}
 
-function! s:SubsBullet() "{{{
+function s:SubsBullet() "{{{
 
     if search(s:Bullet,'cw')
 
@@ -97,17 +104,56 @@ function! s:SubsBullet() "{{{
 
 endfunction "}}}
 
-function! s:SubsURL() "{{{
+function s:SubsLink() "{{{
 
-    if search(s:URL,'cw')
+    if search(s:LinkAll,'cw')
 
-        execute '%s/' . s:URL . '/\r\1\r\2\r/'
+        " seperate text and url
+
+        execute '%s/' . s:LinkAll . '/\r\1\r\2\r/'
+
+        " url: add [url=
+
+        execute 'g/' . s:LinkURL . '/s/^/' .
+        \ s:LinkPart . '/'
+
+        " url: add ]
+
+        execute 'g/' . s:LinkURL . '/s/$/]/'
+
+        " url: delete (
+
+        execute '%s/^\(' . s:LinkPart . '\)(/' .
+        \ '\1/'
+
+        " url: delete )
+
+        execute 'g/^\(' . s:LinkPart . '\)/' .
+        \ 's/)\]$/]/'
+
+        " text: delete [
+
+        execute 'g/^\(' . s:LinkPart . '\)/' .
+        \ '-1s/^\[//'
+
+        " text: add [/url]
+
+        execute 'g/^\(' . s:LinkPart . '\)/' .
+        \ '-1s/\]$/[\/url]/'
+
+        " change position
+
+        execute 'g/' . s:LinkPart . '/-1move .'
+
+        " join lines
+
+        execute 'g/' . s:LinkPart . '/-1,+2join!'
 
     endif
 
 endfunction "}}}
 
-function! s:SubsTitle(forum) "{{{
+function s:SubsTitle(forum) "{{{
 
     if search(s:FoldBegin . '3$','cw')
 
@@ -145,19 +191,19 @@ function! s:SubsTitle(forum) "{{{
 
 endfunction "}}}
 
-function! s:DeleteFoldEnd() "{{{
+function s:DeleteFoldEnd() "{{{
 
     execute 'g/' . s:FoldEnd . '/delete'
 
 endfunction "}}}
 
-function! s:SubsFoldBegin() "{{{
+function s:SubsFoldBegin() "{{{
 
     execute '%s/' . ' ' . s:FoldBegin . '[1-4]$//'
 
 endfunction "}}}
 
-function! s:AddMarkdown() "{{{
+function s:AddMarkdown() "{{{
 
     1s/^/[markdown]\r\r/
     $s/$/\r\r[\/markdown]/
@@ -167,7 +213,7 @@ endfunction "}}}
  "}}}2
 " main "{{{2
 
-function! s:Convert2Trow() "{{{3
+function s:Convert2Trow() "{{{3
 
     call <sid>ProtectBlock()
     call <sid>JoinLines()
@@ -187,7 +233,7 @@ function! s:Convert2Trow() "{{{3
 
 endfunction "}}}3
 
-function! s:Convert2SUSE() "{{{4
+function s:Convert2SUSE() "{{{4
 
     call <sid>ProtectBlock()
     call <sid>JoinLines()
@@ -196,7 +242,7 @@ function! s:Convert2SUSE() "{{{4
 
     call <sid>SubsBlockCode()
     call <sid>SubsBullet()
-    call <sid>SubsURL()
+    call <sid>SubsLink()
 
     call <sid>SubsTitle('suse')
 
@@ -208,7 +254,7 @@ function! s:Convert2SUSE() "{{{4
 endfunction "}}}4
 
 "call <sid>Convert2Trow()
-call <sid>Convert2SUSE()
+"call <sid>Convert2SUSE()
 
  "}}}2
 " vim: set fdm=marker fdl=20 "}}}1
