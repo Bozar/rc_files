@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Dec 02, Tue | 07:41:12 | 2014
+" Last Update: Dec 02, Tue | 22:31:09 | 2014
 
 " global "{{{2
 
@@ -392,7 +392,7 @@ au Bufread vim.write call <sid>KeyVim()
 function s:KeyDivine() "{{{4
 
     call <sid>KeyCR()
-    call <sid>KeyFuncLoop(1,3)
+    call <sid>KeyFuncLoop(1,5)
 
 endfunction "}}}4
 
