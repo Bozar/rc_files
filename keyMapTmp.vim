@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Dec 02, Tue | 22:31:09 | 2014
+" Last Update: Dec 08, Mon | 23:07:07 | 2014
 
 " global "{{{2
 
@@ -348,42 +348,13 @@ au Bufread bullet_en.write
 function s:KeyPlan() "{{{4
 
     call <sid>KeyCR()
+    call <sid>KeyFuncLoop(1,4)
 
 endfunction "}}}4
 
 " command "{{{4
 
 au Bufread plan.write call <sid>KeyPlan()
-
- "}}}4
- "}}}3
-" hhkb.write "{{{3
-
-function s:KeyHHKB() "{{{4
-
-    call <sid>KeyCR()
-    call <sid>KeyFuncLoop(1,3)
-
-endfunction "}}}4
-
-" command "{{{4
-
-au Bufread hhkb.write call <sid>KeyHHKB()
-
- "}}}4
- "}}}3
-" vim.write "{{{3
-
-function s:KeyVim() "{{{4
-
-    call <sid>KeyCR()
-    call <sid>KeyFuncLoop(1,3)
-
-endfunction "}}}4
-
-" command "{{{4
-
-au Bufread vim.write call <sid>KeyVim()
 
  "}}}4
  "}}}3
