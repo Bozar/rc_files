@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Dec 01, Mon | 20:21:02 | 2014
+" Last Update: Dec 10, Wed | 17:59:28 | 2014
 
 " variables "{{{2
 
@@ -39,9 +39,27 @@ function s:ProtectBlock() "{{{3
 
 endfunction "}}}3
 
-function s:JoinLines() "{{{3
+function s:DelExtraSpacesAfterBullet() "{{{3
 
-    let g:TextWidth_Bullet = 9999
+    if search(s:Bullet,'cw')
+
+        execute '%s/' . s:Bullet . '/* /'
+
+    endif
+
+endfunction "}}}3
+
+function s:JoinLines(...) "{{{3
+
+    if exists('a:1')
+
+        let g:TextWidth_Bullet = a:1
+
+    else
+
+        let g:TextWidth_Bullet = 9999
+
+    endif
 
     Bullet w
 
@@ -53,19 +71,15 @@ function s:ShiftLeft() "{{{
 
     1,$<
 
-    if search(s:BlockAll . '$','cw')
-
-        execute 'g;' . s:BlockAll . ';' .
-        \ '/' . s:BlockAll . '$/+1;' .
-        \ '/' . s:FoldEnd . '$/-1>'
-
-    endif
-
 endfunction "}}}
 
-function s:DeleteBlock() "{{{
+function s:DelBlock() "{{{
 
-    execute 'g/' . s:BlockAll . '/delete'
+    if search(s:BlockAll,'cw')
+
+        execute 'g/' . s:BlockAll . '/delete'
+
+    endif
 
 endfunction "}}}
 
@@ -191,15 +205,25 @@ function s:SubsTitle(forum) "{{{
 
 endfunction "}}}
 
-function s:DeleteFoldEnd() "{{{
+function s:DelFoldEnd() "{{{
 
-    execute 'g/' . s:FoldEnd . '/delete'
+    if search(s:FoldEnd,'cw')
+
+        execute 'g/' . s:FoldEnd . '/delete'
+
+    endif
 
 endfunction "}}}
 
 function s:SubsFoldBegin() "{{{
 
-    execute '%s/' . ' ' . s:FoldBegin . '[1-4]$//'
+    let l:pattern = ' ' . s:FoldBegin . '[1-4]$'
+
+    if search(l:pattern,'cw')
+
+        execute '%s/' . l:pattern . '//'
+
+    endif
 
 endfunction "}}}
 
@@ -216,18 +240,37 @@ endfunction "}}}
 function s:Convert2Trow() "{{{3
 
     call <sid>ProtectBlock()
-    call <sid>JoinLines()
-
     call <sid>ShiftLeft()
 
-    call <sid>DeleteBlock()
+    call <sid>JoinLines()
+
+    call <sid>DelBlock()
 
     call <sid>SubsTitle('trow')
 
     call <sid>SubsFoldBegin()
-    call <sid>DeleteFoldEnd()
+    call <sid>DelFoldEnd()
 
     call <sid>AddMarkdown()
+
+    DelAdd
+
+endfunction "}}}3
+
+function s:Convert2Mail() "{{{3
+
+    call <sid>ProtectBlock()
+    call <sid>ShiftLeft()
+    call <sid>DelExtraSpacesAfterBullet()
+
+    call <sid>JoinLines(50)
+
+    call <sid>DelBlock()
+
+    call <sid>SubsTitle('trow')
+
+    call <sid>SubsFoldBegin()
+    call <sid>DelFoldEnd()
 
     DelAdd
 
@@ -236,9 +279,9 @@ endfunction "}}}3
 function s:Convert2SUSE() "{{{4
 
     call <sid>ProtectBlock()
-    call <sid>JoinLines()
-
     call <sid>ShiftLeft()
+
+    call <sid>JoinLines()
 
     call <sid>SubsBlockCode()
     call <sid>SubsBullet()
@@ -247,14 +290,33 @@ function s:Convert2SUSE() "{{{4
     call <sid>SubsTitle('suse')
 
     call <sid>SubsFoldBegin()
-    call <sid>DeleteFoldEnd()
+    call <sid>DelFoldEnd()
 
     DelAdd
 
 endfunction "}}}4
 
-"call <sid>Convert2Trow()
-"call <sid>Convert2SUSE()
+function s:SelectFunction() "{{{4
+
+    call moveCursor#GotoColumn1(1)
+
+    if search('trow','c',1)
+
+        call <sid>Convert2Trow()
+
+    elseif search('mail','c',1)
+
+        call <sid>Convert2Mail()
+
+    elseif search('suse','c',1)
+
+        call <sid>Convert2SUSE()
+
+    endif
+
+endfunction "}}}4
+
+call <sid>SelectFunction()
 
  "}}}2
 " vim: set fdm=marker fdl=20 "}}}1
