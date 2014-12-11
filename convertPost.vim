@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Dec 10, Wed | 17:59:28 | 2014
+" Last Update: Dec 11, Thu | 11:45:20 | 2014
 
 " variables "{{{2
 
@@ -51,6 +51,8 @@ endfunction "}}}3
 
 function s:JoinLines(...) "{{{3
 
+    let l:save = g:TextWidth_Bullet
+
     if exists('a:1')
 
         let g:TextWidth_Bullet = a:1
@@ -63,7 +65,7 @@ function s:JoinLines(...) "{{{3
 
     Bullet w
 
-    let g:TextWidth_Bullet = 50
+    let g:TextWidth_Bullet = l:save
 
 endfunction "}}}3
 
