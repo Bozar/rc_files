@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Dec 08, Mon | 23:07:07 | 2014
+" Last Update: Dec 11, Thu | 21:36:43 | 2014
 
 " global "{{{2
 
@@ -370,6 +370,21 @@ endfunction "}}}4
 " command "{{{4
 
 au Bufread divineComedy.read call <sid>KeyDivine()
+
+ "}}}4
+ "}}}3
+" sixpence.read "{{{3
+
+function s:KeySixpence() "{{{4
+
+    call <sid>KeyCR()
+    call <sid>KeyFuncLoop(1,5)
+
+endfunction "}}}4
+
+" command "{{{4
+
+au Bufread sixpence.read call <sid>KeySixpence()
 
  "}}}4
  "}}}3
