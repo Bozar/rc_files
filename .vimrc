@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Nov 28, Fri | 20:45:41 | 2014
+" Last Update: Dec 11, Thu | 12:09:16 | 2014
 
 " Plugins "{{{2
 
@@ -867,8 +867,8 @@ noremap ^ 0
 nnoremap <a-o> <c-i>
 
 " a-b substitution
-nnoremap <silent> <a-q> :ABSubs<cr>
-vnoremap <silent> <a-q> "by:ABSubs<cr>
+nnoremap <silent> q :ABSubs<cr>
+vnoremap <silent> q "by:ABSubs<cr>
 
 " switch settings
 nnoremap <silent> \ :SwBackground<cr>
