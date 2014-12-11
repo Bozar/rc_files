@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Dec 11, Thu | 21:36:43 | 2014
+" Last Update: Dec 11, Thu | 22:21:22 | 2014
 
 " global "{{{2
 
@@ -254,40 +254,17 @@ endfunction "}}}3
  "}}}2
 " files "{{{2
 
-" latex.read "{{{3
+" commom key mappings "{{{3
 
-function s:Format_Latex() "{{{4
+function s:KeyCommon() "{{{4
 
-    call moveCursor#KeepPos(0)
-
-    BuGlobalTW
-    call space#DelSpaceCJK()
-    call <sid>AddBlankLine_TmpKeyMap()
-
-    call moveCursor#KeepPos(1)
-
-endfunction "}}}4
-
-function s:Key_Latex() "{{{4
-
-    nno <buffer> <silent> <f1>
-    \ :call <sid>Format_Latex()<cr>
-
-endfunction "}}}4
-
-au Bufread latex.read call <sid>Key_Latex()
-
- "}}}3
-" workshop.read "{{{3
-
-function s:KeyWorkshop() "{{{4
-
-    call <sid>KeyFuncLoop(1,3)
+    call <sid>KeyFuncLoop(1,5)
     call <sid>KeyCR()
 
 endfunction "}}}4
 
-au Bufread workshop.read call <sid>KeyWorkshop()
+au Bufread,BufNew *.read,*.write
+\ call <sid>KeyCommon()
 
  "}}}3
 " fisherman.write "{{{3
@@ -322,69 +299,6 @@ endfunction "}}}4
 
 au Bufread fisherman.write
 \ call <sid>Key_Fisherman()
-
- "}}}4
- "}}}3
-" bullet_en.write "{{{3
-
-function s:Key_bullet_en() "{{{4
-
-    call <sid>KeyCR()
-    call <sid>KeyFuncLoop(2,5)
-
-    nno <buffer> <silent> <f12> :Bullet w<cr>
-
-endfunction "}}}4
-
-" command "{{{4
-
-au Bufread bullet_en.write
-\ call <sid>Key_bullet_en()
-
- "}}}4
- "}}}3
-" plan.write "{{{3
-
-function s:KeyPlan() "{{{4
-
-    call <sid>KeyCR()
-    call <sid>KeyFuncLoop(1,4)
-
-endfunction "}}}4
-
-" command "{{{4
-
-au Bufread plan.write call <sid>KeyPlan()
-
- "}}}4
- "}}}3
-" divineComedy.read "{{{3
-
-function s:KeyDivine() "{{{4
-
-    call <sid>KeyCR()
-    call <sid>KeyFuncLoop(1,5)
-
-endfunction "}}}4
-
-" command "{{{4
-
-au Bufread divineComedy.read call <sid>KeyDivine()
-
- "}}}4
- "}}}3
-" sixpence.read "{{{3
-
-function s:KeySixpence() "{{{4
-
-    call <sid>KeyCR()
-    call <sid>KeyFuncLoop(1,5)
-
-endfunction "}}}4
-
-" command "{{{4
-
-au Bufread sixpence.read call <sid>KeySixpence()
 
  "}}}4
  "}}}3
