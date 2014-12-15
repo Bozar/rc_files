@@ -1,14 +1,18 @@
 " convertPost.vim "{{{1
 
-" Last Update: Dec 11, Thu | 11:45:20 | 2014
+" Last Update: Dec 15, Mon | 14:19:31 | 2014
 
 " variables "{{{2
 
 let s:BlockCode = 'CODE {\{3}\d\{0,1}'
 
-let s:BlockAll = s:BlockCode
+let s:BlockQuote = 'QUOTE {\{3}\d\{0,1}'
+
+let s:BlockAll = '\(' . s:BlockCode . '\)'
+let s:BlockAll .= '\|\(' . s:BlockQuote . '\)'
 
 let s:FoldBegin = '{\{3}'
+
 let s:FoldEnd = '}\{3}\d\{0,1}'
 
 let s:Bullet = '^\* \{3}\( \)\@!'
@@ -28,14 +32,21 @@ let s:LinkPart = '\[url='
 
 function s:ProtectBlock() "{{{3
 
-    if search(s:BlockAll . '$','cw')
+    1
 
-        execute 'g;' . s:BlockAll . ';' .
-        \ '/' . s:BlockAll . '$/+1' . ';' .
-        \ '/^' . ' ' . s:FoldEnd . '$/-1' .
-        \ 's;^;@;'
+    while search('^\(' . s:BlockAll . '\)$','cW')
 
-    endif
+        call moveCursor#SetLineJKFold()
+
+        execute
+        \ moveCursor#TakeLineNr('J','K',1,-1) .
+        \ 's/^/@/'
+
+        "execute moveCursor#TakeLineNr('K','',1)
+
+        execute moveCursor#TakeLineNr('K','')
+
+    endwhile
 
 endfunction "}}}3
 
@@ -75,11 +86,21 @@ function s:ShiftLeft() "{{{
 
 endfunction "}}}
 
-function s:DelBlock() "{{{
+function s:DelBlockCode() "{{{
 
-    if search(s:BlockAll,'cw')
+    if search(s:BlockCode,'cw')
 
-        execute 'g/' . s:BlockAll . '/delete'
+        execute 'g/' . s:BlockCode . '/delete'
+
+    endif
+
+endfunction "}}}
+
+function s:DelBlockQuote() "{{{
+
+    if search(s:BlockQuote,'cw')
+
+        execute 'g/' . s:BlockQuote . '/delete'
 
     endif
 
@@ -102,6 +123,30 @@ function s:SubsBlockCode() "{{{
             execute
             \ moveCursor#TakeLineNr('K','') .
             \ 's/^.*$/[\/code]/'
+
+        endif
+
+    endwhile
+
+endfunction "}}}
+
+function s:SubsBlockQuote() "{{{
+
+    while search('^' . s:BlockQuote . '$','cw')
+
+        if moveCursor#SetLineJKFold() == 1
+
+            return
+
+        else
+
+            execute
+            \ moveCursor#TakeLineNr('J','') .
+            \ 's/^.*$/[quote]/'
+
+            execute
+            \ moveCursor#TakeLineNr('K','') .
+            \ 's/^.*$/[\/quote]/'
 
         endif
 
@@ -246,8 +291,9 @@ function s:Convert2Trow() "{{{3
 
     call <sid>JoinLines()
 
-    call <sid>DelBlock()
+    call <sid>DelBlockCode()
 
+    call <sid>SubsBlockQuote()
     call <sid>SubsTitle('trow')
 
     call <sid>SubsFoldBegin()
@@ -267,7 +313,7 @@ function s:Convert2Mail() "{{{3
 
     call <sid>JoinLines(50)
 
-    call <sid>DelBlock()
+    call <sid>DelBlockCode()
 
     call <sid>SubsTitle('trow')
 
@@ -286,6 +332,7 @@ function s:Convert2SUSE() "{{{4
     call <sid>JoinLines()
 
     call <sid>SubsBlockCode()
+    call <sid>SubsBlockQuote()
     call <sid>SubsBullet()
     call <sid>SubsLink()
 
@@ -318,7 +365,11 @@ function s:SelectFunction() "{{{4
 
 endfunction "}}}4
 
-call <sid>SelectFunction()
+if !exists(':ConvertPost')
+
+    command ConvertPost call <sid>SelectFunction()
+
+endif
 
  "}}}2
 " vim: set fdm=marker fdl=20 "}}}1
