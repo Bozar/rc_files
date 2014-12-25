@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Dec 15, Mon | 14:19:31 | 2014
+" Last Update: Dec 23, Tue | 21:49:09 | 2014
 
 " variables "{{{2
 
@@ -62,7 +62,9 @@ endfunction "}}}3
 
 function s:JoinLines(...) "{{{3
 
-    let l:save = g:TextWidth_Bullet
+    let l:saveTW = g:TextWidth_Bullet
+
+    let l:saveFO = g:CommentsAdd_Bullet
 
     if exists('a:1')
 
@@ -74,9 +76,13 @@ function s:JoinLines(...) "{{{3
 
     endif
 
+    let g:CommentsAdd_Bullet = 'b:>,'
+
     Bullet w
 
-    let g:TextWidth_Bullet = l:save
+    let g:TextWidth_Bullet = l:saveTW
+
+    let g:CommentsAdd_Bullet = l:saveFO 
 
 endfunction "}}}3
 
