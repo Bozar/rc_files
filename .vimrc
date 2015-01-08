@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Dec 11, Thu | 12:09:16 | 2014
+" Last Update: Jan 08, Thu | 10:12:13 | 2015
 
 " Plugins "{{{2
 
@@ -1093,6 +1093,10 @@ function s:GotoSameLine() "{{{3
 endfunction "}}}3
 
 command SameLine call <sid>GotoSameLine()
+
+set noimdisable
+autocmd! InsertLeave * set imdisable|set iminsert=0
+autocmd! InsertEnter * set noimdisable|set iminsert=2
 
  "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
