@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Jan 08, Thu | 10:12:13 | 2015
+" Last Update: Jan 08, Thu | 23:29:37 | 2015
 
 " Plugins "{{{2
 
@@ -706,12 +706,21 @@ set display=lastline
 
 " window size
 " windows | linux GUI | linux terminal
+function s:Window()
+
+if has('gui')
+
+set guiheadroom=0
+winsize 123 31
+
+endif
+
+endfunction
 if CheckOS()=='windows' "{{{
 	autocmd GUIEnter * simalt ~x
 	set background=light
 elseif CheckOS()=='linux'
-	set lines=31
-	set columns=123
+	autocmd VimEnter * call <sid>Window()
 	set background=dark
 endif "}}}
 
@@ -1094,9 +1103,13 @@ endfunction "}}}3
 
 command SameLine call <sid>GotoSameLine()
 
-set noimdisable
+if has('win32')
+
+"set noimdisable
 autocmd! InsertLeave * set imdisable|set iminsert=0
 autocmd! InsertEnter * set noimdisable|set iminsert=2
+
+endif
 
  "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
