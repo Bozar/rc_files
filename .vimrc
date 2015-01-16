@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Jan 16, Fri | 08:00:02 | 2015
+" Last Update: Jan 16, Fri | 17:20:04 | 2015
 
 " Plugins "{{{2
 
@@ -17,10 +17,8 @@ filetype plugin on
  "}}}3
 
 " windows or linux "{{{3
-function! CheckOS() "{{{
+function s:CheckOS() "{{{
 	if has('win32')
-		return 'windows'
-	elseif has('win64')
 		return 'windows'
 	else
 		return 'linux'
@@ -716,10 +714,10 @@ winsize 123 31
 endif
 
 endfunction
-if CheckOS()=='windows' "{{{
+if <sid>CheckOS()=='windows' "{{{
 	autocmd GUIEnter * simalt ~x
 	set background=light
-elseif CheckOS()=='linux'
+elseif <sid>CheckOS()=='linux'
 	autocmd VimEnter * call <sid>Window()
 	set background=dark
 endif "}}}
@@ -772,9 +770,9 @@ set cmdheight=2
 set history=99
 
 " fonts
-if CheckOS()=='windows' "{{{
+if <sid>CheckOS()=='windows' "{{{
 	set guifont=Consolas:h15:cANSI
-elseif CheckOS()=='linux'
+elseif <sid>CheckOS()=='linux'
 	set guifont=DejaVu\ Sans\ \Mono\ 14
 endif "}}}
 
@@ -809,9 +807,9 @@ set autoindent
 set smartindent
 
 " change directory
-if CheckOS()=='windows' "{{{
+if <sid>CheckOS()=='windows' "{{{
 	cd d:\Documents\
-elseif CheckOS()=='linux'
+elseif <sid>CheckOS()=='linux'
 	cd ~/documents/
 endif "}}}
  "}}}2
