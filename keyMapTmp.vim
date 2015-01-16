@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Dec 11, Thu | 22:21:22 | 2014
+" Last Update: Jan 15, Thu | 20:33:41 | 2015
 
 " global "{{{2
 
@@ -143,30 +143,30 @@ function s:GlossaryIab(title) "{{{3
     call search(a:title . ' {\{3}\d$')
 
     +2
-    call moveCursor#GetLineNr('.','J')
+    call moveCursor#SetLineNr('.','J')
 
     '}
-    call moveCursor#GetLineNr('.','K')
+    call moveCursor#SetLineNr('.','K')
 
-    execute moveCursor#TakeLineNr('J','K') .'s/' .
-    \ '^\s\+//e'
+    "execute moveCursor#TakeLineNr('J','K') .'s/' .
+    "\ '^\s\+//e'
 
     execute moveCursor#TakeLineNr('J','')
 
     while line('.') <
-    \ line(moveCursor#TakeLineNr('K',''))
+    \ moveCursor#TakeLineNr('K','')
         if substitute(getline('.'),'\t','','')
         \ == getline('.')
             echo 'ERROR: Tab not found in Line ' .
             \ line('.') . '!'
             return
         endif
-        let line = '^\(.\{-1,}\)\t\(.*\)$'
-        let left =
-        \ substitute(getline('.'),line,'\1','')
-        let right =
-        \ substitute(getline('.'),line,'\2','')
-        exe 'iab <buffer> ' left right
+        let l:line = '^\(\s*\*\s*\)\(\S\{-1,}\)\t\(.*\)$'
+        let l:left =
+        \ substitute(getline('.'),l:line,'\2','')
+        let l:right =
+        \ substitute(getline('.'),l:line,'\3','')
+        exe 'iab <buffer> ' . l:left . ' ' . l:right
         +1
     endwhile
 
@@ -299,6 +299,18 @@ endfunction "}}}4
 
 au Bufread fisherman.write
 \ call <sid>Key_Fisherman()
+
+ "}}}4
+ "}}}3
+" sign_of_four.read "{{{3
+
+" command "{{{4
+
+"au BufRead sign_of_four.read
+"\ call <sid>GlossaryIab('Glossary')
+
+au BufRead sign_of_four.read
+\ call <sid>GlossaryIab('Glossary')
 
  "}}}4
  "}}}3

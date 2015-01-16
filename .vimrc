@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Jan 08, Thu | 23:29:37 | 2015
+" Last Update: Jan 16, Fri | 08:00:02 | 2015
 
 " Plugins "{{{2
 
@@ -1106,8 +1106,8 @@ command SameLine call <sid>GotoSameLine()
 if has('win32')
 
 "set noimdisable
-autocmd! InsertLeave * set imdisable|set iminsert=0
-autocmd! InsertEnter * set noimdisable|set iminsert=2
+autocmd InsertLeave * set imdisable|set iminsert=0
+autocmd InsertEnter * set noimdisable|set iminsert=2
 
 endif
 
