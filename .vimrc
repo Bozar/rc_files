@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Jan 16, Fri | 17:20:04 | 2015
+" Last Update: Jan 27, Tue | 14:53:28 | 2015
 
 " Plugins "{{{2
 
@@ -698,6 +698,8 @@ syntax enable
 
 set linespace=0
 set display=lastline
+
+set shiftround
 
 " language
 " change the name of 'lang' folder will force vim to use English
