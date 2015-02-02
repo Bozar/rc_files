@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Jan 27, Tue | 14:53:28 | 2015
+" Last Update: Feb 02, Mon | 17:29:52 | 2015
 
 " Plugins "{{{2
 
@@ -865,7 +865,7 @@ noremap <c-l> }
 
 " ^ and $
 noremap 0 ^
-noremap - $
+noremap - g_
 noremap ^ 0
 
 " jump between brackets
