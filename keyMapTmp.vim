@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Jan 15, Thu | 20:33:41 | 2015
+" Last Update: Feb 07, Sat | 18:04:53 | 2015
 
 " global "{{{2
 
@@ -302,14 +302,11 @@ au Bufread fisherman.write
 
  "}}}4
  "}}}3
-" sign_of_four.read "{{{3
+" norwegian_wood.read "{{{3
 
 " command "{{{4
 
-"au BufRead sign_of_four.read
-"\ call <sid>GlossaryIab('Glossary')
-
-au BufRead sign_of_four.read
+au BufRead norwegian_wood.read
 \ call <sid>GlossaryIab('Glossary')
 
  "}}}4
