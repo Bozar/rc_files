@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Feb 07, Sat | 18:04:53 | 2015
+" Last Update: Feb 16, Mon | 10:55:53 | 2015
 
 " global "{{{2
 
@@ -302,11 +302,11 @@ au Bufread fisherman.write
 
  "}}}4
  "}}}3
-" norwegian_wood.read "{{{3
+" neuromancer.read "{{{3
 
 " command "{{{4
 
-au BufRead norwegian_wood.read
+au BufRead neuromancer.read
 \ call <sid>GlossaryIab('Glossary')
 
  "}}}4
