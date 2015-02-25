@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Feb 16, Mon | 10:55:53 | 2015
+" Last Update: Feb 18, Wed | 12:24:52 | 2015
 
 " global "{{{2
 
@@ -140,7 +140,10 @@ endfunction "}}}3
 function s:GlossaryIab(title) "{{{3
 
     1
-    call search(a:title . ' {\{3}\d$')
+
+    if search(a:title . ' {\{3}\d$') == 0
+        return
+    endif
 
     +2
     call moveCursor#SetLineNr('.','J')
@@ -260,6 +263,7 @@ function s:KeyCommon() "{{{4
 
     call <sid>KeyFuncLoop(1,5)
     call <sid>KeyCR()
+    call <sid>GlossaryIab('Glossary')
 
 endfunction "}}}4
 
@@ -299,15 +303,6 @@ endfunction "}}}4
 
 au Bufread fisherman.write
 \ call <sid>Key_Fisherman()
-
- "}}}4
- "}}}3
-" neuromancer.read "{{{3
-
-" command "{{{4
-
-au BufRead neuromancer.read
-\ call <sid>GlossaryIab('Glossary')
 
  "}}}4
  "}}}3
