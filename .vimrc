@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Feb 02, Mon | 17:29:52 | 2015
+" Last Update: Feb 28, Sat | 15:16:51 | 2015
 
 " Plugins "{{{2
 
@@ -933,6 +933,23 @@ inoremap <a-j> 'j,'k
 cnoremap <a-j> 'j,'k
 inoremap <a-k> 1,$
 cnoremap <a-k> 1,$
+
+" bracket pairs
+inoremap <a-9> ()<left>
+inoremap <a-0> （）<left>
+inoremap <a-[> []<left>
+inoremap <a-]> {}<left>
+inoremap <a-,> <><left>
+inoremap <a-.> 《》<left>
+inoremap <a-=> 【】<left>
+
+cnoremap <a-9> ()<left>
+cnoremap <a-0> （）<left>
+cnoremap <a-[> []<left>
+cnoremap <a-]> {}<left>
+cnoremap <a-,> <><left>
+cnoremap <a-.> 《》<left>
+cnoremap <a-=> 【】<left>
 
  "}}}2
 
