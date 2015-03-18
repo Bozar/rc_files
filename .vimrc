@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Feb 28, Sat | 15:16:51 | 2015
+" Last Update: Mar 04, Wed | 20:20:28 | 2015
 
 " Plugins "{{{2
 
@@ -9,12 +9,12 @@ filetype off
 filetype plugin on
 
 " fcitx
- "}}}2
+"}}}2
 
 " Functions "{{{2
 
 " variables "{{{3
- "}}}3
+"}}}3
 
 " windows or linux "{{{3
 function s:CheckOS() "{{{
@@ -24,7 +24,7 @@ function s:CheckOS() "{{{
 		return 'linux'
 	endif
 endfunction "}}}
- "}}}3
+"}}}3
 
 " switch settings "{{{3
 function! SwitchSettings(setting) "{{{
@@ -53,7 +53,7 @@ function! SwitchSettings(setting) "{{{
 			endif
 		endif
 endfunction "}}}
- "}}}3
+"}}}3
 
 " search pattern "{{{3
 function! SearchPattern(pattern) "{{{
@@ -87,14 +87,14 @@ function! SearchPattern(pattern) "{{{
 	" count matches
 		execute '%s/'.@z.'//gn'
 endfunction "}}}
- "}}}3
+"}}}3
 
 " overwrite whole buffer with @" text "{{{3
 function! OverwriteBuffer() "{{{
 	1put!
 	+1,$delete
 endfunction "}}}
- "}}}3
+"}}}3
 
 " mapping markers "{{{3
 function! MappingMarker(marker) "{{{
@@ -108,7 +108,7 @@ function! MappingMarker(marker) "{{{
 			'lmark k
 		endif
 endfunction "}}}
- "}}}3
+"}}}3
 
 " fold marker "{{{3
 " DO NOT call 'CreatFoldMarker()' alone
@@ -117,7 +117,8 @@ endfunction "}}}
 function! CreatFoldMarker(creat) "{{{
 	" level one
 		if a:creat==0 "{{{
-			s/$/\rFOLDMARKER {{{\r }}}/
+			s/$/\rFOLDMARKER {{{\r}}}/
+			"s/$/\rFOLDMARKER {{{\r }}}/
 			.-1,.s/$/1/
 		endif "}}}
 	" move cursor
@@ -131,9 +132,10 @@ function! CreatFoldMarker(creat) "{{{
 			'hyank
 			'hput
 			'hput
-			'h+1,'h+2s/^.*\( .\{0,1}{\{3}\d\{0,2}\)$/\1/
+			'h+1,'h+2s/^.*\(.\{0,1}{\{3}\d\{0,2}\)$/\1/
+			"'h+1,'h+2s/^.*\( .\{0,1}{\{3}\d\{0,2}\)$/\1/
 			'h+2s/{{{/}}}/
-			'h+1s/^/FOLDMARKER/ "}}}
+			'h+1s/^/FOLDMARKER / "}}}
 	" higher level
 		elseif a:creat==2 "{{{
 			call CreatFoldMarker(1)
@@ -221,7 +223,7 @@ function! MoveFoldMarker(move) "{{{
 		endif
 
 endfunction "}}}
- "}}}3
+"}}}3
 
 " change fold level "{{{3
 " minus (0,1); plus (2,3)
@@ -284,7 +286,7 @@ function! ChangeFoldLevel(level)  "{{{
 		endif
 		call setpos('.', SaveCursor)
 endfunction "}}}
- "}}}3
+"}}}3
 
 " make session "{{{3
 function! MakeSession(file) "{{{
@@ -296,7 +298,7 @@ function! MakeSession(file) "{{{
 	execute 'mksession!' Session
 	echo "NOTE:'" Session "' updated!"
 endfunction "}}}
- "}}}3
+"}}}3
 
 " time stamp "{{{3
 " search 'http://vim.wikia.com' for help
@@ -306,7 +308,7 @@ function! TimeStamp() "{{{
 	s/$/\r/
 	s/^/\=strftime('%b %d | %a | %Y')/
 endfunction "}}}
- "}}}3
+"}}}3
 
 " numbers "{{{3
 function! CreatNumber(fold) "{{{
@@ -357,7 +359,7 @@ function! CreatNumber(fold) "{{{
 			$mark k
 		endif "}}}
 endfunction "}}}
- "}}}3
+"}}}3
 
 " Scratch buffer "{{{3
 function! SwitchToScratch() "{{{
@@ -438,7 +440,7 @@ function! ScratchBuffer(scratch) "{{{
 			"}}}
 		endif
 endfunction "}}}
- "}}}3
+"}}}3
 
 " English vocabulary "{{{3
 
@@ -455,7 +457,7 @@ function! F1_Vocab() "{{{
 	call F1_Normal_Vocab()
 	call F1_Shift_Normal_Vocab()
 endfunction "}}}
- "}}}4
+"}}}4
 
 " Function key: <F2> "{{{4
 " search word
@@ -474,7 +476,7 @@ endfunction "}}}
 function! F2_Vocab() "{{{
 	call F2_Normal_Vocab()
 endfunction "}}}
- "}}}4
+"}}}4
 
 " Function key: <F3> "{{{4
 " insert brackets
@@ -494,7 +496,7 @@ function! F3_Vocab() "{{{
 	call F3_Shift_Normal_Vocab()
 	call F3_Visual_Vocab()
 endfunction "}}}
- "}}}4
+"}}}4
 
 " Function key: <F4> "{{{4
 " update word list
@@ -502,7 +504,7 @@ endfunction "}}}
 " Word List "{{{
 " [word 1]
 " [word 2]
- "}}}
+"}}}
 function! UpdateWordList_Vocab() "{{{
 		mark h
 		let List_Vocab='^\(Word List\)\|\(生词表\) {{{$' "}}}
@@ -550,7 +552,7 @@ endfunction "}}}
 function! F4_Vocab() "{{{
 	call F4_Normal_Vocab()
 endfunction "}}}
- "}}}4
+"}}}4
 
 function! Vocabulary() "{{{4
 	let i=1
@@ -559,7 +561,7 @@ function! Vocabulary() "{{{4
 		let i=i+1
 	endwhile
 endfunction "}}}4
- "}}}3
+"}}}3
 
 " translation "{{{3
 " 3 rows: english = chinese = glossary
@@ -661,7 +663,7 @@ function! F1_Trans() "{{{
 	call F1_Normal_Trans()
 	call F1_Visual_Trans()
 endfunction "}}}
- "}}}4
+"}}}4
 
 " Function key: <F2> "{{{4
 " same line
@@ -672,7 +674,7 @@ endfunction "}}}
 function! F2_Trans() "{{{
 	call F2_Normal_Trans()
 endfunction "}}}
- "}}}4
+"}}}4
 
 function! Translation() "{{{4
 	let i=1
@@ -681,9 +683,9 @@ function! Translation() "{{{4
 		let i=i+1
 	endwhile
 endfunction "}}}4
- "}}}3
+"}}}3
 
- "}}}2
+"}}}2
 
 " Vim settings "{{{2
 
@@ -761,7 +763,7 @@ set statusline+=\ %P
 " column number and virtual column number
 " set statusline+=[%1.3(%c%)
 " set statusline+=%1.4V]
- "}}}
+"}}}
 
 set number
 set showcmd
@@ -814,7 +816,7 @@ if <sid>CheckOS()=='windows' "{{{
 elseif <sid>CheckOS()=='linux'
 	cd ~/documents/
 endif "}}}
- "}}}2
+"}}}2
 
 " Key mappings and abbreviations "{{{2
 
@@ -951,7 +953,7 @@ cnoremap <a-,> <><left>
 cnoremap <a-.> 《》<left>
 cnoremap <a-=> 【】<left>
 
- "}}}2
+"}}}2
 
 " User defined commands "{{{2
 
@@ -981,7 +983,7 @@ endfunction "}}}4
 command DelEmpty call <sid>DelLine(1)
 command DelAdd call <sid>DelLine(0)
 
- "}}}3
+"}}}3
 
 " a-b substitution
 command! ABSubs call SearchPattern(0)
@@ -1128,5 +1130,7 @@ autocmd InsertEnter * set noimdisable|set iminsert=2
 
 endif
 
- "}}}2
+com LeftFoldMarker g;\v^ .{0,1}\}{3}.{0,1};le0
+
+"}}}2
 " vim: set fdm=marker fdl=20: "}}}1
