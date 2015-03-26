@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Feb 18, Wed | 12:24:52 | 2015
+" Last Update: Mar 26, Thu | 15:30:36 | 2015
 
 " global "{{{2
 
@@ -254,7 +254,7 @@ function s:JoinLines() "{{{3
 
 endfunction "}}}3
 
- "}}}2
+"}}}2
 " files "{{{2
 
 " commom key mappings "{{{3
@@ -270,7 +270,7 @@ endfunction "}}}4
 au Bufread,BufNew *.read,*.write
 \ call <sid>KeyCommon()
 
- "}}}3
+"}}}3
 " fisherman.write "{{{3
 
 function s:Format_Fisherman() "{{{4
@@ -304,7 +304,39 @@ endfunction "}}}4
 au Bufread fisherman.write
 \ call <sid>Key_Fisherman()
 
- "}}}4
- "}}}3
- "}}}2
- "}}}1
+"}}}4
+"}}}3
+" planescape.read "{{{3
+
+"function s:Format_Fisherman() "{{{4
+"
+"    call moveCursor#KeepPos(0)
+"
+"    call <sid>AddNum4Note('片段 ',4)
+"    call <sid>AddNum4Note('摘要 ',4)
+"    call moveCursor#KeepPos(1)
+"    Bullet w
+"
+"    call moveCursor#KeepPos(1)
+"
+"endfunction "}}}4
+
+function s:Key_Plane() "{{{4
+
+vno <buffer> <silent> <f1>
+\ :g;^$;+1s;^;=<cr>
+\ :'<+1,'>g;^$;d<cr>
+\ :'<,'>g;^[^=];s;^;-;<cr>
+\ :'>s;$;\/<cr>
+
+endfunction "}}}4
+
+" command "{{{4
+
+au Bufread,BufNew,BufWinEnter planescape.read
+\ call <sid>Key_Plane()
+
+"}}}4
+"}}}3
+"}}}2
+"}}}1
