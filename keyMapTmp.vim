@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Mar 26, Thu | 15:30:36 | 2015
+" Last Update: Mar 26, Thu | 23:03:12 | 2015
 
 " global "{{{2
 
@@ -308,33 +308,44 @@ au Bufread fisherman.write
 "}}}3
 " planescape.read "{{{3
 
-"function s:Format_Fisherman() "{{{4
-"
-"    call moveCursor#KeepPos(0)
-"
-"    call <sid>AddNum4Note('片段 ',4)
-"    call <sid>AddNum4Note('摘要 ',4)
-"    call moveCursor#KeepPos(1)
-"    Bullet w
-"
-"    call moveCursor#KeepPos(1)
-"
-"endfunction "}}}4
+function s:AddBullet_Visual() "{{{4
+
+    " = & -
+    '<,'>g;^$;+1s;^;=;
+    normal! '<
+    if search('^[^=]','cn',line("'>"))
+        '<,'>g;^[^=];s;^;-;
+    endif
+
+    " == & --
+    normal! '<
+    if search('\v^\=\s+','cn',"'>")
+        '<,'>s;\v^\=\s+;==;
+    endif
+    normal! '<
+    if search('\v^\-\s+','cn',"'>")
+        '<,'>s;\v^\-\s+;--;
+    endif
+
+    '<+1,'>g;^$;d
+    '>s;$;\/;
+
+endfunction "}}}4
 
 function s:Key_Plane() "{{{4
 
 vno <buffer> <silent> <f1>
-\ :g;^$;+1s;^;=<cr>
-\ :'<+1,'>g;^$;d<cr>
-\ :'<,'>g;^[^=];s;^;-;<cr>
-\ :'>s;$;\/<cr>
+\ <esc>:call <sid>AddBullet_Visual()<cr>
 
 endfunction "}}}4
 
 " command "{{{4
 
-au Bufread,BufNew,BufWinEnter planescape.read
-\ call <sid>Key_Plane()
+let s:addBullet = 'planescape.read'
+let s:addBullet .= '\|eternal_boundary.write'
+
+exe 'au Bufread,BufNew,BufWinEnter' . ' ' .
+\ s:addBullet . ' call <sid>Key_Plane()'
 
 "}}}4
 "}}}3
