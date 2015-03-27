@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Mar 26, Thu | 23:03:12 | 2015
+" Last Update: Mar 27, Fri | 09:16:08 | 2015
 
 " global "{{{2
 
@@ -342,7 +342,7 @@ endfunction "}}}4
 " command "{{{4
 
 let s:addBullet = 'planescape.read'
-let s:addBullet .= '\|eternal_boundary.write'
+let s:addBullet .= ',eternal_boundary.write'
 
 exe 'au Bufread,BufNew,BufWinEnter' . ' ' .
 \ s:addBullet . ' call <sid>Key_Plane()'

@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Mar 04, Wed | 20:20:28 | 2015
+" Last Update: Mar 27, Fri | 09:32:12 | 2015
 
 " Plugins "{{{2
 
@@ -1131,6 +1131,15 @@ autocmd InsertEnter * set noimdisable|set iminsert=2
 endif
 
 com LeftFoldMarker g;\v^ .{0,1}\}{3}.{0,1};le0
+
+"function s:EndBullet()
+"    if search('^\s*\(=\|-\)','cbn',line('.'))
+"        s;$;\/;
+"    endif
+"endfunction
+"
+"ino <silent> <c-cr>
+"\ <esc>:call <sid>EndBullet()<cr>o
 
 "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
