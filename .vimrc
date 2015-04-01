@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Mar 27, Fri | 09:32:12 | 2015
+" Last Update: Apr 01, Wed | 09:39:30 | 2015
 
 " Plugins "{{{2
 
@@ -1140,6 +1140,32 @@ com LeftFoldMarker g;\v^ .{0,1}\}{3}.{0,1};le0
 "
 "ino <silent> <c-cr>
 "\ <esc>:call <sid>EndBullet()<cr>o
+
+command -range BuAdd call <sid>AddBullet_Visual()
+
+function s:AddBullet_Visual()
+
+    " = & -
+    '<,'>g;^$;+1s;^;=;
+    normal! '<
+    if search('^[^=]','cn',line("'>"))
+        '<,'>g;^[^=];s;^;-;
+    endif
+
+    " == & --
+    normal! '<
+    if search('\v^\=\s+','cn',"'>")
+        '<,'>s;\v^\=\s+;==;
+    endif
+    normal! '<
+    if search('\v^\-\s+','cn',"'>")
+        '<,'>s;\v^\-\s+;--;
+    endif
+
+    '<+1,'>g;^$;d
+    '>s;$;\/;
+
+endfunction
 
 "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
