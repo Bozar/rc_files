@@ -1,6 +1,6 @@
 " keyMapTmp.vim "{{{1
 
-" Last Update: Mar 27, Fri | 09:16:08 | 2015
+" Last Update: Apr 01, Wed | 09:26:49 | 2015
 
 " global "{{{2
 
@@ -303,49 +303,6 @@ endfunction "}}}4
 
 au Bufread fisherman.write
 \ call <sid>Key_Fisherman()
-
-"}}}4
-"}}}3
-" planescape.read "{{{3
-
-function s:AddBullet_Visual() "{{{4
-
-    " = & -
-    '<,'>g;^$;+1s;^;=;
-    normal! '<
-    if search('^[^=]','cn',line("'>"))
-        '<,'>g;^[^=];s;^;-;
-    endif
-
-    " == & --
-    normal! '<
-    if search('\v^\=\s+','cn',"'>")
-        '<,'>s;\v^\=\s+;==;
-    endif
-    normal! '<
-    if search('\v^\-\s+','cn',"'>")
-        '<,'>s;\v^\-\s+;--;
-    endif
-
-    '<+1,'>g;^$;d
-    '>s;$;\/;
-
-endfunction "}}}4
-
-function s:Key_Plane() "{{{4
-
-vno <buffer> <silent> <f1>
-\ <esc>:call <sid>AddBullet_Visual()<cr>
-
-endfunction "}}}4
-
-" command "{{{4
-
-let s:addBullet = 'planescape.read'
-let s:addBullet .= ',eternal_boundary.write'
-
-exe 'au Bufread,BufNew,BufWinEnter' . ' ' .
-\ s:addBullet . ' call <sid>Key_Plane()'
 
 "}}}4
 "}}}3
