@@ -1,5 +1,5 @@
 " fold marker "{{{
-" Last Update: Apr 02, Thu | 16:28:15 | 2015
+" Last Update: Apr 02, Thu | 17:45:25 | 2015
 
 let s:Title = 'FOLDMARKER'
 
@@ -16,6 +16,18 @@ function! s:LoadVars()
     \ s:Bra . '\v(\d{0,2})\s{-}$'
     let s:FoldEnd = '\v^(.*)\s(\S{-})\M' .
     \ s:Ket . '\v(\d{0,2})\s{-}$'
+
+endfunction
+
+function! s:ExpandFold(when)
+
+    if a:when ==# 0
+        let s:foldlevel = &foldlevel
+        let &foldlevel = 20
+    endif
+    if a:when ==# 1
+        let &foldlevel = s:foldlevel
+    endif
 
 endfunction
 
@@ -93,6 +105,7 @@ endfunction
 function! s:FoldMarker(line)
 
     call <sid>LoadVars()
+    call <sid>ExpandFold(0)
     call <sid>GetFoldInfo()
 
     if a:line ==# 'new'
@@ -108,146 +121,26 @@ function! s:FoldMarker(line)
         call <sid>CreatMarker(1)
     endif
     if a:line ==# 'wrap'
+        if line("'<") ==# line("'>")
+            call <sid>ExpandFold(1)
+            return
+        endif
         call <sid>CreatMarker(2)
     endif
 
     call <sid>CreatLevel()
     normal! [z
     +1
+    call <sid>ExpandFold(1)
 
 endfunction
-
-"nno <f8> :call <sid>FoldMarker('new')<cr>
-"nno <f9> :call <sid>FoldMarker('before')<cr>
-"nno <f10> :call <sid>FoldMarker('after')<cr>
-"nno <f11> :call <sid>FoldMarker('new')<cr>
-"vno <f12> <esc>:call <sid>FoldMarker('wrap')<cr>
-
-" DO NOT call 'CreatFoldMarker()' alone
-" call 'MoveFoldMarker()' instead
-" which has fail-safe protocol 'substitute()'
-"function! s:CreatFoldMarker(creat)
-
-"    " level one
-"    if a:creat ==# 0
-"        execute 's/$/' .
-"        \ '\r' . s:Title . ' ' . s:Bra .
-"        \ '\r\r\r' . s:Ket . '/'
-"        .-3,.g/./s/$/1/
-"    endif
-
-"    " move cursor
-"        if substitute(getline('.'),
-"            \'{\{3}\d\{0,2}$','','') != getline('.')
-"            +1
-"        endif
-"    " same level
-"        if a:creat==1 "{{{
-"            execute 'normal [zmh]zml'
-"            'hyank
-"            'hput
-"            'hput
-"            'h+1,'h+2s/^.*\(.\{0,1}{\{3}\d\{0,2}\)$/\1/
-"            "'h+1,'h+2s/^.*\( .\{0,1}{\{3}\d\{0,2}\)$/\1/
-"            'h+2s/{{{/}}}/
-"            'h+1s/^/FOLDMARKER / "}}}
-"    " higher level
-"        elseif a:creat==2 "{{{
-"            call <sid>CreatFoldMarker(1)
-"            'h+1,'h+2s/\(\d\{1,2}\)$/\=submatch(0)+1/e "}}}
-"        endif
-
-"endfunction
-
-" new (0), after (1), before (2)
-" inside (3), wrap text (4,5)
-"function! s:MoveFoldMarker(move) "{{{
-
-"    " creat level one marker
-"        if a:move==0 "{{{
-"            call <sid>CreatFoldMarker(0)
-"            mark k
-"            -1mark j
-"            -1
-"        endif "}}}
-
-"    " remember position
-"        execute 'normal H'
-"        let Top=line('.')
-"        ''
-
-"    " detect fold
-"        let SaveCursor=getpos('.')
-"        if substitute(getline('.'),
-"            \'{\{3}\d\{0,2}$','','') != getline('.')
-"            +1
-"        endif
-"        execute 'normal [z'
-"        if substitute(getline('.'),'{\{3}\d\{0,2}$','','')==getline('.') "{{{
-"            echo "ERROR: Fold '[z' not found!"
-"            call setpos('.', SaveCursor)
-"            return
-"        else
-"            call setpos('.', SaveCursor)
-"        endif "}}}
-
-"    " after
-"        if a:move==1 "{{{
-"            call <sid>CreatFoldMarker(1)
-"            'h+1,'h+2delete
-"            'lput
-"            execute Top ' | normal zt'
-"            'l+1 "}}}
-
-"    " before
-"        elseif a:move==2 "{{{
-"            call <sid>CreatFoldMarker(1)
-"            'h+1,'h+2delete
-"            'hput!
-"            execute Top ' | normal zt'
-"            'h-1 "}}}
-
-"    " inside
-"        elseif a:move==3 "{{{
-"            mark z
-"            call <sid>CreatFoldMarker(2)
-"            'h+1,'h+2delete
-"            'zput
-"            execute Top ' | normal zt'
-"            'z+1 "}}}
-
-"    " wrap text, normal
-"        elseif a:move==4 "{{{
-"            call <sid>CreatFoldMarker(2)
-"            'h+1,'h+2s/\d\{0,2}$//
-"            'h+1,'h+2delete
-"            'jput
-"            'j+1s/^FOLDMARKER//
-"            'j+2delete
-"            'kput
-"            'j,'j+1join!
-"            'k,'k+1join!
-"            execute 'normal [z'
-"            execute Top ' | normal zt'
-"            '' "}}}
-
-"    " wrap text, visual
-"        elseif a:move==5 "{{{
-"            '<mark j
-"            '>mark k
-"            call <sid>MoveFoldMarker(4)
-"            execute Top ' | normal zt'
-"            '' "}}}
-"        endif
-
-"endfunction "}}}
-
 
 " append, insert and creat fold marker
 command! FmNew call <sid>FoldMarker('new')
 command! FmAfter call <sid>FoldMarker('after')
 command! FmBefore call <sid>FoldMarker('before')
-command! -range FmWrap call <sid>FoldMarker('wrap')
+command! -range FmWrap
+\ call <sid>FoldMarker('wrap')
 
 " append, insert and creat fold marker
 nnoremap <silent> <tab> :FmAfter<cr>
