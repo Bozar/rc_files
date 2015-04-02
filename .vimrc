@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Apr 01, Wed | 09:39:30 | 2015
+" Last Update: Apr 02, Thu | 16:20:47 | 2015
 
 " Plugins "{{{2
 
@@ -96,135 +96,6 @@ function! OverwriteBuffer() "{{{
 endfunction "}}}
 "}}}3
 
-" mapping markers "{{{3
-function! MappingMarker(marker) "{{{
-	" visual markers to j,k
-		if a:marker==0
-			'<mark j
-			'>mark k
-	" h,l to j,k
-		elseif a:marker==1
-			'hmark j
-			'lmark k
-		endif
-endfunction "}}}
-"}}}3
-
-" fold marker "{{{3
-" DO NOT call 'CreatFoldMarker()' alone
-" call 'MoveFoldMarker()' instead
-" which has fail-safe protocol 'substitute()'
-function! CreatFoldMarker(creat) "{{{
-	" level one
-		if a:creat==0 "{{{
-			s/$/\rFOLDMARKER {{{\r}}}/
-			"s/$/\rFOLDMARKER {{{\r }}}/
-			.-1,.s/$/1/
-		endif "}}}
-	" move cursor
-		if substitute(getline('.'),
-			\'{\{3}\d\{0,2}$','','') != getline('.')
-			+1
-		endif
-	" same level
-		if a:creat==1 "{{{
-			execute 'normal [zmh]zml'
-			'hyank
-			'hput
-			'hput
-			'h+1,'h+2s/^.*\(.\{0,1}{\{3}\d\{0,2}\)$/\1/
-			"'h+1,'h+2s/^.*\( .\{0,1}{\{3}\d\{0,2}\)$/\1/
-			'h+2s/{{{/}}}/
-			'h+1s/^/FOLDMARKER / "}}}
-	" higher level
-		elseif a:creat==2 "{{{
-			call CreatFoldMarker(1)
-			'h+1,'h+2s/\(\d\{1,2}\)$/\=submatch(0)+1/e "}}}
-		endif
-endfunction "}}}
-" new (0), after (1), before (2)
-" inside (3), wrap text (4,5)
-function! MoveFoldMarker(move) "{{{
-
-	" creat level one marker
-		if a:move==0 "{{{
-			call CreatFoldMarker(0)
-			mark k
-			-1mark j
-			-1
-		endif "}}}
-
-	" remember position
-		execute 'normal H'
-		let Top=line('.')
-		''
-
-	" detect fold
-		let SaveCursor=getpos('.')
-		if substitute(getline('.'),
-			\'{\{3}\d\{0,2}$','','') != getline('.')
-			+1
-		endif
-		execute 'normal [z'
-		if substitute(getline('.'),'{\{3}\d\{0,2}$','','')==getline('.') "{{{
-			echo "ERROR: Fold '[z' not found!"
-			call setpos('.', SaveCursor)
-			return
-		else
-			call setpos('.', SaveCursor)
-		endif "}}}
-
-	" after
-		if a:move==1 "{{{
-			call CreatFoldMarker(1)
-			'h+1,'h+2delete
-			'lput
-			execute Top ' | normal zt'
-			'l+1 "}}}
-
-	" before
-		elseif a:move==2 "{{{
-			call CreatFoldMarker(1)
-			'h+1,'h+2delete
-			'hput!
-			execute Top ' | normal zt'
-			'h-1 "}}}
-
-	" inside
-		elseif a:move==3 "{{{
-			mark z
-			call CreatFoldMarker(2)
-			'h+1,'h+2delete
-			'zput
-			execute Top ' | normal zt'
-			'z+1 "}}}
-
-	" wrap text, normal
-		elseif a:move==4 "{{{
-			call CreatFoldMarker(2)
-			'h+1,'h+2s/\d\{0,2}$//
-			'h+1,'h+2delete
-			'jput
-			'j+1s/^FOLDMARKER//
-			'j+2delete
-			'kput
-			'j,'j+1join!
-			'k,'k+1join!
-			execute 'normal [z'
-			execute Top ' | normal zt'
-			'' "}}}
-
-	" wrap text, visual
-		elseif a:move==5 "{{{
-			call MappingMarker(0)
-			call MoveFoldMarker(4)
-			execute Top ' | normal zt'
-			'' "}}}
-		endif
-
-endfunction "}}}
-"}}}3
-
 " change fold level "{{{3
 " minus (0,1); plus (2,3)
 " delete number (4,5); append number (6,7)
@@ -243,7 +114,8 @@ function! ChangeFoldLevel(level)  "{{{
 				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)-1/e "}}}
 	" minus, visual
 		elseif a:level==1 "{{{
-			call MappingMarker(0)
+			'<mark j
+			'>mark k
 			call ChangeFoldLevel(0) "}}}
 	" plus, normal
 		elseif a:level==2 "{{{
@@ -258,14 +130,16 @@ function! ChangeFoldLevel(level)  "{{{
 				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)+1/e "}}}
 	" plus, visual
 		elseif a:level==3 "{{{
-			call MappingMarker(0)
+			'<mark j
+			'>mark k
 			call ChangeFoldLevel(2) "}}}
 	" delete number, normal
 		elseif a:level==4 "{{{
 			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$//e "}}}
 	" delete number, visual
 		elseif a:level==5 "{{{
-			call MappingMarker(0)
+			'<mark j
+			'>mark k
 			call ChangeFoldLevel(4) "}}}
 	" append number, normal
 		elseif a:level==6 "{{{
@@ -281,7 +155,8 @@ function! ChangeFoldLevel(level)  "{{{
 			endwhile "}}}
 	" append number, visual
 		elseif a:level==7 "{{{
-			call MappingMarker(0)
+			'<mark j
+			'>mark k
 			call ChangeFoldLevel(6) "}}}
 		endif
 		call setpos('.', SaveCursor)
@@ -431,7 +306,8 @@ function! ScratchBuffer(scratch) "{{{
 			endif "}}}
 	" visual mode
 		elseif a:scratch==6 "{{{
-			call MappingMarker(0)
+			'<mark j
+			'>mark k
 			call ScratchBuffer(5) "}}}
 	" creat more Scratches
 		elseif a:scratch==7 "{{{
@@ -897,14 +773,6 @@ vnoremap <silent> _ <esc>:FlVDelNum<cr>
 nnoremap <silent> + :FlAppNum<cr>
 vnoremap <silent> + <esc>:FlVAppNum<cr>
 
-" append, insert and creat fold marker
-nnoremap <silent> <tab> :FmAfter<cr>
-nnoremap <silent> <s-tab> :FmBefore<cr>
-nnoremap <silent> <c-tab> :FmInside<cr>
-nnoremap <silent> ~ :FmCreat<cr>
-nnoremap <silent> Q :FmWrap<cr>
-vnoremap <silent> Q <esc>:FmVWrap<cr>
-
 " search visual selection
 " forward, backward and yank match pattern
 vnoremap <silent> <tab> y:SearchForward<cr>
@@ -1022,14 +890,6 @@ command! FlVDelNum call ChangeFoldLevel(5)
 command! FlAppNum call ChangeFoldLevel(6)
 command! FlVAppNum call ChangeFoldLevel(7)
 
-" append, insert and creat fold marker
-command! FmCreat call MoveFoldMarker(0)
-command! FmAfter call MoveFoldMarker(1)
-command! FmBefore call MoveFoldMarker(2)
-command! FmInside call MoveFoldMarker(3)
-command! FmWrap call MoveFoldMarker(4)
-command! FmVWrap call MoveFoldMarker(5)
-
 " switch settings
 command SwHlsearch call SwitchSettings(0)
 command SwLinebreak call SwitchSettings(1)
@@ -1131,41 +991,6 @@ autocmd InsertEnter * set noimdisable|set iminsert=2
 endif
 
 com LeftFoldMarker g;\v^ .{0,1}\}{3}.{0,1};le0
-
-"function s:EndBullet()
-"    if search('^\s*\(=\|-\)','cbn',line('.'))
-"        s;$;\/;
-"    endif
-"endfunction
-"
-"ino <silent> <c-cr>
-"\ <esc>:call <sid>EndBullet()<cr>o
-
-command -range BuAdd call <sid>AddBullet_Visual()
-
-function s:AddBullet_Visual()
-
-    " = & -
-    '<,'>g;^$;+1s;^;=;
-    normal! '<
-    if search('^[^=]','cn',line("'>"))
-        '<,'>g;^[^=];s;^;-;
-    endif
-
-    " == & --
-    normal! '<
-    if search('\v^\=\s+','cn',"'>")
-        '<,'>s;\v^\=\s+;==;
-    endif
-    normal! '<
-    if search('\v^\-\s+','cn',"'>")
-        '<,'>s;\v^\-\s+;--;
-    endif
-
-    '<+1,'>g;^$;d
-    '>s;$;\/;
-
-endfunction
 
 "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
