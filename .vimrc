@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Apr 02, Thu | 16:20:47 | 2015
+" Last Update: Apr 02, Thu | 23:49:51 | 2015
 
 " Plugins "{{{2
 
@@ -93,73 +93,6 @@ endfunction "}}}
 function! OverwriteBuffer() "{{{
 	1put!
 	+1,$delete
-endfunction "}}}
-"}}}3
-
-" change fold level "{{{3
-" minus (0,1); plus (2,3)
-" delete number (4,5); append number (6,7)
-function! ChangeFoldLevel(level)  "{{{
-		let SaveCursor=getpos('.')
-	" minus, normal
-		if a:level==0 "{{{
-			" detect level one marker
-				'j "{{{
-				call search("{{{\|}}}","cW","'k")
-				if substitute(getline('.'),'\({{{\|}}}\)1$','','')!=getline('.')
-					call setpos('.', SaveCursor)
-					echo 'ERROR: Fold level 1 detected!'
-					return
-				endif "}}}
-				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)-1/e "}}}
-	" minus, visual
-		elseif a:level==1 "{{{
-			'<mark j
-			'>mark k
-			call ChangeFoldLevel(0) "}}}
-	" plus, normal
-		elseif a:level==2 "{{{
-			" fold level exceeds 20
-				'j "{{{
-				call search("\({{{\|}}}\)[2-9][0-9]$","cW","'k")
-				if substitute(getline("."),'\({{{\|}}}\)[2-9][0-9]$','','')!=getline('.')
-					call setpos('.', SaveCursor)
-					echo 'ERROR: Fold level exceeds 20!'
-					return
-				endif "}}}
-				'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$/\=submatch(0)+1/e "}}}
-	" plus, visual
-		elseif a:level==3 "{{{
-			'<mark j
-			'>mark k
-			call ChangeFoldLevel(2) "}}}
-	" delete number, normal
-		elseif a:level==4 "{{{
-			'j,'ks/\({{{\|}}}\)\@<=\d\{1,2}$//e "}}}
-	" delete number, visual
-		elseif a:level==5 "{{{
-			'<mark j
-			'>mark k
-			call ChangeFoldLevel(4) "}}}
-	" append number, normal
-		elseif a:level==6 "{{{
-			'j
-			while line(".")<=line("'k")
-				if search('\({{{\|}}}\)$','cW',line("'k"))==0
-					call setpos('.', SaveCursor)
-					return
-				endif
-				call search('\({{{\|}}}\)$','cW',line("'k"))
-				s/\({{{\|}}}\)\@<=$/\=foldlevel(line('.'))/e
-				+1
-			endwhile "}}}
-	" append number, visual
-		elseif a:level==7 "{{{
-			'<mark j
-			'>mark k
-			call ChangeFoldLevel(6) "}}}
-		endif
-		call setpos('.', SaveCursor)
 endfunction "}}}
 "}}}3
 
@@ -763,16 +696,6 @@ nnoremap <silent> <c-\> :SwHlsearch<cr>
 nnoremap <silent> \| :SwColorColumn<cr>
 nnoremap <silent> <a-\> :SwLinebreak<cr>
 
-" change fold level
-nnoremap <silent> <a-=> :FlPlus<cr>
-vnoremap <silent> <a-=> <esc>:FlVPlus<cr>
-nnoremap <silent> <a--> :FlMinus<cr>
-vnoremap <silent> <a--> <esc>:FlVMinus<cr>
-nnoremap <silent> _ :FlDelNum<cr>
-vnoremap <silent> _ <esc>:FlVDelNum<cr>
-nnoremap <silent> + :FlAppNum<cr>
-vnoremap <silent> + <esc>:FlVAppNum<cr>
-
 " search visual selection
 " forward, backward and yank match pattern
 vnoremap <silent> <tab> y:SearchForward<cr>
@@ -877,18 +800,6 @@ command! ScrEdit call ScratchBuffer(1)
 " move text between Scratch and other buffers
 command! ScrMove call ScratchBuffer(5)
 command! ScrVMove call ScratchBuffer(6)
-
-" folds
-
-" change fold level
-command! FlMinus call ChangeFoldLevel(0)
-command! FlVMinus call ChangeFoldLevel(1)
-command! FlPlus call ChangeFoldLevel(2)
-command! FlVPlus call ChangeFoldLevel(3)
-command! FlDelNum call ChangeFoldLevel(4)
-command! FlVDelNum call ChangeFoldLevel(5)
-command! FlAppNum call ChangeFoldLevel(6)
-command! FlVAppNum call ChangeFoldLevel(7)
 
 " switch settings
 command SwHlsearch call SwitchSettings(0)
