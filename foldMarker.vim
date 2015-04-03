@@ -1,5 +1,5 @@
 " fold marker "{{{
-" Last Update: Apr 02, Thu | 17:45:25 | 2015
+" Last Update: Apr 03, Fri | 00:42:09 | 2015
 
 let s:Title = 'FOLDMARKER'
 
@@ -12,10 +12,10 @@ function! s:LoadVars()
     \ substitute(&foldmarker,'\v(.*,)(.*)','\2',
     \ '')
 
-    let s:FoldBegin = '\v^(.*)\s(\S{-})\M' .
-    \ s:Bra . '\v(\d{0,2})\s{-}$'
-    let s:FoldEnd = '\v^(.*)\s(\S{-})\M' .
-    \ s:Ket . '\v(\d{0,2})\s{-}$'
+    let s:FoldBegin = '\v^(.*)\s(\S{-})' .
+    \ '\M' . s:Bra . '\v(\d{0,2})\s*$'
+    let s:FoldEnd = '\v^(.*)' .
+    \ '\M' . s:Ket . '\v(\d{0,2})\s*$'
 
 endfunction
 
@@ -101,6 +101,47 @@ function! s:CreatLevel()
 
 endfunction
 
+function! s:ChangeLevel()
+
+    if line("'<") <# 1 ||
+    \ line("'<") ># line('$') ||
+    \ line("'>") <# 1 ||
+    \ line("'>") ># line('$')
+        echo 'ERROR: Visual block not found!'
+        return
+    endif
+
+    let l:BeginNum =
+    \ substitute(s:FoldBegin,'{0,2}','+','')
+    let l:BeginNoNum =
+    \ substitute(s:FoldBegin,'{0,2}','{0}','')
+    let l:EndNum =
+    \ substitute(s:FoldEnd,'{0,2}','+','')
+    let l:EndNoNum =
+    \ substitute(s:FoldEnd,'{0,2}','{0}','')
+
+    normal! '<
+    normal! 0
+    if search(l:BeginNoNum,'cnW',line("'>"))
+        execute "'<,'>" . 'g/' . l:BeginNoNum .
+        \ '/s/\v\s*$/\=foldlevel(".")/'
+    elseif search(l:BeginNum,'cnW',line("'>"))
+        execute "'<,'>" . 'g/' . l:BeginNum .
+        \ '/s//\1 \2' . s:Bra . '/'
+    endif
+
+    normal! '<
+    normal! 0
+    if search(l:EndNoNum,'cnW',line("'>"))
+        execute "'<,'>" . 'g/' . l:EndNoNum .
+        \ '/s/\v\s*$/\=foldlevel(".")/'
+    elseif search(l:EndNum,'cnW',line("'>"))
+        execute "'<,'>" . 'g/' . l:EndNum .
+        \ '/s//\1' . s:Ket . '/'
+    endif
+
+endfunction
+
 " main function
 function! s:FoldMarker(line)
 
@@ -121,7 +162,9 @@ function! s:FoldMarker(line)
         call <sid>CreatMarker(1)
     endif
     if a:line ==# 'wrap'
-        if line("'<") ==# line("'>")
+        if line("'<") ==# line("'>") ||
+        \ getline(line("'<")) =~# s:FoldBegin ||
+        \ getline(line("'>")) =~# s:FoldEnd
             call <sid>ExpandFold(1)
             return
         endif
@@ -135,17 +178,32 @@ function! s:FoldMarker(line)
 
 endfunction
 
-" append, insert and creat fold marker
+function! s:FoldLevel()
+
+    call <sid>LoadVars()
+    call <sid>ExpandFold(0)
+
+    call <sid>ChangeLevel()
+
+    call <sid>ExpandFold(1)
+
+endfunction
+
+" creat fold marker
 command! FmNew call <sid>FoldMarker('new')
 command! FmAfter call <sid>FoldMarker('after')
 command! FmBefore call <sid>FoldMarker('before')
 command! -range FmWrap
 \ call <sid>FoldMarker('wrap')
 
-" append, insert and creat fold marker
+" change fold level
+command! -range FmLevel call <sid>FoldLevel()
+
+" creat fold marker
 nnoremap <silent> <tab> :FmAfter<cr>
 nnoremap <silent> <s-tab> :FmBefore<cr>
 nnoremap <silent> <c-tab> :FmNew<cr>
+nnoremap <silent> ~ :FmWrap<cr>
 vnoremap <silent> ~ :FmWrap<cr>
 
 "}}}
