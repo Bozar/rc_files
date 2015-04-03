@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Dec 23, Tue | 21:49:09 | 2014
+" Last Update: Apr 03, Fri | 15:28:16 | 2015
 
 " variables "{{{2
 
@@ -353,7 +353,7 @@ endfunction "}}}4
 
 function s:SelectFunction() "{{{4
 
-    call moveCursor#GotoColumn1(1)
+    execute 'normal! gg0'
 
     if search('trow','c',1)
 

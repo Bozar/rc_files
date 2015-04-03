@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Apr 02, Thu | 23:49:51 | 2015
+" Last Update: Apr 03, Fri | 10:08:27 | 2015
 
 " Plugins "{{{2
 
@@ -699,8 +699,8 @@ nnoremap <silent> <a-\> :SwLinebreak<cr>
 " search visual selection
 " forward, backward and yank match pattern
 vnoremap <silent> <tab> y:SearchForward<cr>
-vnoremap <silent> <s-tab> y:SearchYankAll<cr>
-vnoremap <silent> <c-tab> y:SearchGrep<cr>:copen<cr>
+"vnoremap <silent> <s-tab> y:SearchYankAll<cr>
+"vnoremap <silent> <c-tab> y:SearchGrep<cr>:copen<cr>
 
 " Scratch buffer
 " edit
@@ -902,6 +902,8 @@ autocmd InsertEnter * set noimdisable|set iminsert=2
 endif
 
 com LeftFoldMarker g;\v^ .{0,1}\}{3}.{0,1};le0
+
+"let LoadKeyMap_foldMarker=0
 
 "}}}2
 " vim: set fdm=marker fdl=20: "}}}1

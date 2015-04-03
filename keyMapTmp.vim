@@ -41,7 +41,7 @@ function s:AddNum4Note(note,fold) "{{{3
 
     let l:scene = '^\d\{1,2} {\{3}' . a:fold . '$'
 
-    call moveCursor#GotoColumn1(1)
+    execute 'normal! gg0'
 
     while search(l:scene,'W')
 
@@ -49,8 +49,8 @@ function s:AddNum4Note(note,fold) "{{{3
         \ '^\(\d\{1,2}\).*$','\1','')
 
         call moveCursor#SetLineJKFold()
-        call moveCursor#GotoColumn1(
-        \ moveCursor#TakeLineNr('J','')num')
+        execute moveCursor#TakeLineNr('J','')
+        execute 'normal! 0'
 
         let l:pat_note = '^' . a:note
         let l:pat_note .= '\d\{0,2}\.\{0,1}'
@@ -73,8 +73,8 @@ function s:AddNum4Note(note,fold) "{{{3
 
         endif
 
-        call moveCursor#GotoColumn1(
-        \ moveCursor#TakeLineNr('K',''))
+        execute moveCursor#TakeLineNr('K','')
+        execute 'normal! 0'
 
     endwhile
 
@@ -87,12 +87,12 @@ function s:SearchFold(level,move) "{{{3
     if a:move == 'f'
 
         call search(l:pattern,'w')
-        call moveCursor#GotoColumnEnd('.')
+        execute 'normal! $'
 
     elseif a:move == 'b'
 
         call search(l:pattern,'bw')
-        call moveCursor#GotoColumn1('.')
+        execute 'normal! 0'
 
     endif
 
@@ -179,8 +179,8 @@ function s:AddNote(pattern,level) "{{{3
 
     if a:level == foldlevel('.')
         call moveCursor#SetLineJKFold()
-        call moveCursor#GotoColumn1(
-        \ moveCursor#TakeLineNr('K',''))
+        execute moveCursor#TakeLineNr('K','')
+        execute 'normal! 0'
     endif
 
     exe 's;$;\r' . a:pattern . ' {{{' .

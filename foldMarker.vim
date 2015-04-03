@@ -1,9 +1,9 @@
-" fold marker "{{{
-" Last Update: Apr 03, Fri | 00:42:09 | 2015
+" foldMarker.vim "{{{1
+" Last Update: Apr 03, Fri | 14:26:09 | 2015
 
-let s:Title = 'FOLDMARKER'
+function! s:LoadVars() "{{{2
 
-function! s:LoadVars()
+    let s:Title = 'FOLDMARKER'
 
     let s:Bra =
     \ substitute(&foldmarker,'\v(.*)(,.*)','\1',
@@ -17,9 +17,9 @@ function! s:LoadVars()
     let s:FoldEnd = '\v^(.*)' .
     \ '\M' . s:Ket . '\v(\d{0,2})\s*$'
 
-endfunction
+endfunction "}}}2
 
-function! s:ExpandFold(when)
+function! s:ExpandFold(when) "{{{2
 
     if a:when ==# 0
         let s:foldlevel = &foldlevel
@@ -29,10 +29,10 @@ function! s:ExpandFold(when)
         let &foldlevel = s:foldlevel
     endif
 
-endfunction
+endfunction "}}}2
 
 " fold level & fold prefix
-function! s:GetFoldInfo()
+function! s:GetFoldInfo() "{{{2
 
     let l:pos = getpos('.')
     let s:Level = foldlevel('.')
@@ -46,9 +46,9 @@ function! s:GetFoldInfo()
     endif
     call setpos('.',l:pos)
 
-endfunction
+endfunction "}}}2
 
-function! s:CreatMarker(line)
+function! s:CreatMarker(line) "{{{2
 
     let l:begin = ' ' . s:Prefix . s:Bra
     let l:end = s:Prefix . s:Ket
@@ -82,9 +82,9 @@ function! s:CreatMarker(line)
         endif
     endif
 
-endfunction
+endfunction "}}}2
 
-function! s:CreatLevel()
+function! s:CreatLevel() "{{{2
 
     call moveCursor#GotoFoldBegin()
     if foldlevel('.') ==# 0
@@ -99,9 +99,9 @@ function! s:CreatLevel()
         execute 's/$/' . foldlevel('.') . '/'
     endif
 
-endfunction
+endfunction "}}}2
 
-function! s:ChangeLevel()
+function! s:ChangeLevel() "{{{2
 
     if line("'<") <# 1 ||
     \ line("'<") ># line('$') ||
@@ -140,10 +140,10 @@ function! s:ChangeLevel()
         \ '/s//\1' . s:Ket . '/'
     endif
 
-endfunction
+endfunction "}}}2
 
 " main function
-function! s:FoldMarker(line)
+function! s:FoldMarker(line) "{{{2
 
     call <sid>LoadVars()
     call <sid>ExpandFold(0)
@@ -175,10 +175,11 @@ function! s:FoldMarker(line)
     normal! [z
     +1
     call <sid>ExpandFold(1)
+    normal! zz
 
-endfunction
+endfunction "}}}2
 
-function! s:FoldLevel()
+function! s:FoldLevel() "{{{2
 
     call <sid>LoadVars()
     call <sid>ExpandFold(0)
@@ -187,23 +188,32 @@ function! s:FoldLevel()
 
     call <sid>ExpandFold(1)
 
-endfunction
+endfunction "}}}2
 
-" creat fold marker
-command! FmNew call <sid>FoldMarker('new')
-command! FmAfter call <sid>FoldMarker('after')
-command! FmBefore call <sid>FoldMarker('before')
-command! -range FmWrap
-\ call <sid>FoldMarker('wrap')
+function! s:Commands() "{{{2
 
-" change fold level
-command! -range FmLevel call <sid>FoldLevel()
+    command! FmNew
+    \ call <sid>FoldMarker('new')
+    command! FmAfter
+    \ call <sid>FoldMarker('after')
+    command! FmBefore
+    \ call <sid>FoldMarker('before')
+    command! -range FmWrap
+    \ call <sid>FoldMarker('wrap')
+    command! -range FmLevel
+    \ call <sid>FoldLevel()
 
-" creat fold marker
-nnoremap <silent> <tab> :FmAfter<cr>
-nnoremap <silent> <s-tab> :FmBefore<cr>
-nnoremap <silent> <c-tab> :FmNew<cr>
-nnoremap <silent> ~ :FmWrap<cr>
-vnoremap <silent> ~ :FmWrap<cr>
+    if !exists('g:LoadKeyMap_foldMarker') ||
+    \ g:LoadKeyMap_foldMarker ># 0
+        nnoremap <silent> <tab> :FmAfter<cr>
+        nnoremap <silent> <s-tab> :FmBefore<cr>
+        nnoremap <silent> <c-tab> :FmNew<cr>
+        vnoremap <silent> <s-tab> :FmLevel<cr>
+        vnoremap <silent> <c-tab> :FmWrap<cr>
+    endif
 
-"}}}
+endfunction "}}}2
+
+call <sid>Commands()
+
+"}}}1
