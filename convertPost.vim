@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Apr 03, Fri | 15:28:16 | 2015
+" Last Update: Apr 05, Sun | 14:19:24 | 2015
 
 " variables "{{{2
 
@@ -27,7 +27,11 @@ let s:LinkAll = s:LinkText . s:LinkURL
 
 let s:LinkPart = '\[url='
 
- "}}}2
+let s:Star = '\v^(\s*\*\s*)'
+let s:Cross = '\v^(\s*\+\s*)'
+let s:SpaceFour = '    '
+
+"}}}2
 " parts "{{{2
 
 function s:ProtectBlock() "{{{3
@@ -287,7 +291,7 @@ function s:AddMarkdown() "{{{
 
 endfunction "}}}
 
- "}}}2
+"}}}2
 " main "{{{2
 
 function s:Convert2Trow() "{{{3
@@ -351,22 +355,98 @@ function s:Convert2SUSE() "{{{4
 
 endfunction "}}}4
 
+function! s:Convert2HTML() "{{{4
+
+    let l:BeginUL = '<ul>'
+    let l:EndUL = '<\/ul>'
+    let l:BeginLI = '<li>'
+    let l:EndLI = '<\/li>'
+
+    1s/^/\r/
+    $s/$/\r/
+    execute '%s/\v^.*\}{3}\d//e'
+
+    " insert <ul> before s:Cross
+    normal! gg
+    while search(s:Cross,'cW',line('$'))
+        if getline(line('.')-1) =~# s:Star
+            execute 's/^/' . s:SpaceFour .
+            \ l:BeginUL . '\r/'
+        endif
+        normal! j0
+    endwhile
+
+    " insert </ul> after s:Cross
+    normal! gg
+    while search(s:Cross,'cW',line('$'))
+        if getline(line('.')+1) =~# s:Star
+            execute 's/$/\r' . s:SpaceFour .
+            \ l:EndUL . '/'
+        endif
+        normal! j0
+    endwhile
+    normal! gg
+    while search(s:Cross,'cW',line('$'))
+        if getline(line('.')+1) =~# '^$'
+            execute 's/$/\r' . s:SpaceFour .
+            \ l:EndUL . '/'
+        endif
+        normal! j0
+    endwhile
+
+    " surround s:Star with <ul> and </ul>
+    normal! gg
+    while search(s:Star,'cw',line('$'))
+        call moveCursor#SetLineJKPara()
+        execute moveCursor#TakeLineNr('J','') .
+        \ 's/^/' . l:BeginUL . '\r/'
+        execute moveCursor#TakeLineNr('K','',1) .
+        \ 's/$/\r' . l:EndUL . '/'
+        execute 'normal! }'
+    endwhile
+
+    " substitute s:Star and s:Cross
+    if search(s:Star,'cw')
+        execute '%s/' . s:Star . '/' .
+        \ l:BeginLI . '/'
+    endif
+    if search(s:Cross,'cw')
+        execute '%s/' . s:Cross . '/' .
+        \ s:SpaceFour . l:BeginLI . '/'
+    endif
+    if search(l:BeginLI,'cw')
+        execute 'g/' . l:BeginLI . '/s/$/' .
+        \ l:EndLI . '/'
+    endif
+
+    " <h1> and <p>
+    execute 'g/\v\{{3}\d/s/\v^(.*)( \{{3})' .
+    \ '(\d)$/<h\3>\1<\/h\3>'
+    execute 'g/\v^([^< ])/s/^/<p>\1/'
+    execute 'g/^<p>/s/$/<\/p>/'
+
+    call <sid>SubsLink()
+    %s/\v(\[url=)(.{-1,})(\])/<a href="\2">/e
+    %s/\v\[\/url\]/<\/a>/e
+
+endfunction "}}}4
+
 function s:SelectFunction() "{{{4
 
-    execute 'normal! gg0'
+    1,$left 0
+    let g:TextWidth_Bullet = 9999
+    BuW0TW
+    let g:TextWidth_Bullet = 50
+    normal! gg
 
     if search('trow','c',1)
-
         call <sid>Convert2Trow()
-
     elseif search('mail','c',1)
-
         call <sid>Convert2Mail()
-
     elseif search('suse','c',1)
-
         call <sid>Convert2SUSE()
-
+    elseif search('html','c',1)
+        call <sid>Convert2HTML()
     endif
 
 endfunction "}}}4
@@ -377,5 +457,5 @@ if !exists(':ConvertPost')
 
 endif
 
- "}}}2
+"}}}2
 " vim: set fdm=marker fdl=20 "}}}1

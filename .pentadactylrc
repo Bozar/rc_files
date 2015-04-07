@@ -1,5 +1,5 @@
 " pentadactyl {{{1
-" Last Update: Mar 16, Sun | 13:25:38 | 2014
+" Last Update: Apr 05, Sun | 19:44:04 | 2015
 loadplugins '\.(js|penta)$'
 group user
 
@@ -9,6 +9,7 @@ colo royalblue
 " abbreviate
 iab bz bozar
 iab tm tommyfranklin42@gmail.com
+iab ty tommyfranklin42@yahoo.com
 " cab ie js io.run("c:\\program files\\internet explorer\\iexplore.exe", [buffer.URL])
 
 " map
@@ -38,10 +39,11 @@ cm -b <down> <tab>
 cm -b <up> <s-tab>
 
 " set
+set maxitems=19
 se titlestring='Mozilla Firefox'
 se guioptions=Cs
 se hintkeys=asdfgqwert
-se complete=l
+se complete=location,file
 " se editor='d:\\Program\ Files\\Vim\\vim73\\gvim.exe -f'
 se nextpattern='\s*下页|下一页|后页\s*','\bnext\b','^>$','^(>>|»)$','^(>|»)','(>|»)$',
 se previouspattern='\s*上页|上一页|前页\s*','\bprev|previous\b','^<$','^(<<|«)$','^(<|«)','(<|«)$',
