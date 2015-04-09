@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Apr 04, Sat | 13:18:54 | 2015
+" Last Update: Apr 09, Thu | 11:10:28 | 2015
 
 " Plugins "{{{2
 
@@ -326,7 +326,7 @@ function! UpdateWordList_Vocab() "{{{
 		call search(List_Vocab,'c')
 	" add new Word List if necessary
 		if substitute(getline('.'),List_Vocab,'','')==getline('.')
-			2s/$/\rWord List {{{\r\r\r }}}/
+			2s/$/\rWord List {{{\r\r\r}}}/
 			'h
 		endif "}}}
 	" move cursor out of word list
@@ -337,7 +337,7 @@ function! UpdateWordList_Vocab() "{{{
 	" clear old list
 	" put whole text to the end
 		1 "{{{
-		execute '/'.List_Vocab.'/+2;/^ }\{3}$/-1delete'
+		execute '/'.List_Vocab.'/+2;/^}\{3}$/-1delete'
 		$mark z
 		1,$yank
 		'zput
