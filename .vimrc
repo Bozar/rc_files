@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Apr 10, Fri | 16:05:44 | 2015
+" Last Update: Apr 10, Fri | 16:40:38 | 2015
 
 " Plugins "{{{2
 
@@ -907,14 +907,14 @@ com LeftFoldMarker g;\v^ .{0,1}\}{3}.{0,1};le0
 
 command! -range FmAfter FoldMarker a
 command! -range FmBefore FoldMarker b
-command! -range FmNew FoldMarker i
+command! -range FmNew FoldMarker l
 command! -range FmSurround FoldMarker s
 command! -range FmCreLevel FoldMarker c
 command! -range FmDelLevel FoldMarker d
 
 nnoremap <silent> <tab> :FoldMarker a<cr>
 nnoremap <silent> <s-tab> :FoldMarker b<cr>
-nnoremap <silent> <c-tab> :FoldMarker i<cr>
+nnoremap <silent> <c-tab> :FoldMarker l<cr>
 vnoremap <silent> <c-tab> :FoldMarker s<cr>
 
 nnoremap <silent> <a-=> :FoldMarker c<cr>
