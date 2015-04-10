@@ -1,5 +1,9 @@
 " foldMarker.vim "{{{1
-" Last Update: Apr 04, Sat | 19:38:26 | 2015
+" Last Update: Apr 09, Thu | 11:39:04 | 2015
+
+" Version: 0.8.0
+" License: GPLv3
+" Author: Bozar
 
 let s:Title = 'FOLDMARKER'
 
@@ -250,4 +254,4 @@ endfunction "}}}2
 
 call <sid>Commands()
 
-"}}}1
+" vim: set fdm=marker fdl=20 cc=50 "}}}1
