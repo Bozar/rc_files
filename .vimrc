@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Apr 13, Mon | 17:58:15 | 2015
+" Last Update: Apr 14, Tue | 00:00:16 | 2015
 
 " Plugins "{{{2
 
@@ -907,9 +907,10 @@ com LeftFoldMarker g;\v^ .{0,1}\}{3}.{0,1};le0
 function! s:SetPath() "{{{3
 
     if <sid>CheckOS() ==# 'windows'
-        se path+=d:/GitHub/**/,
+        se path+=d:/GitHub/**/
     elseif <sid>CheckOS() ==# 'linux'
-        return
+        se path+=~/.vim/**/
+        se path+=~/git/**/
     endif
 
 endfunction "}}}3
