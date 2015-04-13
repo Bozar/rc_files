@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Apr 13, Mon | 17:14:55 | 2015
+" Last Update: Apr 13, Mon | 17:58:15 | 2015
 
 " Plugins "{{{2
 
@@ -920,7 +920,7 @@ call <sid>SetPath()
 
 command! -range FmAfter FoldMarker a
 command! -range FmBefore FoldMarker b
-command! -range FmNew FoldMarker l
+command! -range FmLine FoldMarker l
 command! -range FmSurround FoldMarker s
 command! -range FmCreLevel FoldMarker c
 command! -range FmDelLevel FoldMarker d
