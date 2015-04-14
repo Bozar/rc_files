@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Apr 14, Tue | 13:58:05 | 2015
+" Last Update: Apr 14, Tue | 22:54:39 | 2015
 
 " Plugins "{{{2
 
@@ -894,11 +894,11 @@ endfunction "}}}3
 command SameLine call <sid>GotoSameLine()
 
 if has('win32') && has('gui_running')
-
-"set noimdisable
-autocmd InsertLeave * set imdisable|set iminsert=0
-autocmd InsertEnter * set noimdisable|set iminsert=2
-
+    "set noimdisable
+    autocmd InsertLeave *
+    \ set imdisable|set iminsert=0
+    autocmd InsertEnter *
+    \ set noimdisable|set iminsert=2
 endif
 
 com LeftFoldMarker g;\v^ .{0,1}\}{3}.{0,1};le0
