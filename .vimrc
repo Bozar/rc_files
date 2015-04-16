@@ -1,6 +1,6 @@
 " Bozar's .vimrc file "{{{1
 
-" Last Update: Apr 15, Wed | 09:52:55 | 2015
+" Last Update: Apr 16, Thu | 21:49:51 | 2015
 
 " Plugins "{{{2
 
@@ -501,6 +501,8 @@ endfunction "}}}4
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf-8,cp936,latin1
+
+set formatoptions=tcqro2mB1j
 
 set nobomb
 set nolinebreak
