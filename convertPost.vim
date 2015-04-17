@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Apr 05, Sun | 14:19:24 | 2015
+" Last Update: Apr 17, Fri | 22:37:40 | 2015
 
 " variables "{{{2
 
@@ -365,6 +365,16 @@ function! s:Convert2HTML() "{{{4
     1s/^/\r/
     $s/$/\r/
     execute '%s/\v^.*\}{3}\d//e'
+
+    " &lt and &gt
+    normal! gg
+    if search('<','cW',line('$'))
+        %s/</\&lt/g
+    endif
+    normal! gg
+    if search('>','cW',line('$'))
+        %s/>/\&gt/g
+    endif
 
     " insert <ul> before s:Cross
     normal! gg
