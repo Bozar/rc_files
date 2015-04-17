@@ -1,6 +1,5 @@
 " Bozar's .vimrc file "{{{1
-
-" Last Update: Apr 16, Thu | 21:49:51 | 2015
+" Last Update: Apr 17, Fri | 12:51:27 | 2015
 
 " Plugins "{{{2
 
@@ -18,93 +17,93 @@ filetype plugin on
 
 " windows or linux "{{{3
 function s:CheckOS() "{{{
-	if has('win32')
-		return 'windows'
-	else
-		return 'linux'
-	endif
+    if has('win32')
+        return 'windows'
+    else
+        return 'linux'
+    endif
 endfunction "}}}
 "}}}3
 
 " switch settings "{{{3
 function! SwitchSettings(setting) "{{{
-		if a:setting==0 "{{{
-			set hlsearch!
-			set hlsearch? "}}}
-		elseif a:setting==1 "{{{
-			set linebreak!
-			set linebreak? "}}}
-	" :h expr-option
-		elseif a:setting==2 "{{{
-			if &background=='dark'
-				set background=light
-			else
-				set background=dark
-			endif "}}}
-		elseif a:setting==3 "{{{
-			set modifiable!
-			set modifiable? "}}}
-		elseif a:setting==4
-			if substitute(&colorcolumn,50,'','')
-			\ == &colorcolumn
-				set colorcolumn=50
-			else
-				set colorcolumn-=50
-			endif
-		endif
+        if a:setting==0 "{{{
+            set hlsearch!
+            set hlsearch? "}}}
+        elseif a:setting==1 "{{{
+            set linebreak!
+            set linebreak? "}}}
+    " :h expr-option
+        elseif a:setting==2 "{{{
+            if &background=='dark'
+                set background=light
+            else
+                set background=dark
+            endif "}}}
+        elseif a:setting==3 "{{{
+            set modifiable!
+            set modifiable? "}}}
+        elseif a:setting==4
+            if substitute(&colorcolumn,50,'','')
+            \ == &colorcolumn
+                set colorcolumn=50
+            else
+                set colorcolumn-=50
+            endif
+        endif
 endfunction "}}}
 "}}}3
 
 " search pattern "{{{3
 function! SearchPattern(pattern) "{{{
-		let SaveCursor=getpos('.')
-		let @z=@"
-	" a-b substitution
-		if a:pattern==0 "{{{
-			call search(@a,'c')
-			if substitute(getline('.'),@a,'','')==getline('.')
-				call setpos('.', SaveCursor)
-				echo 'ERROR:' @a 'not found!' 
-				return
-			else
-				execute '%s/'.@a.'/'.@b.'/gc'
-			return
-			endif "}}}
-	" search
-		elseif a:pattern==1 "{{{
-			let @/=@" "}}}
-	" yank all matched pattern
-		elseif a:pattern==2 "{{{
-			let @x=''
-			execute 'g/'.@".'/yank X'
-			let @"=@x
-			call setpos('.', SaveCursor) "}}}
-	" vim grep
-		elseif a:pattern==3 "{{{
-			execute 'vim /'.@".'/ %'
-			"}}}
-		endif
-	" count matches
-		execute '%s/'.@z.'//gn'
+        let SaveCursor=getpos('.')
+        let @z=@"
+    " a-b substitution
+        if a:pattern==0 "{{{
+            call search(@a,'c')
+            if substitute(getline('.'),@a,'','')==getline('.')
+                call setpos('.', SaveCursor)
+                echo 'ERROR:' @a 'not found!' 
+                return
+            else
+                execute '%s/'.@a.'/'.@b.'/gc'
+            return
+            endif "}}}
+    " search
+        elseif a:pattern==1 "{{{
+            let @/=@" "}}}
+    " yank all matched pattern
+        elseif a:pattern==2 "{{{
+            let @x=''
+            execute 'g/'.@".'/yank X'
+            let @"=@x
+            call setpos('.', SaveCursor) "}}}
+    " vim grep
+        elseif a:pattern==3 "{{{
+            execute 'vim /'.@".'/ %'
+            "}}}
+        endif
+    " count matches
+        execute '%s/'.@z.'//gn'
 endfunction "}}}
 "}}}3
 
 " overwrite whole buffer with @" text "{{{3
 function! OverwriteBuffer() "{{{
-	1put!
-	+1,$delete
+    1put!
+    +1,$delete
 endfunction "}}}
 "}}}3
 
 " make session "{{{3
 function! MakeSession(file) "{{{
-	if a:file=='NONEXSIST' "{{{
-		let Session=s:NONEXSIST
-	elseif a:file=='NONEXSIST'
-		let Session=s:NONEXSIST
-	endif "}}}
-	execute 'mksession!' Session
-	echo "NOTE:'" Session "' updated!"
+    if a:file=='NONEXSIST' "{{{
+        let Session=s:NONEXSIST
+    elseif a:file=='NONEXSIST'
+        let Session=s:NONEXSIST
+    endif "}}}
+    execute 'mksession!' Session
+    echo "NOTE:'" Session "' updated!"
 endfunction "}}}
 "}}}3
 
@@ -113,141 +112,141 @@ endfunction "}}}
 " year (%Y) | month (%b) | day (%d) | weekday (%a)
 " hour (%H) | miniute (%M) | second (%S)
 function! TimeStamp() "{{{
-	s/$/\r/
-	s/^/\=strftime('%b %d | %a | %Y')/
+    s/$/\r/
+    s/^/\=strftime('%b %d | %a | %Y')/
 endfunction "}}}
 "}}}3
 
 " numbers "{{{3
 function! CreatNumber(fold) "{{{
-		let NoHyphen='^\(\D*\)\(\d\+\)\(\D*\)$'
-		let Hyphen='^\(\D*\)\(\d\+\)-\(\d\+\)\(\D*\)$'
-		$s/$/\r
-		1
-	" chapter
-		if substitute(getline('.'),NoHyphen,'','')!=getline('.') "{{{
-			let a=substitute(getline('.'),NoHyphen,'\1','')
-			let i=substitute(getline('.'),NoHyphen,'\2','')
-			let b=substitute(getline('.'),NoHyphen,'\3','')
-			while line('.')<line('$')
-				let i=i+1
-				+1
-				execute 's/^.*$/'.a.i.b.'/'
-			endwhile "}}}
-	" page
-		elseif substitute(getline('.'),Hyphen,'','')!=getline('.') "{{{
-			let a=substitute(getline('.'),Hyphen,'\1','')
-			let i=substitute(getline('.'),Hyphen,'\2','')
-			let j=substitute(getline('.'),Hyphen,'\3','')
-			let b=substitute(getline('.'),Hyphen,'\4','')
-			let k=j-i
-			while line('.')<line('$')
-				let i=j+1
-				let j=j+k+1
-				+1
-				execute 's/^.*$/'.a.i.'-'.j.b.'/'
-			endwhile "}}}
-		else
-			$delete
-			echo 'ERROR: Number pattern not found in the first line!'
-			return
-		endif
-		$delete
-	" foldmarker
-		if a:fold==0 "{{{
-			return
-		elseif a:fold==1
-			%s/$/ {{{\r\r }}}/
-			g/{\|}/s/$/2/
-			1s/^/FOLDMARKER {{{\r/
-			1s/$/1/
-			$s/$/\r }}}/
-			$s/$/1/
-			1mark j
-			$mark k
-		endif "}}}
+        let NoHyphen='^\(\D*\)\(\d\+\)\(\D*\)$'
+        let Hyphen='^\(\D*\)\(\d\+\)-\(\d\+\)\(\D*\)$'
+        $s/$/\r
+        1
+    " chapter
+        if substitute(getline('.'),NoHyphen,'','')!=getline('.') "{{{
+            let a=substitute(getline('.'),NoHyphen,'\1','')
+            let i=substitute(getline('.'),NoHyphen,'\2','')
+            let b=substitute(getline('.'),NoHyphen,'\3','')
+            while line('.')<line('$')
+                let i=i+1
+                +1
+                execute 's/^.*$/'.a.i.b.'/'
+            endwhile "}}}
+    " page
+        elseif substitute(getline('.'),Hyphen,'','')!=getline('.') "{{{
+            let a=substitute(getline('.'),Hyphen,'\1','')
+            let i=substitute(getline('.'),Hyphen,'\2','')
+            let j=substitute(getline('.'),Hyphen,'\3','')
+            let b=substitute(getline('.'),Hyphen,'\4','')
+            let k=j-i
+            while line('.')<line('$')
+                let i=j+1
+                let j=j+k+1
+                +1
+                execute 's/^.*$/'.a.i.'-'.j.b.'/'
+            endwhile "}}}
+        else
+            $delete
+            echo 'ERROR: Number pattern not found in the first line!'
+            return
+        endif
+        $delete
+    " foldmarker
+        if a:fold==0 "{{{
+            return
+        elseif a:fold==1
+            %s/$/ {{{\r\r }}}/
+            g/{\|}/s/$/2/
+            1s/^/FOLDMARKER {{{\r/
+            1s/$/1/
+            $s/$/\r }}}/
+            $s/$/1/
+            1mark j
+            $mark k
+        endif "}}}
 endfunction "}}}
 "}}}3
 
 " Scratch buffer "{{{3
 function! SwitchToScratch() "{{{
-	if bufwinnr(2)==-1
-		buffer 2
-	elseif bufwinnr(2)!=bufwinnr('%')
-		execute bufwinnr(2).'wincmd w'
-	endif
+    if bufwinnr(2)==-1
+        buffer 2
+    elseif bufwinnr(2)!=bufwinnr('%')
+        execute bufwinnr(2).'wincmd w'
+    endif
 endfunction "}}}
 " creat the first Scratch (0), edit (1)
 " substitute (2), insert (3) and append (4)
 " move (5,6) text between buffers
 " creat more Scratches (7)
 function! ScratchBuffer(scratch) "{{{
-	" creat Scratch
-		if a:scratch==0 "{{{
-			new
-			setlocal buftype=nofile
-			setlocal bufhidden=hide
-			setlocal noswapfile
-			setlocal nobuflisted
-			s/^/SCRATCH_BUFFER\r/
-			close
-		endif "}}}
-	" detect if Scratch exsists
-		if bufexists(2)==0 "{{{
-			echo 'ERROR: Scratch Buffer 2 not found!'
-			return
-		endif "}}}
-	" edit Scratch
-		if a:scratch==1 "{{{
-			call SwitchToScratch() "}}}
-	" substitute whole Scratch
-		elseif a:scratch==2 "{{{
-			call SwitchToScratch()
-			call OverwriteBuffer() "}}}
-	" before
-		elseif a:scratch==3 "{{{
-			call SwitchToScratch()
-			1put! "}}}
-	" after
-		elseif a:scratch==4 "{{{
-			call SwitchToScratch()
-			$put "}}}
-	" move text between Scratch and other buffers
-	" normal mode
-		elseif a:scratch==5 "{{{
-			if bufnr('%')!=2 "{{{
-				set nofoldenable
-				1s/^/\r/
-				if line("'j")==1
-					'jmark H
-					'j+1,'kdelete
-				elseif line("'j")!=1
-					'j-1mark H
-					'j,'kdelete
-				endif
-				set foldenable
-				call ScratchBuffer(2) "}}}
-			elseif bufnr('%')==2 "{{{
-				1,$yank
-				'H
-				set nofoldenable
-				'Hput
-				1g/^$/d
-				set foldenable
-				'H
-				delmarks H "}}}
-			endif "}}}
-	" visual mode
-		elseif a:scratch==6 "{{{
-			'<mark j
-			'>mark k
-			call ScratchBuffer(5) "}}}
-	" creat more Scratches
-		elseif a:scratch==7 "{{{
-			call ScratchBuffer(0)
-			echo 'Scratch buffer' bufnr('$') 'created!'
-			"}}}
-		endif
+    " creat Scratch
+        if a:scratch==0 "{{{
+            new
+            setlocal buftype=nofile
+            setlocal bufhidden=hide
+            setlocal noswapfile
+            setlocal nobuflisted
+            s/^/SCRATCH_BUFFER\r/
+            close
+        endif "}}}
+    " detect if Scratch exsists
+        if bufexists(2)==0 "{{{
+            echo 'ERROR: Scratch Buffer 2 not found!'
+            return
+        endif "}}}
+    " edit Scratch
+        if a:scratch==1 "{{{
+            call SwitchToScratch() "}}}
+    " substitute whole Scratch
+        elseif a:scratch==2 "{{{
+            call SwitchToScratch()
+            call OverwriteBuffer() "}}}
+    " before
+        elseif a:scratch==3 "{{{
+            call SwitchToScratch()
+            1put! "}}}
+    " after
+        elseif a:scratch==4 "{{{
+            call SwitchToScratch()
+            $put "}}}
+    " move text between Scratch and other buffers
+    " normal mode
+        elseif a:scratch==5 "{{{
+            if bufnr('%')!=2 "{{{
+                set nofoldenable
+                1s/^/\r/
+                if line("'j")==1
+                    'jmark H
+                    'j+1,'kdelete
+                elseif line("'j")!=1
+                    'j-1mark H
+                    'j,'kdelete
+                endif
+                set foldenable
+                call ScratchBuffer(2) "}}}
+            elseif bufnr('%')==2 "{{{
+                1,$yank
+                'H
+                set nofoldenable
+                'Hput
+                1g/^$/d
+                set foldenable
+                'H
+                delmarks H "}}}
+            endif "}}}
+    " visual mode
+        elseif a:scratch==6 "{{{
+            '<mark j
+            '>mark k
+            call ScratchBuffer(5) "}}}
+    " creat more Scratches
+        elseif a:scratch==7 "{{{
+            call ScratchBuffer(0)
+            echo 'Scratch buffer' bufnr('$') 'created!'
+            "}}}
+        endif
 endfunction "}}}
 "}}}3
 
@@ -256,15 +255,15 @@ endfunction "}}}
 " Function key: <F1> "{{{4
 " search bracket '['
 function! F1_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <f1> /[<cr>"+yi[
+    nnoremap <buffer> <silent> <f1> /[<cr>"+yi[
 endfunction "}}}
 function! F1_Shift_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <s-f1> 2?[<cr>"+yi[
+    nnoremap <buffer> <silent> <s-f1> 2?[<cr>"+yi[
 endfunction "}}}
 
 function! F1_Vocab() "{{{
-	call F1_Normal_Vocab()
-	call F1_Shift_Normal_Vocab()
+    call F1_Normal_Vocab()
+    call F1_Shift_Normal_Vocab()
 endfunction "}}}
 "}}}4
 
@@ -272,38 +271,38 @@ endfunction "}}}
 " search word
 function Bracket_Vocab() "{{{
 
-	execute 'normal "+yi['
-	let @+ = substitute(@+,'\(\(\_.\t\)\| \)',
-	\'\\(\\(\\_.\\t\\)\\| \\)','g')
-	execute '/\[' . @+ . '\]'
+    execute 'normal "+yi['
+    let @+ = substitute(@+,'\(\(\_.\t\)\| \)',
+    \'\\(\\(\\_.\\t\\)\\| \\)','g')
+    execute '/\[' . @+ . '\]'
 
 endfunction "}}}
 function! F2_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <f2> :call Bracket_Vocab()<cr>zz
+    nnoremap <buffer> <silent> <f2> :call Bracket_Vocab()<cr>zz
 endfunction "}}}
 
 function! F2_Vocab() "{{{
-	call F2_Normal_Vocab()
+    call F2_Normal_Vocab()
 endfunction "}}}
 "}}}4
 
 " Function key: <F3> "{{{4
 " insert brackets
 function! F3_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <f3> "+ciw[<c-r>"]<esc>
+    nnoremap <buffer> <silent> <f3> "+ciw[<c-r>"]<esc>
 endfunction "}}}
 function! F3_Visual_Vocab() "{{{
-	vnoremap <buffer> <silent> <f3> s[<c-r>"]<esc>
+    vnoremap <buffer> <silent> <f3> s[<c-r>"]<esc>
 endfunction "}}}
 " delete brackets
 function! F3_Shift_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <s-f3> di[pF[2x
+    nnoremap <buffer> <silent> <s-f3> di[pF[2x
 endfunction "}}}
 
 function! F3_Vocab() "{{{
-	call F3_Normal_Vocab()
-	call F3_Shift_Normal_Vocab()
-	call F3_Visual_Vocab()
+    call F3_Normal_Vocab()
+    call F3_Shift_Normal_Vocab()
+    call F3_Visual_Vocab()
 endfunction "}}}
 "}}}4
 
@@ -315,182 +314,182 @@ endfunction "}}}
 " [word 2]
 "}}}
 function! UpdateWordList_Vocab() "{{{
-		mark h
-		let List_Vocab='^\(Word List\)\|\(生词表\) {{{$' "}}}
-	" detect word list in the first five lines
-		if line('$')<5 "{{{
-			echo 'ERROR: There should be at least 5 lines!'
-			return
-		endif
-		1
-		call search(List_Vocab,'c')
-	" add new Word List if necessary
-		if substitute(getline('.'),List_Vocab,'','')==getline('.')
-			2s/$/\rWord List {{{\r\r\r}}}/
-			'h
-		endif "}}}
-	" move cursor out of word list
-		if line("'h")<=5 "{{{
-			execute 'normal [z'
-			mark h
-		endif "}}}
-	" clear old list
-	" put whole text to the end
-		1 "{{{
-		execute '/'.List_Vocab.'/+2;/^}\{3}$/-1delete'
-		$mark z
-		1,$yank
-		'zput
-		$mark x "}}}
-	" delete text outside brackets
-		'z+1,'xs/\[/\r[/ge "{{{
-		'z+1,'xs/\]/]\r/ge
-		'z+1,'xg!/\[/delete "}}}
-	" add a blank line in the end
-		$s;$;\r
-	" move words back to list
-		'z+1,$delete "{{{
-		1
-		execute '/'.List_Vocab.'/+1put'
-		'h "}}}
+        mark h
+        let List_Vocab='^\(Word List\)\|\(生词表\) {{{$' "}}}
+    " detect word list in the first five lines
+        if line('$')<5 "{{{
+            echo 'ERROR: There should be at least 5 lines!'
+            return
+        endif
+        1
+        call search(List_Vocab,'c')
+    " add new Word List if necessary
+        if substitute(getline('.'),List_Vocab,'','')==getline('.')
+            2s/$/\rWord List {{{\r\r\r}}}/
+            'h
+        endif "}}}
+    " move cursor out of word list
+        if line("'h")<=5 "{{{
+            execute 'normal [z'
+            mark h
+        endif "}}}
+    " clear old list
+    " put whole text to the end
+        1 "{{{
+        execute '/'.List_Vocab.'/+2;/^}\{3}$/-1delete'
+        $mark z
+        1,$yank
+        'zput
+        $mark x "}}}
+    " delete text outside brackets
+        'z+1,'xs/\[/\r[/ge "{{{
+        'z+1,'xs/\]/]\r/ge
+        'z+1,'xg!/\[/delete "}}}
+    " add a blank line in the end
+        $s;$;\r
+    " move words back to list
+        'z+1,$delete "{{{
+        1
+        execute '/'.List_Vocab.'/+1put'
+        'h "}}}
 endfunction "}}}
 function! F4_Normal_Vocab() "{{{
-	nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
+    nnoremap <buffer> <silent> <f4> :call UpdateWordList_Vocab()<cr>
 endfunction "}}}
 
 function! F4_Vocab() "{{{
-	call F4_Normal_Vocab()
+    call F4_Normal_Vocab()
 endfunction "}}}
 "}}}4
 
 function! Vocabulary() "{{{4
-	let i=1
-	while i<5
-		execute substitute('call F0_Vocab()',0,i,'')
-		let i=i+1
-	endwhile
+    let i=1
+    while i<5
+        execute substitute('call F0_Vocab()',0,i,'')
+        let i=i+1
+    endwhile
 endfunction "}}}4
 "}}}3
 
 " translation "{{{3
 " 3 rows: english = chinese = glossary
 function! SameLine_Trans(WinNr,WinR,WinC,FType) "{{{
-	" detect number of windows
-		if winnr('$')!=a:WinNr "{{{
-			echo 'ERROR: There should be exact' a:WinNr 'windows for' a:FType.'!'
-			return
-		endif "}}}
-	" move cursor "{{{
-		execute a:WinC.'wincmd w'
-		let i=line('.')
-		execute a:WinR.'wincmd w'
-		execute i
-		execute 'normal ztma'
-		execute a:WinC.'wincmd w'
-		"}}}
+    " detect number of windows
+        if winnr('$')!=a:WinNr "{{{
+            echo 'ERROR: There should be exact' a:WinNr 'windows for' a:FType.'!'
+            return
+        endif "}}}
+    " move cursor "{{{
+        execute a:WinC.'wincmd w'
+        let i=line('.')
+        execute a:WinR.'wincmd w'
+        execute i
+        execute 'normal ztma'
+        execute a:WinC.'wincmd w'
+        "}}}
 endfunction "}}}
 function! SwitchWindow_Trans(WinN,WinR,WinC,WinG,FType) "{{{
-	" WinNumber, WinChinese, WinReference, WinGlossary
-	" detect number of windows
-		if winnr('$')!=a:WinN "{{{
-			echo 'ERROR: There should be exact' a:WinN 'windows for' a:FType.'!'
-			return
-		endif "}}}
-	" yank glossary
-		if bufwinnr('%')==a:WinG "{{{
-			let @"=substitute(getline('.'),'^.\{-}\t\(.\{-}\)\t.*$','\1','')
-		endif "}}}
-	" switch between window Chinese and Reference
-		if bufwinnr('%')==a:WinC "{{{
-			execute a:WinR.'wincmd w'
-		else
-			execute a:WinC.'wincmd w'
-		endif "}}}
+    " WinNumber, WinChinese, WinReference, WinGlossary
+    " detect number of windows
+        if winnr('$')!=a:WinN "{{{
+            echo 'ERROR: There should be exact' a:WinN 'windows for' a:FType.'!'
+            return
+        endif "}}}
+    " yank glossary
+        if bufwinnr('%')==a:WinG "{{{
+            let @"=substitute(getline('.'),'^.\{-}\t\(.\{-}\)\t.*$','\1','')
+        endif "}}}
+    " switch between window Chinese and Reference
+        if bufwinnr('%')==a:WinC "{{{
+            execute a:WinR.'wincmd w'
+        else
+            execute a:WinC.'wincmd w'
+        endif "}}}
 endfunction "}}}
 " switch buffer
 function! SwitchBuffer_Trans(project) "{{{
-	" variables
-	" translation and localization
-		if a:project=='t' "{{{
-			let BufR=s:BufE_Pro
-			let BufC=s:BufC_Pro
-			let BufG=s:BufG_Pro
-		elseif a:project=='l'
-			let BufR=s:BufT_Loc
-			let BufC=s:BufC_Loc
-			let BufG=s:BufG_Loc
-		endif "}}}
-	" detect buffer
-		if bufexists(bufname(BufG))==0 "{{{
-			echo "ERROR: Buffer '".BufG."' not found!"
-			return
-		elseif bufexists(bufname(BufC))==0
-			echo "ERROR: Buffer '".BufC."' not found!"
-			return
-		elseif bufexists(bufname(BufR))==0
-			echo "ERROR: Buffer '".BufR."' not found!"
-			return
-		endif "}}}
-	" switch buffer
-		if bufname('%')==BufG "{{{
-			execute 'buffer' BufC
-		elseif bufname('%')==BufC
-			execute 'buffer' BufR
-		else
-			execute 'buffer' BufG
-		endif "}}}
+    " variables
+    " translation and localization
+        if a:project=='t' "{{{
+            let BufR=s:BufE_Pro
+            let BufC=s:BufC_Pro
+            let BufG=s:BufG_Pro
+        elseif a:project=='l'
+            let BufR=s:BufT_Loc
+            let BufC=s:BufC_Loc
+            let BufG=s:BufG_Loc
+        endif "}}}
+    " detect buffer
+        if bufexists(bufname(BufG))==0 "{{{
+            echo "ERROR: Buffer '".BufG."' not found!"
+            return
+        elseif bufexists(bufname(BufC))==0
+            echo "ERROR: Buffer '".BufC."' not found!"
+            return
+        elseif bufexists(bufname(BufR))==0
+            echo "ERROR: Buffer '".BufR."' not found!"
+            return
+        endif "}}}
+    " switch buffer
+        if bufname('%')==BufG "{{{
+            execute 'buffer' BufC
+        elseif bufname('%')==BufC
+            execute 'buffer' BufR
+        else
+            execute 'buffer' BufG
+        endif "}}}
 endfunction "}}}
 function! SearchGlossary_Trans(WinN,WinG,FType) "{{{
-	" detect number of windows
-		if winnr('$')!=a:WinN "{{{
-			echo 'ERROR: There should be exact' a:WinN 'windows for' a:FType.'!'
-			return
-		endif "}}}
-	" search "{{{
-		execute a:WinG.'wincmd w'
-		let @/=@"
-		call search(@",'c')
-		if substitute(getline('.'),@",'','')==getline('.')
-			echo "ERROR: '".@"."' not found!"
-			return
-		else
-			execute '%s/\('.@".'\)/\1/gn'
-		endif "}}}
+    " detect number of windows
+        if winnr('$')!=a:WinN "{{{
+            echo 'ERROR: There should be exact' a:WinN 'windows for' a:FType.'!'
+            return
+        endif "}}}
+    " search "{{{
+        execute a:WinG.'wincmd w'
+        let @/=@"
+        call search(@",'c')
+        if substitute(getline('.'),@",'','')==getline('.')
+            echo "ERROR: '".@"."' not found!"
+            return
+        else
+            execute '%s/\('.@".'\)/\1/gn'
+        endif "}}}
 endfunction "}}}
 
 " Function key: <F1> "{{{4
 " switch window
 function! F1_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f1> :call SwitchWindow_Trans(3,1,2,3,'trans')<cr>
+    nnoremap <buffer> <silent> <f1> :call SwitchWindow_Trans(3,1,2,3,'trans')<cr>
 endfunction "}}}
 " search glossary
 function! F1_Visual_Trans() "{{{
-	vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans(3,3,'trans')<cr>
+    vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans(3,3,'trans')<cr>
 endfunction "}}}
 
 function! F1_Trans() "{{{
-	call F1_Normal_Trans()
-	call F1_Visual_Trans()
+    call F1_Normal_Trans()
+    call F1_Visual_Trans()
 endfunction "}}}
 "}}}4
 
 " Function key: <F2> "{{{4
 " same line
 function! F2_Normal_Trans() "{{{
-	nnoremap <buffer> <silent> <f2> :call SameLine_Trans(3,1,2,'trans')<cr>
+    nnoremap <buffer> <silent> <f2> :call SameLine_Trans(3,1,2,'trans')<cr>
 endfunction "}}}
 
 function! F2_Trans() "{{{
-	call F2_Normal_Trans()
+    call F2_Normal_Trans()
 endfunction "}}}
 "}}}4
 
 function! Translation() "{{{4
-	let i=1
-	while i<3
-		execute substitute('call F0_Trans()',0,i,'')
-		let i=i+1
-	endwhile
+    let i=1
+    while i<3
+        execute substitute('call F0_Trans()',0,i,'')
+        let i=i+1
+    endwhile
 endfunction "}}}4
 "}}}3
 
@@ -530,17 +529,17 @@ endif
 
 endfunction
 if <sid>CheckOS()=='windows' "{{{
-	autocmd GUIEnter * simalt ~x
-	set background=light
+    autocmd GUIEnter * simalt ~x
+    set background=light
 elseif <sid>CheckOS()=='linux'
-	autocmd VimEnter * call <sid>Window()
-	set background=dark
+    autocmd VimEnter * call <sid>Window()
+    set background=dark
 endif "}}}
 
 if has('gui_running') "{{{
-	colorscheme solarized
+    colorscheme solarized
 else
-	colorscheme desert
+    colorscheme desert
 endif "}}}
 
 set laststatus=2
@@ -586,9 +585,9 @@ set history=99
 
 " fonts
 if <sid>CheckOS()=='windows' "{{{
-	set guifont=Consolas:h15:cANSI
+    set guifont=Consolas:h15:cANSI
 elseif <sid>CheckOS()=='linux'
-	set guifont=DejaVu\ Sans\ \Mono\ 14
+    set guifont=DejaVu\ Sans\ \Mono\ 14
 endif "}}}
 
 set modelines=1
@@ -623,9 +622,9 @@ set smartindent
 
 " change directory
 if <sid>CheckOS()=='windows' "{{{
-	cd d:\Documents\
+    cd d:\Documents\
 elseif <sid>CheckOS()=='linux'
-	cd ~/documents/
+    cd ~/documents/
 endif "}}}
 "}}}2
 
@@ -764,12 +763,12 @@ command! NumFold call CreatNumber(1)
 
 function s:DelLine(line) "{{{4
 
-	call space#DelSpaceTrail()
-	if a:line == 0
-		call space#DelLine(0)
-	elseif a:line == 1
-		call space#DelLine(1)
-	endif
+    call space#DelSpaceTrail()
+    if a:line == 0
+        call space#DelLine(0)
+    elseif a:line == 1
+        call space#DelLine(1)
+    endif
 
 endfunction "}}}4
 
@@ -814,12 +813,12 @@ command SwColorColumn call SwitchSettings(4)
 
 function s:CountChineseWord() "{{{
 
-	if search('[^\x00-\xff]','n') == 0
-		echo 'NOTE: Chinese words not found!'
-		return
-	else
-		%s/[^\x00-\xff]//gn
-	endif
+    if search('[^\x00-\xff]','n') == 0
+        echo 'NOTE: Chinese words not found!'
+        return
+    else
+        %s/[^\x00-\xff]//gn
+    endif
 
 endfunction "}}}
 
