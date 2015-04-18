@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Apr 17, Fri | 22:37:40 | 2015
+" Last Update: Apr 18, Sat | 21:54:34 | 2015
 
 " variables "{{{2
 
@@ -310,6 +310,16 @@ function s:Convert2Trow() "{{{3
     call <sid>DelFoldEnd()
 
     call <sid>AddMarkdown()
+
+    normal! gg
+    if search('<','cW',line('$'))
+        %s/</`<`/g
+    endif
+    normal! gg
+    if search('>','cW',line('$'))
+        %s/>/`>`/g
+    endif
+
 
     DelAdd
 
