@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Apr 18, Sat | 21:54:34 | 2015
+" Last Update: Apr 19, Sun | 19:36:07 | 2015
 
 " variables "{{{2
 
@@ -33,6 +33,20 @@ let s:SpaceFour = '    '
 
 "}}}2
 " parts "{{{2
+
+function! s:SubsStarsInQuote() "{{{3
+
+    while search('^' . s:BlockQuote . '$','cw')
+        mark j
+        normal ]z
+        mark k
+        'j,'ks/^\*/ /e
+        'j,'ks/^\v(\s+)\+/\1 /e
+        'js/^.*//
+        'ks/^.*//
+    endwhile
+
+endfunction "}}}3
 
 function s:ProtectBlock() "{{{3
 
@@ -301,9 +315,9 @@ function s:Convert2Trow() "{{{3
 
     call <sid>JoinLines()
 
-    call <sid>DelBlockCode()
-
-    call <sid>SubsBlockQuote()
+    "call <sid>DelBlockCode()
+    "call <sid>SubsBlockQuote()
+    call <sid>SubsStarsInQuote()
     call <sid>SubsTitle('trow')
 
     call <sid>SubsFoldBegin()
@@ -321,7 +335,7 @@ function s:Convert2Trow() "{{{3
     endif
 
 
-    DelAdd
+    "DelAdd
 
 endfunction "}}}3
 
