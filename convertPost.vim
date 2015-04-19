@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Apr 19, Sun | 19:36:07 | 2015
+" Last Update: Apr 19, Sun | 21:05:23 | 2015
 
 " variables "{{{2
 
@@ -42,8 +42,29 @@ function! s:SubsStarsInQuote() "{{{3
         mark k
         'j,'ks/^\*/ /e
         'j,'ks/^\v(\s+)\+/\1 /e
+        'j,'ks/`//ge
         'js/^.*//
         'ks/^.*//
+    endwhile
+
+endfunction "}}}3
+
+function! s:Surround() "{{{3
+
+    while search('[^`]<','cw')
+        %s/\v([^`])\</\1`</g
+    endwhile
+
+    while search('<[^`]','cw')
+        %s/\v\<([^`])/<`\1/g
+    endwhile
+
+    while search('[^`]>','cw')
+        %s/\v([^`])\>/\1`>/g
+    endwhile
+
+    while search('>[^`]','cw')
+        %s/\v\>([^`])/>`\1/g
     endwhile
 
 endfunction "}}}3
@@ -317,6 +338,7 @@ function s:Convert2Trow() "{{{3
 
     "call <sid>DelBlockCode()
     "call <sid>SubsBlockQuote()
+    "call <sid>Surround()
     call <sid>SubsStarsInQuote()
     call <sid>SubsTitle('trow')
 
@@ -325,17 +347,7 @@ function s:Convert2Trow() "{{{3
 
     call <sid>AddMarkdown()
 
-    normal! gg
-    if search('<','cW',line('$'))
-        %s/</`<`/g
-    endif
-    normal! gg
-    if search('>','cW',line('$'))
-        %s/>/`>`/g
-    endif
-
-
-    "DelAdd
+    DelAdd
 
 endfunction "}}}3
 
