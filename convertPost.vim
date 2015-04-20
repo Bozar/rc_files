@@ -1,6 +1,6 @@
 " convertPost.vim "{{{1
 
-" Last Update: Apr 19, Sun | 21:05:23 | 2015
+" Last Update: Apr 20, Mon | 12:37:43 | 2015
 
 " variables "{{{2
 
@@ -69,7 +69,7 @@ function! s:Surround() "{{{3
 
 endfunction "}}}3
 
-function s:ProtectBlock() "{{{3
+function! s:ProtectBlock() "{{{3
 
     1
 
@@ -89,7 +89,7 @@ function s:ProtectBlock() "{{{3
 
 endfunction "}}}3
 
-function s:DelExtraSpacesAfterBullet() "{{{3
+function! s:DelExtraSpacesAfterBullet() "{{{3
 
     if search(s:Bullet,'cw')
 
@@ -99,7 +99,7 @@ function s:DelExtraSpacesAfterBullet() "{{{3
 
 endfunction "}}}3
 
-function s:JoinLines(...) "{{{3
+function! s:JoinLines(...) "{{{3
 
     let l:saveTW = g:TextWidth_Bullet
 
@@ -125,13 +125,13 @@ function s:JoinLines(...) "{{{3
 
 endfunction "}}}3
 
-function s:ShiftLeft() "{{{
+function! s:ShiftLeft() "{{{
 
     1,$<
 
 endfunction "}}}
 
-function s:DelBlockCode() "{{{
+function! s:DelBlockCode() "{{{
 
     if search(s:BlockCode,'cw')
 
@@ -141,7 +141,7 @@ function s:DelBlockCode() "{{{
 
 endfunction "}}}
 
-function s:DelBlockQuote() "{{{
+function! s:DelBlockQuote() "{{{
 
     if search(s:BlockQuote,'cw')
 
@@ -151,7 +151,7 @@ function s:DelBlockQuote() "{{{
 
 endfunction "}}}
 
-function s:SubsBlockCode() "{{{
+function! s:SubsBlockCode() "{{{
 
     while search('^' . s:BlockCode . '$','cw')
 
@@ -175,7 +175,7 @@ function s:SubsBlockCode() "{{{
 
 endfunction "}}}
 
-function s:SubsBlockQuote() "{{{
+function! s:SubsBlockQuote() "{{{
 
     while search('^' . s:BlockQuote . '$','cw')
 
@@ -199,7 +199,7 @@ function s:SubsBlockQuote() "{{{
 
 endfunction "}}}
 
-function s:SubsBullet() "{{{
+function! s:SubsBullet() "{{{
 
     if search(s:Bullet,'cw')
 
@@ -210,7 +210,7 @@ function s:SubsBullet() "{{{
 
 endfunction "}}}
 
-function s:SubsLink() "{{{
+function! s:SubsLink() "{{{
 
     if search(s:LinkAll,'cw')
 
@@ -259,20 +259,24 @@ function s:SubsLink() "{{{
 
 endfunction "}}}
 
-function s:SubsTitle(forum) "{{{
+function! s:SubsTitle(forum) "{{{
 
     if search(s:FoldBegin . '3$','cw')
 
         if a:forum == 'trow'
-
             execute 'g/' . s:FoldBegin . '3$' .
             \ '/s/^/## /'
 
         elseif a:forum == 'suse'
-
             execute '%s/^\(.*\)' . ' ' .
             \ s:FoldBegin . '3$/' .
             \ '[size=200]\1[\/size]/'
+
+        elseif a:forum == 'elle'
+            execute '%s/^\(.*\)' . ' ' .
+            \ s:FoldBegin . '3$/' .
+            \ '[size=22pt]\1[\/size]/'
+            g;\[size=22pt\];s;$;\r[hr\/];
 
         endif
 
@@ -281,15 +285,18 @@ function s:SubsTitle(forum) "{{{
     if search(s:FoldBegin . '4$','cw')
 
         if a:forum == 'trow'
-
             execute 'g/' . s:FoldBegin . '4$' .
             \ '/s/^/### /'
 
         elseif a:forum == 'suse'
-
             execute '%s/^\(.*\)' . ' ' .
             \ s:FoldBegin . '4$/' .
             \ '[size=150]\1[\/size]/'
+
+        elseif a:forum == 'elle'
+            execute '%s/^\(.*\)' . ' ' .
+            \ s:FoldBegin . '4$/' .
+            \ '[size=18pt]\1[\/size]/'
 
         endif
 
@@ -297,7 +304,7 @@ function s:SubsTitle(forum) "{{{
 
 endfunction "}}}
 
-function s:DelFoldEnd() "{{{
+function! s:DelFoldEnd() "{{{
 
     if search(s:FoldEnd,'cw')
 
@@ -307,7 +314,7 @@ function s:DelFoldEnd() "{{{
 
 endfunction "}}}
 
-function s:SubsFoldBegin() "{{{
+function! s:SubsFoldBegin() "{{{
 
     let l:pattern = ' ' . s:FoldBegin . '[1-4]$'
 
@@ -319,7 +326,7 @@ function s:SubsFoldBegin() "{{{
 
 endfunction "}}}
 
-function s:AddMarkdown() "{{{
+function! s:AddMarkdown() "{{{
 
     1s/^/[markdown]\r\r/
     $s/$/\r\r[\/markdown]/
@@ -329,7 +336,7 @@ endfunction "}}}
 "}}}2
 " main "{{{2
 
-function s:Convert2Trow() "{{{3
+function! s:Convert2Trow() "{{{3
 
     call <sid>ProtectBlock()
     call <sid>ShiftLeft()
@@ -351,7 +358,7 @@ function s:Convert2Trow() "{{{3
 
 endfunction "}}}3
 
-function s:Convert2Mail() "{{{3
+function! s:Convert2Mail() "{{{3
 
     call <sid>ProtectBlock()
     call <sid>ShiftLeft()
@@ -370,7 +377,7 @@ function s:Convert2Mail() "{{{3
 
 endfunction "}}}3
 
-function s:Convert2SUSE() "{{{4
+function! s:Convert2SUSE() "{{{4
 
     call <sid>ProtectBlock()
     call <sid>ShiftLeft()
@@ -477,7 +484,29 @@ function! s:Convert2HTML() "{{{4
 
 endfunction "}}}4
 
-function s:SelectFunction() "{{{4
+function! s:Convert2Ellesime() "{{{4
+
+    call <sid>ProtectBlock()
+    call <sid>ShiftLeft()
+
+    call <sid>JoinLines()
+
+    call <sid>SubsTitle('elle')
+    call <sid>DelFoldEnd()
+
+    if search('^\*\s','cw')
+        g;^\*\s;-1s;^$;\r[list];
+        g;^\*\s;+1s;^$;[\/list]\r;
+        g;^\*\s;s;$;[\/li];
+        %s;^\*\s\+;[li];
+    endif
+
+    "call <sid>SubsLink()
+
+
+endfunction "}}}4
+
+function! s:SelectFunction() "{{{4
 
     1,$left 0
     let g:TextWidth_Bullet = 9999
@@ -493,6 +522,8 @@ function s:SelectFunction() "{{{4
         call <sid>Convert2SUSE()
     elseif search('html','c',1)
         call <sid>Convert2HTML()
+    elseif search('elle','c',1)
+        call <sid>Convert2Ellesime()
     endif
 
 endfunction "}}}4
