@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 23, Thu | 21:37:19 | 2015
+" Last Update: Apr 26, Sun | 12:38:44 | 2015
 
 " Plugins "{{{2
 
@@ -700,7 +700,7 @@ nnoremap <silent> <a-\> :SwLinebreak<cr>
 
 " search visual selection
 " forward, backward and yank match pattern
-vnoremap <silent> <tab> y:SearchForward<cr>
+" vnoremap <silent> <tab> y:SearchForward<cr>
 "vnoremap <silent> <s-tab> y:SearchYankAll<cr>
 "vnoremap <silent> <c-tab> y:SearchGrep<cr>:copen<cr>
 
@@ -921,6 +921,17 @@ endfunction "}}}3
 
 call <sid>SetPath()
 
+function! s:TabVisual() "{{{3
+
+    if line("'<") ==# line("'>")
+        normal! gvy
+        SearchForward
+    else
+        FoldMarker s
+    endif
+
+endfun "}}}3
+
 " foldMarker.vim "{{{3
 
 command! -range FmAbove FoldMarker a
@@ -933,7 +944,8 @@ command! -range FmDelLevel FoldMarker d
 nnoremap <silent> <tab> :FoldMarker b<cr>
 nnoremap <silent> <s-tab> :FoldMarker a<cr>
 nnoremap <silent> <c-tab> :FoldMarker l<cr>
-vnoremap <silent> <c-tab> :FoldMarker s<cr>
+vnoremap <silent> <tab> <esc>:call <sid>TabVisual()<cr>
+"vnoremap <silent> <c-tab> :FoldMarker s<cr>
 
 nnoremap <silent> <a-=> :FoldMarker c<cr>
 nnoremap <silent> <a--> :FoldMarker d<cr>
