@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 26, Sun | 12:38:44 | 2015
+" Last Update: Apr 27, Mon | 13:31:43 | 2015
 
 " Plugins "{{{2
 
@@ -55,7 +55,7 @@ endfunction "}}}
 "}}}3
 
 " search pattern "{{{3
-function! SearchPattern(pattern) "{{{
+function! s:SearchPattern(pattern) "{{{
         let SaveCursor=getpos('.')
         let @z=@"
     " a-b substitution
@@ -439,7 +439,7 @@ function! SwitchBuffer_Trans(project) "{{{
             execute 'buffer' BufG
         endif "}}}
 endfunction "}}}
-function! SearchGlossary_Trans(WinN,WinG,FType) "{{{
+function! s:SearchGlossary_Trans(WinN,WinG,FType) "{{{
     " detect number of windows
         if winnr('$')!=a:WinN "{{{
             echo 'ERROR: There should be exact' a:WinN 'windows for' a:FType.'!'
@@ -464,7 +464,7 @@ function! F1_Normal_Trans() "{{{
 endfunction "}}}
 " search glossary
 function! F1_Visual_Trans() "{{{
-    vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans(3,3,'trans')<cr>
+    vnoremap <buffer> <silent> <f1> y:call <sid>SearchGlossary_Trans(3,3,'trans')<cr>
 endfunction "}}}
 
 function! F1_Trans() "{{{
@@ -779,12 +779,12 @@ command DelAdd call <sid>DelLine(0)
 "}}}3
 
 " a-b substitution
-command! ABSubs call SearchPattern(0)
+command! ABSubs call <sid>SearchPattern(0)
 
 " foward/backward search
-command! SearchForward call SearchPattern(1)
-command! SearchYankAll call SearchPattern(2)
-command! SearchGrep call SearchPattern(3)
+"command! SearchForward call SearchPattern(1)
+"command! SearchYankAll call SearchPattern(2)
+"command! SearchGrep call SearchPattern(3)
 
 " Scratch buffer
 
@@ -925,7 +925,7 @@ function! s:TabVisual() "{{{3
 
     if line("'<") ==# line("'>")
         normal! gvy
-        SearchForward
+        call <sid>SearchPattern(1)
     else
         FoldMarker s
     endif
