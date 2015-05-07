@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 27, Mon | 13:31:43 | 2015
+" Last Update: May 07, Thu | 14:30:07 | 2015
 
 " Plugins "{{{2
 
@@ -951,6 +951,8 @@ nnoremap <silent> <a-=> :FoldMarker c<cr>
 nnoremap <silent> <a--> :FoldMarker d<cr>
 vnoremap <silent> <a-=> :FoldMarker c<cr>
 vnoremap <silent> <a--> :FoldMarker d<cr>
+
+let g:MoveFold_FoldMarker = 0
 
 "}}}3
 "}}}2
