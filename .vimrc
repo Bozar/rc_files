@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: May 07, Thu | 21:44:09 | 2015
+" Last Update: May 08, Fri | 23:03:34 | 2015
 
 " Plugins "{{{2
 
@@ -940,6 +940,8 @@ command! -range FmLine FoldMarker l n
 command! -range FmSurround FoldMarker s n
 command! -range FmCreLevel FoldMarker c
 command! -range FmDelLevel FoldMarker d
+command! -range FmRemove FoldMarker r
+command! -range FmRemoveAll FoldMarker R
 
 command! -range FmAboveNoNum FoldMarker a N
 command! -range FmBelowNoNum FoldMarker b N
