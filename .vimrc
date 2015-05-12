@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: May 11, Mon | 17:15:15 | 2015
+" Last Update: May 12, Tue | 17:01:34 | 2015
 
 " Plugins "{{{2
 
@@ -927,37 +927,48 @@ function! s:TabVisual() "{{{3
         normal! gvy
         call <sid>SearchPattern(1)
     else
-        FoldMarker s
+        '<,'>FoldMarker s
     endif
 
 endfun "}}}3
 
 " foldMarker.vim "{{{3
 
-command! -range FmLine FoldMarker l
-command! -range FmAbove FoldMarker a
-command! -range FmBelow FoldMarker b
-command! -range FmSurround FoldMarker s
-command! -range FmCreLevel FoldMarker c
-command! -range FmDelLevel FoldMarker d
-command! -range FmRemove FoldMarker r
+command! -range FmLine
+\ <line1>FoldMarker l
+command! -range FmAbove
+\ <line1>FoldMarker a
+command! -range FmBelow
+\ <line1>FoldMarker b
+command! -range FmSurround
+\ <line1>,<line2>FoldMarker s
+command! -range FmCreLevel
+\ <line1>,<line2>FoldMarker c
+command! -range FmDelLevel
+\ <line1>,<line2>FoldMarker d
+command! -range FmRemove
+\ <line1>,<line2>FoldMarker r
 
-command! -range FmLineNoNum FoldMarker L
-command! -range FmAboveNoNum FoldMarker A
-command! -range FmBelowNoNum FoldMarker B
-command! -range FmSurroundNoNum FoldMarker S
-command! -range FmCreLevelRelative FoldMarker C
-command! -range FmRemoveAll FoldMarker R
+command! -range FmLineNoNum
+\ <line1>FoldMarker L
+command! -range FmAboveNoNum
+\ <line1>FoldMarker A
+command! -range FmBelowNoNum
+\ <line1>FoldMarker B
+command! -range FmSurroundNoNum
+\ <line1>,<line2>FoldMarker S
+command! -range FmCreLevelRelative
+\ <line1>,<line2>FoldMarker C
+command! -range FmRemoveAll
+\ <line1>,<line2>FoldMarker R
 
 nnoremap <silent> <tab> :FoldMarker b<cr>
 nnoremap <silent> <s-tab> :FoldMarker a<cr>
 nnoremap <silent> <c-tab> :FoldMarker l<cr>
-vnoremap <silent> <tab> <esc>:call <sid>TabVisual()<cr>
-"vnoremap <silent> <c-tab> :FoldMarker s<cr>
+vnoremap <silent> <tab>
+\ <esc>:call <sid>TabVisual()<cr>
 
-nnoremap <silent> <a-=> :FoldMarker c<cr>
-nnoremap <silent> <a--> :FoldMarker d<cr>
-vnoremap <silent> <a-=> :FoldMarker c<cr>
+vnoremap <silent> <a-=> :FoldMarker C<cr>
 vnoremap <silent> <a--> :FoldMarker d<cr>
 
 let g:MoveFold_FoldMarker = 0
