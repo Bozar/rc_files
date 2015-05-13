@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: May 12, Tue | 17:01:34 | 2015
+" Last Update: May 13, Wed | 13:26:48 | 2015
 
 " Plugins "{{{2
 
@@ -839,15 +839,12 @@ command Ed2KeyMap e ~/.vim/plugin/keyMapTmp.vim
 autocmd BufRead *.vocab call Vocabulary()
 autocmd VimEnter * call ScratchBuffer(0)
 
-let s:ColorColumn = '*.vim'
-let s:ColorColumn .= ',*.vimrc'
+let s:ColorColumn = '*.vim*'
 
 execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 \ ' setl tw=50'
 execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 \ ' setl colorcolumn=+0'
-execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
-\ ' setl fo+=1mBj'
 
 let g:AutoLoad_Bullet = '*.read'
 let g:AutoLoad_Bullet .= ',*.write'
