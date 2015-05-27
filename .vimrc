@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: May 13, Wed | 13:26:48 | 2015
+" Last Update: May 27, Wed | 21:11:42 | 2015
 
 " Plugins "{{{2
 
@@ -901,6 +901,15 @@ if has('win32') && has('gui_running')
 endif
 
 com LeftFoldMarker g;\v^ .{0,1}\}{3}.{0,1};le0
+
+" indent html tags
+fun! s:IndentHTML()
+    DelAdd
+    g;ul>;le4
+    g;li>;le8
+    g;p>;le4
+endfun
+com! HtmlTag call <sid>IndentHTML()
 
 " set path
 function! s:SetPath() "{{{3
