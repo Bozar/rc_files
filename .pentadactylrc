@@ -1,5 +1,5 @@
 " pentadactyl {{{1
-" Last Update: Apr 05, Sun | 19:44:04 | 2015
+" Last Update: Jun 02, Tue | 20:09:40 | 2015
 loadplugins '\.(js|penta)$'
 group user
 
@@ -8,8 +8,6 @@ colo royalblue
 
 " abbreviate
 iab bz bozar
-iab tm tommyfranklin42@gmail.com
-iab ty tommyfranklin42@yahoo.com
 " cab ie js io.run("c:\\program files\\internet explorer\\iexplore.exe", [buffer.URL])
 
 " map
@@ -18,6 +16,8 @@ nm -b h <C-p>
 nm -b j <C-f>
 nm -b k <C-b>
 nm -b l <C-n>
+nm -b -e H :back
+nm -b -e L :forward
 nm -b <c-j> j
 nm -b <c-k> k
 nm -b <leader>, :
