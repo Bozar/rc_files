@@ -1,4 +1,4 @@
-;Last Update: Jun 02, Tue | 13:21:11 | 2015
+;Last Update: Jun 02, Tue | 13:41:27 | 2015
 capslock::ctrl
 #q::!F4
 #PgUp::
@@ -10,10 +10,10 @@ return
 #End::
 Send {Volume_Mute}
 return
-F12::
+#F12::
 IfWinActive, MINGW32
 {
     MouseMove, 600, 300
     Send {RButton}
+    return
 }
-return
