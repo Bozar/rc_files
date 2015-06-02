@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: May 27, Wed | 21:11:42 | 2015
+" Last Update: Jun 02, Tue | 20:07:24 | 2015
 
 " Plugins "{{{2
 
@@ -919,8 +919,9 @@ function! s:SetPath() "{{{3
         se path+=
         \d:/Program\\\ Files/Vim/vimfiles/**/
     elseif <sid>CheckOS() ==# 'linux'
-        se path+=~/.vim/**/
-        se path+=~/git/**/
+        se path+=~/**/
+        "se path+=~/.vim/**/
+        "se path+=~/git/**/
     endif
 
 endfunction "}}}3
