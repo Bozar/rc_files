@@ -1,4 +1,4 @@
-;Last Update: Jun 02, Tue | 13:41:27 | 2015
+;Last Update: Jun 03, Wed | 13:44:30 | 2015
 capslock::ctrl
 #q::!F4
 #PgUp::
@@ -13,7 +13,7 @@ return
 #F12::
 IfWinActive, MINGW32
 {
-    MouseMove, 600, 300
+    MouseMove, 50, 50
     Send {RButton}
     return
 }
