@@ -1,8 +1,8 @@
-" convertPost.vim "{{{1
+" convertPost.vim
 
-" Last Update: Apr 20, Mon | 12:37:43 | 2015
+" Last Update: Jun 26, Fri | 09:48:24 | 2015
 
-" variables "{{{2
+" variables
 
 let s:BlockCode = 'CODE {\{3}\d\{0,1}'
 
@@ -31,11 +31,16 @@ let s:Star = '\v^(\s*\*\s*)'
 let s:Cross = '\v^(\s*\+\s*)'
 let s:SpaceFour = '    '
 
-"}}}2
-" parts "{{{2
 
-function! s:SubsStarsInQuote() "{{{3
+" parts
 
+function! s:SubsDash()
+    if search('—','cw')
+        %s/—/\&mdash;/g
+    endif
+endfunction
+
+function! s:SubsStarsInQuote()
     while search('^' . s:BlockQuote . '$','cw')
         mark j
         normal ]z
@@ -46,11 +51,9 @@ function! s:SubsStarsInQuote() "{{{3
         'js/^.*//
         'ks/^.*//
     endwhile
+endfunction
 
-endfunction "}}}3
-
-function! s:Surround() "{{{3
-
+function! s:Surround()
     while search('[^`]<','cw')
         %s/\v([^`])\</\1`</g
     endwhile
@@ -66,11 +69,9 @@ function! s:Surround() "{{{3
     while search('>[^`]','cw')
         %s/\v\>([^`])/>`\1/g
     endwhile
+endfunction
 
-endfunction "}}}3
-
-function! s:ProtectBlock() "{{{3
-
+function! s:ProtectBlock()
     1
 
     while search('^\(' . s:BlockAll . '\)$','cW')
@@ -86,21 +87,17 @@ function! s:ProtectBlock() "{{{3
         execute moveCursor#TakeLineNr('K','')
 
     endwhile
+endfunction
 
-endfunction "}}}3
-
-function! s:DelExtraSpacesAfterBullet() "{{{3
-
+function! s:DelExtraSpacesAfterBullet()
     if search(s:Bullet,'cw')
 
         execute '%s/' . s:Bullet . '/* /'
 
     endif
+endfunction
 
-endfunction "}}}3
-
-function! s:JoinLines(...) "{{{3
-
+function! s:JoinLines(...)
     let l:saveTW = g:TextWidth_Bullet
 
     let l:saveFO = g:CommentsAdd_Bullet
@@ -122,37 +119,29 @@ function! s:JoinLines(...) "{{{3
     let g:TextWidth_Bullet = l:saveTW
 
     let g:CommentsAdd_Bullet = l:saveFO 
+endfunction
 
-endfunction "}}}3
-
-function! s:ShiftLeft() "{{{
-
+function! s:ShiftLeft()
     1,$<
+endfunction
 
-endfunction "}}}
-
-function! s:DelBlockCode() "{{{
-
+function! s:DelBlockCode()
     if search(s:BlockCode,'cw')
 
         execute 'g/' . s:BlockCode . '/delete'
 
     endif
+endfunction
 
-endfunction "}}}
-
-function! s:DelBlockQuote() "{{{
-
+function! s:DelBlockQuote()
     if search(s:BlockQuote,'cw')
 
         execute 'g/' . s:BlockQuote . '/delete'
 
     endif
+endfunction
 
-endfunction "}}}
-
-function! s:SubsBlockCode() "{{{
-
+function! s:SubsBlockCode()
     while search('^' . s:BlockCode . '$','cw')
 
         if moveCursor#SetLineJKFold() == 1
@@ -172,11 +161,9 @@ function! s:SubsBlockCode() "{{{
         endif
 
     endwhile
+endfunction
 
-endfunction "}}}
-
-function! s:SubsBlockQuote() "{{{
-
+function! s:SubsBlockQuote()
     while search('^' . s:BlockQuote . '$','cw')
 
         if moveCursor#SetLineJKFold() == 1
@@ -196,22 +183,18 @@ function! s:SubsBlockQuote() "{{{
         endif
 
     endwhile
+endfunction
 
-endfunction "}}}
-
-function! s:SubsBullet() "{{{
-
+function! s:SubsBullet()
     if search(s:Bullet,'cw')
 
         execute 'g/' . s:Bullet . '/s/$/[\/list]/'
         execute '%s/' . s:Bullet . '/[list]/'
 
     endif
+endfunction
 
-endfunction "}}}
-
-function! s:SubsLink() "{{{
-
+function! s:SubsLink()
     if search(s:LinkAll,'cw')
 
         " seperate text and url
@@ -256,11 +239,9 @@ function! s:SubsLink() "{{{
         execute 'g/' . s:LinkPart . '/-1,+2join!'
 
     endif
+endfunction
 
-endfunction "}}}
-
-function! s:SubsTitle(forum) "{{{
-
+function! s:SubsTitle(forum)
     if search(s:FoldBegin . '3$','cw')
 
         if a:forum == 'trow'
@@ -301,21 +282,17 @@ function! s:SubsTitle(forum) "{{{
         endif
 
     endif
+endfunction
 
-endfunction "}}}
-
-function! s:DelFoldEnd() "{{{
-
+function! s:DelFoldEnd()
     if search(s:FoldEnd,'cw')
 
         execute 'g/' . s:FoldEnd . '/delete'
 
     endif
+endfunction
 
-endfunction "}}}
-
-function! s:SubsFoldBegin() "{{{
-
+function! s:SubsFoldBegin()
     let l:pattern = ' ' . s:FoldBegin . '[1-4]$'
 
     if search(l:pattern,'cw')
@@ -323,21 +300,17 @@ function! s:SubsFoldBegin() "{{{
         execute '%s/' . l:pattern . '//'
 
     endif
+endfunction
 
-endfunction "}}}
-
-function! s:AddMarkdown() "{{{
-
+function! s:AddMarkdown()
     1s/^/[markdown]\r\r/
     $s/$/\r\r[\/markdown]/
+endfunction
 
-endfunction "}}}
 
-"}}}2
-" main "{{{2
+" main
 
-function! s:Convert2Trow() "{{{3
-
+function! s:Convert2Trow()
     call <sid>ProtectBlock()
     call <sid>ShiftLeft()
 
@@ -355,11 +328,9 @@ function! s:Convert2Trow() "{{{3
     call <sid>AddMarkdown()
 
     DelAdd
+endfunction
 
-endfunction "}}}3
-
-function! s:Convert2Mail() "{{{3
-
+function! s:Convert2Mail()
     call <sid>ProtectBlock()
     call <sid>ShiftLeft()
     call <sid>DelExtraSpacesAfterBullet()
@@ -374,11 +345,9 @@ function! s:Convert2Mail() "{{{3
     call <sid>DelFoldEnd()
 
     DelAdd
+endfunction
 
-endfunction "}}}3
-
-function! s:Convert2SUSE() "{{{4
-
+function! s:Convert2SUSE()
     call <sid>ProtectBlock()
     call <sid>ShiftLeft()
 
@@ -395,11 +364,9 @@ function! s:Convert2SUSE() "{{{4
     call <sid>DelFoldEnd()
 
     DelAdd
+endfunction
 
-endfunction "}}}4
-
-function! s:Convert2HTML() "{{{4
-
+function! s:Convert2HTML()
     let l:BeginUL = '<ul>'
     let l:EndUL = '<\/ul>'
     let l:BeginLI = '<li>'
@@ -478,14 +445,15 @@ function! s:Convert2HTML() "{{{4
     execute 'g/\v^([^< ])/s/^/<p>\1/'
     execute 'g/^<p>/s/$/<\/p>/'
 
+    " dash
+    call <sid>SubsDash()
+
     call <sid>SubsLink()
     %s/\v(\[url=)(.{-1,})(\])/<a href="\2">/e
     %s/\v\[\/url\]/<\/a>/e
+endfunction
 
-endfunction "}}}4
-
-function! s:Convert2Ellesime() "{{{4
-
+function! s:Convert2Ellesime()
     call <sid>ProtectBlock()
     call <sid>ShiftLeft()
 
@@ -503,11 +471,9 @@ function! s:Convert2Ellesime() "{{{4
 
     "call <sid>SubsLink()
 
+endfunction
 
-endfunction "}}}4
-
-function! s:SelectFunction() "{{{4
-
+function! s:SelectFunction()
     1,$left 0
     let g:TextWidth_Bullet = 9999
     BuW0TW
@@ -525,14 +491,11 @@ function! s:SelectFunction() "{{{4
     elseif search('elle','c',1)
         call <sid>Convert2Ellesime()
     endif
-
-endfunction "}}}4
+endfunction
 
 if !exists(':ConvertPost')
-
     command ConvertPost call <sid>SelectFunction()
-
 endif
 
-"}}}2
-" vim: set fdm=marker fdl=20 "}}}1
+
+" vim: set fdm=indent fdl=20:
