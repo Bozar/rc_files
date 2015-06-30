@@ -1,6 +1,6 @@
 " keyMapTmp.vim
 
-" Last Update: Jun 10, Wed | 23:31:10 | 2015
+" Last Update: Jun 30, Tue | 09:21:40 | 2015
 
 " global
 function s:KeyFuncLoop(begin,end)
@@ -185,6 +185,7 @@ endfunction
 " commom key mappings
 
 function s:KeyCommon()
+    set foldlevel=20
     call <sid>KeyFuncLoop(1,5)
     call <sid>KeyCR()
     call <sid>GlossaryIab('Glossary')
