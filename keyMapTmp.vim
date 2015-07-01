@@ -1,6 +1,6 @@
 " keyMapTmp.vim
 
-" Last Update: Jun 30, Tue | 09:21:40 | 2015
+" Last Update: Jul 01, Wed | 09:14:54 | 2015
 
 " global
 function s:KeyFuncLoop(begin,end)
@@ -20,10 +20,18 @@ function s:KeyFuncLoop(begin,end)
     endwhile
 endfunction
 
+function s:OneWindow()
+    if winnr('$') ># 1
+        only
+    endif
+    vsplit
+endfunction
+
 function s:KeyCR()
     nnoremap <buffer> <silent> <cr> <c-w>w
     nnoremap <buffer> <silent> <s-cr> <c-w>W
-    nnoremap <buffer> <silent> <c-cr> <c-w>o<c-w>v
+    nnoremap <buffer> <silent> <c-cr>
+    \ :call <sid>OneWindow()<cr>
 endfunction
 
 function s:AddNum4Note(note,fold)
