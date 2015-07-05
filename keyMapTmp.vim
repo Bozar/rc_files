@@ -1,6 +1,6 @@
 " keyMapTmp.vim
 
-" Last Update: Jul 01, Wed | 09:14:54 | 2015
+" Last Update: Jul 05, Sun | 14:05:46 | 2015
 
 " global
 function s:KeyFuncLoop(begin,end)
@@ -101,6 +101,7 @@ function s:InsertBullet(bullet)
 endfunction
 
 function s:GlossaryIab(title)
+    iabclear <buffer>
     1
     if search(a:title . ' {\{3}\d$') == 0
         return
