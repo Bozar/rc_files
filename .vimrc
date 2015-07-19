@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Jun 02, Tue | 20:07:24 | 2015
+" Last Update: Jul 19, Sun | 13:30:51 | 2015
 
 " Plugins "{{{2
 
@@ -537,11 +537,7 @@ elseif <sid>CheckOS()=='linux'
     set background=dark
 endif "}}}
 
-if has('gui_running') "{{{
-    colorscheme solarized
-else
-    colorscheme desert
-endif "}}}
+colorscheme solarized
 
 set laststatus=2
 set ruler
