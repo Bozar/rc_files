@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Jul 20, Mon | 14:31:34 | 2015
+" Last Update: Jul 20, Mon | 14:33:39 | 2015
 
 " Plugins "{{{2
 
@@ -728,6 +728,12 @@ inoremap <a-j> 'j,'k
 cnoremap <a-j> 'j,'k
 inoremap <a-k> 1,$
 cnoremap <a-k> 1,$
+
+" command range, console
+inoremap jjk 'j,'k
+cnoremap jjk 'j,'k
+inoremap hhl 1,$
+cnoremap hhl 1,$
 
 " bracket pairs
 inoremap <a-9> ()<left>
