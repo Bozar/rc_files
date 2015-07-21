@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Jul 20, Mon | 14:56:12 | 2015
+" Last Update: Jul 21, Tue | 10:09:42 | 2015
 
 " Plugins "{{{2
 
@@ -884,27 +884,10 @@ autocmd BufRead achieve.daily setl fo+=ro
 let g:AutoLoad_Achieve = '*.daily'
 
 function s:GotoSameLine() "{{{3
-
-    let l:bufNr = bufnr('%')
-
-    let l:cursor = getpos('.')
-
-    call moveCursor#GotoColumn1('w0')
-    let l:top = getpos('.')
-
-    call setpos('.',l:cursor)
-
-    wincmd w
-
-    execute 'buffer' . ' ' . l:bufNr
-
-    call setpos('.',l:top)
-    execute 'normal zt'
-
-    call setpos('.',l:cursor)
-
-    wincmd W
-
+    if winnr('$') ># 1
+        wincmd o
+    endif
+    wincmd v
 endfunction "}}}3
 
 command SameLine call <sid>GotoSameLine()
