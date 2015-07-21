@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Jul 21, Tue | 23:08:53 | 2015
+" Last Update: Jul 21, Tue | 23:31:58 | 2015
 
 " Plugins "{{{2
 
@@ -750,15 +750,15 @@ cnoremap <a-.> 《》<left>
 cnoremap <a-=> 【】<left>
 
 " bracket pairs, console
-iabbrev ( ()
-iabbrev （ （）
-iabbrev [ []
-iabbrev { {}
+" iabbrev ( ()
+" iabbrev （ （）
+" iabbrev [ []
+" iabbrev { {}
 
-cabbrev ( ()
-cabbrev （ （）
-cabbrev [ []
-cabbrev { {}
+" cabbrev ( ()
+" cabbrev （ （）
+" cabbrev [ []
+" cabbrev { {}
 
 "}}}2
 
