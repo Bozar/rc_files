@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Jul 21, Tue | 10:09:42 | 2015
+" Last Update: Jul 21, Tue | 23:08:53 | 2015
 
 " Plugins "{{{2
 
@@ -520,15 +520,12 @@ set shiftround
 " window size
 " windows | linux GUI | linux terminal
 function s:Window()
-
-if has('gui')
-
-set guiheadroom=0
-winsize 123 31
-
-endif
-
+    if has('gui')
+        set guiheadroom=0
+        winsize 123 31
+    endif
 endfunction
+
 if <sid>CheckOS()=='windows' "{{{
     autocmd GUIEnter * simalt ~x
     set background=light
@@ -537,11 +534,11 @@ elseif <sid>CheckOS()=='linux'
     set background=dark
 endif "}}}
 
-"if has('gui_running') "{{{
+if has('gui_running') "{{{
     colorscheme solarized
-"else
-"    colorscheme desert
-"endif "}}}
+else
+    colorscheme desert
+endif "}}}
 
 set laststatus=2
 set ruler
