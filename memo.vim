@@ -1,5 +1,5 @@
 " memo.vim
-" Last Update: Aug 04, Tue | 16:22:54 | 2015
+" Last Update: Aug 10, Mon | 09:57:44 | 2015
 
 function s:Console()
     execute "normal! o\<cr>" . @* .
@@ -27,5 +27,6 @@ function s:TmpKeyMap()
 endfunction
 
 autocmd BufRead memo.loc call <sid>TmpKeyMap()
+command! KeMemoQ call <sid>TmpKeyMap()
 
 " vim: set fdm=indent:
