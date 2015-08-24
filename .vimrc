@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Jul 21, Tue | 23:31:58 | 2015
+" Last Update: Aug 24, Mon | 18:02:16 | 2015
 
 " Plugins "{{{2
 
@@ -922,6 +922,19 @@ function! s:SetPath() "{{{3
     endif
 
 endfunction "}}}3
+
+" git update "{{{3
+function s:GitUpdate()
+    1s/^/\r/
+    3,/^# Changes to be committed:/delete
+    $delete
+    %s/^#\s\+/-   /
+    1
+endfunction
+
+command GitUpdate call <sid>GitUpdate()
+
+"}}}3
 
 call <sid>SetPath()
 
