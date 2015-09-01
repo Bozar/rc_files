@@ -1,5 +1,5 @@
 " loki.vim
-" Last Update: Sep 01, Tue | 13:08:40 | 2015
+" Last Update: Sep 01, Tue | 14:11:55 | 2015
 
 " nightly version
 
@@ -10,7 +10,7 @@ let s:BufC = 'chinese.loc'
 let s:BufT = 'tmp.loc'
 let s:BufG = 'glossary.loc'
 
-let s:Folder = '/d/Documents/'
+let s:Folder = 'd:/Documents/'
 let s:FileGlossary = s:Folder . 'glossary.loc'
 let s:FileSource = s:Folder . 'english.loc'
 let s:FileTmp = s:Folder . 'ztmp'
