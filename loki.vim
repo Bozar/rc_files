@@ -1,18 +1,20 @@
-" loki.vim "{{{1
+" loki.vim
+" Last Update: Sep 01, Tue | 13:08:40 | 2015
 
-" Last Update: Apr 03, Fri | 15:54:24 | 2015
+" nightly version
 
-" vars "{{{2
+" vars
 
 let s:BufE = 'english.loc'
 let s:BufC = 'chinese.loc'
 let s:BufT = 'tmp.loc'
 let s:BufG = 'glossary.loc'
 
-let s:FileGlossary = 'glossary.loc'
-let s:FileSource = 'english.loc'
-let s:FileTmp = 'ztmp'
-let s:FileOutput = 'tmp.loc'
+let s:Folder = '/d/Documents/'
+let s:FileGlossary = s:Folder . 'glossary.loc'
+let s:FileSource = s:Folder . 'english.loc'
+let s:FileTmp = s:Folder . 'ztmp'
+let s:FileOutput = s:Folder . 'tmp.loc'
 
 let s:WinShell = 1
 let s:WinTrans = 2
@@ -20,14 +22,27 @@ let s:WinTrans = 2
 let s:KeySearchTab = '<cr>'
 let s:KeySearchTabReverse = '<c-cr>'
 
-"}}}2
+let s:BufWork = 'memo.loc'
+let s:BufTemp = 'tmp.loc'
 
-" functions "{{{2
+" functions
 
-" parts "{{{3
+function! s:SplitScreen()
+    if bufname('%') =~# s:BufWork
+        if winnr('$') ># 1
+            only
+        endif
+        split
+        if bufexists(s:BufTemp)
+            execute 'buffer' . ' ' . s:BufTemp
+        else
+            execute 'find' . ' ' . s:BufTemp
+        endif
+        wincmd j
+    endif
+endfunction
 
-function! s:Yank() "{{{
-
+function! s:Yank()
     " yank GUID
     if bufwinnr('%') == s:WinTrans
         execute 'normal ^2f	lviW'
@@ -35,11 +50,9 @@ function! s:Yank() "{{{
     elseif bufwinnr('%') == s:WinShell
         execute 'normal ^5f	lviW'
     endif
+endfunction
 
-endfunction "}}}
-
-function! s:Grep(text,output) "{{{
-
+function! s:Grep(text,output,...)
     " grep glossary/source
     if a:text == 'glossary'
         let l:text = s:FileGlossary
@@ -75,10 +88,12 @@ function! s:Grep(text,output) "{{{
 
     let @+ = l:command
 
-endfunction "}}}
+    if exists('a:1') && a:1 ># 0
+        execute '!' . @+
+    endif
+endfunction
 
-function s:SearchInLine(pat,move) "{{{4
-
+function s:SearchInLine(pat,move)
     if a:move ==# 'f' || a:move ==# ''
         let l:noCursorPos = 'W'
         let l:cursorPos = 'cW'
@@ -111,87 +126,58 @@ function s:SearchInLine(pat,move) "{{{4
             return 1
         endif
     endwhile
+endfunction
 
-endfunction "}}}4
-
-"}}}3
-" F1 "{{{3
-
-function! s:F1_Loc() "{{{
-
-    " window jump
+" jump between windows
+function! s:F1_Loc()
     nno <buffer> <silent> <f1> <c-w>w
-
     nno <buffer> <silent> <s-f1>
     \ :call <sid>Yank()<cr>
+endfunction
 
-endfunction "}}}
-
-"}}}3
-
-" F2 "{{{3
-
-function! s:F2_Loc() "{{{
-
+" move between tabs in one line
+function! s:F2_Loc()
     nno <buffer> <silent> <f2>
     \ :execute 'normal ^f	'<cr>
+endfunction
 
-endfunction "}}}
-
-"}}}3
-
-" F3 "{{{3
-
-function! s:F3_Loc() "{{{
-
+" search glossary.loc in vim
+function! s:F3_Loc()
     vno <buffer> <silent> <f3>
-    \ y:call <sid>Grep('glossary','write')<cr>
+    \ y:call <sid>Grep('glossary','write',1)<cr>
+endfunction
 
-    vno <buffer> <silent> <s-f3>
-    \ y:call <sid>Grep('glossary','add')<cr>
-
-endfunction "}}}
-
-"}}}3
-
-" F4 "{{{3
-
-function! s:F4_Loc() "{{{
-
+" search english.loc in vim
+function! s:F4_Loc()
     vno <buffer> <silent> <f4>
-    \ y:call <sid>Grep('source','write')<cr>
+    \ y:call <sid>Grep('source','write',1)<cr>
+endfunction
 
-    vno <buffer> <silent> <s-f4>
-    \ y:call <sid>Grep('source','add')<cr>
-
-endfunction "}}}
-
-"}}}3
-
-" F5 "{{{3
-
-function! s:F5_Loc() "{{{
-
+" search glossary.loc in vim/shell
+function! s:F5_Loc()
     vno <buffer> <silent> <f5>
-    \ y:call <sid>Grep('glossary','shell')<cr>
+    \ y:call <sid>Grep('glossary','write')<cr>
+endfunction
 
-endfunction "}}}
-
-"}}}3
-
-" F6 "{{{3
-
-function! s:F6_Loc() "{{{
-
+" search english.loc in vim/shell
+function! s:F6_Loc()
     vno <buffer> <silent> <f6>
+    \ y:call <sid>Grep('source','write')<cr>
+endfunction
+
+" print glossary.loc in shell
+function! s:F7_Loc()
+    vno <buffer> <silent> <f7>
+    \ y:call <sid>Grep('glossary','shell')<cr>
+endfunction
+
+" print english.loc in shell
+function! s:F8_Loc()
+    vno <buffer> <silent> <f8>
     \ y:call <sid>Grep('source','shell')<cr>
+endfunction
 
-endfunction "}}}
-
-"}}}3
-
-function! s:KeyMap() "{{{3
-
+function! s:KeyMap()
     execute 'nno <buffer> <silent>' . ' ' .
     \ s:KeySearchTab . ' ' .
     \ ':call <sid>SearchInLine(' .
@@ -202,34 +188,31 @@ function! s:KeyMap() "{{{3
     \ ':call <sid>SearchInLine(' .
     \ "'\t','b')<cr>"
 
-endfunction "}}}3
+    nno <buffer> <silent> <s-cr>
+    \ :call <sid>SplitScreen()<cr>
+endfunction
 
-function! s:Localization() "{{{3
+function! s:Localization()
     let i=1
     while i<7
+    "while i<9
         execute 'call <sid>F' . i . '_Loc()'
         let i=i+1
     endwhile
 
     call <sid>KeyMap()
+endfunction
 
-endfunction "}}}3
-
-function! s:FileFormat_Loc() "{{{3
+function! s:FileFormat_Loc()
     set fileencoding=utf-8
     set fileformat=unix
     %s/\r//ge
-endfunction "}}}3
+endfunction
 
-"}}}2
-
-" commands "{{{2
-
+" commands
 command! KeLocal call <sid>Localization()
-
 command! LocFormat call <sid>FileFormat_Loc()
 "command! LocLine call LineBreak_Loc()
 autocmd! BufRead *.loc call <sid>Localization()
 
-"}}}2
-"}}}1
+" vim: set fdm=indent tw=50 :
