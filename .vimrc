@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Apr 26, Sun | 12:38:44 | 2015
+" Last Update: 10月 25, 周日 | 12:57:35 | 2015
 
 " Plugins "{{{2
 
@@ -531,7 +531,12 @@ endif
 endfunction
 if <sid>CheckOS()=='windows' "{{{
     autocmd GUIEnter * simalt ~x
-    set background=light
+    if substitute(system('hostname'),'\n','','')
+    \ ==# 'section9'
+        set background=dark
+    else
+        set background=light
+    endif
 elseif <sid>CheckOS()=='linux'
     autocmd VimEnter * call <sid>Window()
     set background=dark
@@ -623,7 +628,12 @@ set smartindent
 
 " change directory
 if <sid>CheckOS()=='windows' "{{{
-    cd d:\Documents\
+    if substitute(system('hostname'),'\n','','')
+    \ ==# 'section9'
+        cd ~/Documents/documents/
+    else
+        cd d:\Documents\
+    endif
 elseif <sid>CheckOS()=='linux'
     cd ~/documents/
 endif "}}}
@@ -831,8 +841,21 @@ command! KeTranslation call Translation()
 
 " edit files
 command Ed0Vimrc e $MYVIMRC
-command Ed1Achieve e ~/documents/achieve.daily|
-\ cd ~/documents
+
+fun! s:EdFile()
+    if <sid>CheckOS()=='windows' &&
+    \ substitute(system('hostname'),'\n','','')
+    \ ==# 'section9'
+        e ~/Documents/documents/achieve.daily
+        cd ~/Documents/documents
+    elseif <sid>CheckOS()=='linux'
+        e ~/documents/achieve.daily
+        cd ~/documents
+    endif
+endfun
+
+command Ed1Achieve call <sid>EdFile()
+
 command Ed2KeyMap e ~/.vim/plugin/keyMapTmp.vim
 
 " autocommands
