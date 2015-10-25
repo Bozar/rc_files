@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: 10月 25, 周日 | 12:57:35 | 2015
+" Last Update: Oct 25, Sun | 23:49:05 | 2015
 
 " Plugins "{{{2
 
