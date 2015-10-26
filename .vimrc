@@ -1,9 +1,5 @@
 " Bozar's .vimrc file "{{{1
-<<<<<<< HEAD
-" Last Update: Aug 24, Mon | 18:02:16 | 2015
-=======
 " Last Update: Oct 26, Mon | 09:38:15 | 2015
->>>>>>> origin/master
 
 " Plugins "{{{2
 
