@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Oct 26, Mon | 23:35:39 | 2015
+" Last Update: Oct 27, Tue | 00:00:09 | 2015
 
 " Plugins "{{{2
 
@@ -527,7 +527,9 @@ function s:Window()
 endfunction
 
 if <sid>CheckOS()=='windows' "{{{
-    autocmd GUIEnter * simalt ~x
+    " autocmd GUIEnter * simalt ~x
+    set lines=999
+    set columns=999
     if substitute(system('hostname'),'\n','','')
     \ ==# 'section9'
         set background=dark
@@ -588,7 +590,7 @@ set history=99
 
 " fonts
 if <sid>CheckOS()=='windows' "{{{
-    set guifont=Consolas:h16:cANSI
+    set guifont=Consolas:h15:cANSI
 elseif <sid>CheckOS()=='linux'
     set guifont=DejaVu\ Sans\ \Mono\ 14
 endif "}}}
