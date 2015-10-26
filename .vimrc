@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Oct 25, Sun | 23:49:05 | 2015
+" Last Update: Oct 26, Mon | 09:38:15 | 2015
 
 " Plugins "{{{2
 
@@ -55,7 +55,7 @@ endfunction "}}}
 "}}}3
 
 " search pattern "{{{3
-function! SearchPattern(pattern) "{{{
+function! s:SearchPattern(pattern) "{{{
         let SaveCursor=getpos('.')
         let @z=@"
     " a-b substitution
@@ -439,7 +439,7 @@ function! SwitchBuffer_Trans(project) "{{{
             execute 'buffer' BufG
         endif "}}}
 endfunction "}}}
-function! SearchGlossary_Trans(WinN,WinG,FType) "{{{
+function! s:SearchGlossary_Trans(WinN,WinG,FType) "{{{
     " detect number of windows
         if winnr('$')!=a:WinN "{{{
             echo 'ERROR: There should be exact' a:WinN 'windows for' a:FType.'!'
@@ -464,7 +464,7 @@ function! F1_Normal_Trans() "{{{
 endfunction "}}}
 " search glossary
 function! F1_Visual_Trans() "{{{
-    vnoremap <buffer> <silent> <f1> y:call SearchGlossary_Trans(3,3,'trans')<cr>
+    vnoremap <buffer> <silent> <f1> y:call <sid>SearchGlossary_Trans(3,3,'trans')<cr>
 endfunction "}}}
 
 function! F1_Trans() "{{{
@@ -520,15 +520,12 @@ set shiftround
 " window size
 " windows | linux GUI | linux terminal
 function s:Window()
-
-if has('gui')
-
-set guiheadroom=0
-winsize 123 31
-
-endif
-
+    if has('gui')
+        set guiheadroom=0
+        winsize 123 31
+    endif
 endfunction
+
 if <sid>CheckOS()=='windows' "{{{
     autocmd GUIEnter * simalt ~x
     if substitute(system('hostname'),'\n','','')
@@ -739,6 +736,12 @@ cnoremap <a-j> 'j,'k
 inoremap <a-k> 1,$
 cnoremap <a-k> 1,$
 
+" command range, console
+iabbrev jjk 'j,'k
+cabbrev jjk 'j,'k
+iabbrev hhl 1,$
+cabbrev hhl 1,$
+
 " bracket pairs
 inoremap <a-9> ()<left>
 inoremap <a-0> （）<left>
@@ -755,6 +758,17 @@ cnoremap <a-]> {}<left>
 cnoremap <a-,> <><left>
 cnoremap <a-.> 《》<left>
 cnoremap <a-=> 【】<left>
+
+" bracket pairs, console
+" iabbrev ( ()
+" iabbrev （ （）
+" iabbrev [ []
+" iabbrev { {}
+
+" cabbrev ( ()
+" cabbrev （ （）
+" cabbrev [ []
+" cabbrev { {}
 
 "}}}2
 
@@ -789,12 +803,12 @@ command DelAdd call <sid>DelLine(0)
 "}}}3
 
 " a-b substitution
-command! ABSubs call SearchPattern(0)
+command! ABSubs call <sid>SearchPattern(0)
 
 " foward/backward search
-command! SearchForward call SearchPattern(1)
-command! SearchYankAll call SearchPattern(2)
-command! SearchGrep call SearchPattern(3)
+"command! SearchForward call SearchPattern(1)
+"command! SearchYankAll call SearchPattern(2)
+"command! SearchGrep call SearchPattern(3)
 
 " Scratch buffer
 
@@ -862,15 +876,12 @@ command Ed2KeyMap e ~/.vim/plugin/keyMapTmp.vim
 autocmd BufRead *.vocab call Vocabulary()
 autocmd VimEnter * call ScratchBuffer(0)
 
-let s:ColorColumn = '*.vim'
-let s:ColorColumn .= ',*.vimrc'
+let s:ColorColumn = '*.vim*'
 
 execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 \ ' setl tw=50'
 execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
 \ ' setl colorcolumn=+0'
-execute 'autocmd BufRead,BufNewFile ' . s:ColorColumn .
-\ ' setl fo+=1mBj'
 
 let g:AutoLoad_Bullet = '*.read'
 let g:AutoLoad_Bullet .= ',*.write'
@@ -893,27 +904,10 @@ autocmd BufRead achieve.daily setl fo+=ro
 let g:AutoLoad_Achieve = '*.daily'
 
 function s:GotoSameLine() "{{{3
-
-    let l:bufNr = bufnr('%')
-
-    let l:cursor = getpos('.')
-
-    call moveCursor#GotoColumn1('w0')
-    let l:top = getpos('.')
-
-    call setpos('.',l:cursor)
-
-    wincmd w
-
-    execute 'buffer' . ' ' . l:bufNr
-
-    call setpos('.',l:top)
-    execute 'normal zt'
-
-    call setpos('.',l:cursor)
-
-    wincmd W
-
+    if winnr('$') ># 1
+        wincmd o
+    endif
+    wincmd v
 endfunction "}}}3
 
 command SameLine call <sid>GotoSameLine()
@@ -928,6 +922,15 @@ endif
 
 com LeftFoldMarker g;\v^ .{0,1}\}{3}.{0,1};le0
 
+" indent html tags
+fun! s:IndentHTML()
+    DelAdd
+    g;ul>;le4
+    g;li>;le8
+    g;p>;le4
+endfun
+com! HtmlTag call <sid>IndentHTML()
+
 " set path
 function! s:SetPath() "{{{3
 
@@ -936,11 +939,25 @@ function! s:SetPath() "{{{3
         se path+=
         \d:/Program\\\ Files/Vim/vimfiles/**/
     elseif <sid>CheckOS() ==# 'linux'
-        se path+=~/.vim/**/
-        se path+=~/git/**/
+        se path+=~/**/
+        "se path+=~/.vim/**/
+        "se path+=~/git/**/
     endif
 
 endfunction "}}}3
+
+" git update "{{{3
+function s:GitUpdate()
+    1s/^/\r/
+    3,/^# Changes to be committed:/delete
+    $delete
+    %s/^#\s\+/-   /
+    1
+endfunction
+
+command GitUpdate call <sid>GitUpdate()
+
+"}}}3
 
 call <sid>SetPath()
 
@@ -948,32 +965,53 @@ function! s:TabVisual() "{{{3
 
     if line("'<") ==# line("'>")
         normal! gvy
-        SearchForward
+        call <sid>SearchPattern(1)
     else
-        FoldMarker s
+        '<,'>FoldMarker s
     endif
 
 endfun "}}}3
 
 " foldMarker.vim "{{{3
 
-command! -range FmAbove FoldMarker a
-command! -range FmBelow FoldMarker b
-command! -range FmLine FoldMarker l
-command! -range FmSurround FoldMarker s
-command! -range FmCreLevel FoldMarker c
-command! -range FmDelLevel FoldMarker d
+command! -range FmLine
+\ <line1>FoldMarker l
+command! -range FmAbove
+\ <line1>FoldMarker a
+command! -range FmBelow
+\ <line1>FoldMarker b
+command! -range FmSurround
+\ <line1>,<line2>FoldMarker s
+command! -range FmCreLevel
+\ <line1>,<line2>FoldMarker c
+command! -range FmDelLevel
+\ <line1>,<line2>FoldMarker d
+command! -range FmRemove
+\ <line1>,<line2>FoldMarker r
+
+command! -range FmLineNoNum
+\ <line1>FoldMarker L
+command! -range FmAboveNoNum
+\ <line1>FoldMarker A
+command! -range FmBelowNoNum
+\ <line1>FoldMarker B
+command! -range FmSurroundNoNum
+\ <line1>,<line2>FoldMarker S
+command! -range FmCreLevelRelative
+\ <line1>,<line2>FoldMarker C
+command! -range FmRemoveAll
+\ <line1>,<line2>FoldMarker R
 
 nnoremap <silent> <tab> :FoldMarker b<cr>
 nnoremap <silent> <s-tab> :FoldMarker a<cr>
 nnoremap <silent> <c-tab> :FoldMarker l<cr>
-vnoremap <silent> <tab> <esc>:call <sid>TabVisual()<cr>
-"vnoremap <silent> <c-tab> :FoldMarker s<cr>
+vnoremap <silent> <tab>
+\ <esc>:call <sid>TabVisual()<cr>
 
-nnoremap <silent> <a-=> :FoldMarker c<cr>
-nnoremap <silent> <a--> :FoldMarker d<cr>
-vnoremap <silent> <a-=> :FoldMarker c<cr>
+vnoremap <silent> <a-=> :FoldMarker C<cr>
 vnoremap <silent> <a--> :FoldMarker d<cr>
+
+let g:MoveFold_FoldMarker = 0
 
 "}}}3
 "}}}2
