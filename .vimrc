@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Oct 27, Tue | 09:12:31 | 2015
+" Last Update: Oct 28, Wed | 00:12:16 | 2015
 
 " Plugins "{{{2
 
@@ -634,10 +634,10 @@ if <sid>CheckOS()=='windows' "{{{
         cd d:\Documents\
     endif
 elseif <sid>CheckOS()=='linux'
-    if substitute(system('hostname'),'\n','','')
-    \ ==# 'section9'
-        cd ~/documents/
-    endif
+    "if substitute(system('hostname'),'\n','','')
+    "\ ==# 'section9'
+    "    cd ~/documents/
+    "endif
 endif "}}}
 "}}}2
 
