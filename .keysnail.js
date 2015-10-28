@@ -541,7 +541,7 @@ key.setViewKey('c', function (aEvent, aArg) {
     ext.exec("hok-yank-foreground-mode", aArg);
 }, 'Hok - Foreground yank hint mode', true);
 
-plugins.options["hok.hint_keys"] = "asdfgqwert";
+//plugins.options["hok.hint_keys"] = "asdfgqwert";
 
 // Tanything
 key.setViewKey("a", function (ev, arg) {
