@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 28, Wed | 18:13:18 | 2015
+// Last Update: Oct 28, Wed | 19:38:18 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -521,11 +521,11 @@ key.setCaretKey('M-n', function (ev) {
 // user defined plugin settings
 
 // HoK
-key.setViewKey('e', function (aEvent, aArg) {
+key.setViewKey('f', function (aEvent, aArg) {
     ext.exec("hok-start-foreground-mode", aArg);
 }, 'Hok - Foreground hint mode', true);
 
-key.setViewKey('E', function (aEvent, aArg) {
+key.setViewKey('F', function (aEvent, aArg) {
     ext.exec("hok-start-background-mode", aArg);
 }, 'HoK - Background hint mode', true);
 
