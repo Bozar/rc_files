@@ -1,14 +1,26 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 28, Wed | 09:29:46 | 2015
-
+// Last Update: Oct 28, Wed | 10:54:31 | 2015
+//
+// Insatalled plugins:
+// MetaPlus
+// bmany
+// Tanything
+// HoK
+//
 // You can preserve your code in this area when generating the init file using GUI.
 // Put all your code except special key, set*key, hook, blacklist.
 // ========================================================================= //
 //{{%PRESERVE%
 // Put your codes here
 // user defined plugin settings
+
+// MetaPlus
 plugins.options["metaplus.metakeys"] = ["ESC", "C-["];
+
+// bmany
+plugins.options["bmany.default_open_type"] = "tab";
+
 //}}%PRESERVE%
 // ========================================================================= //
 
@@ -508,6 +520,7 @@ key.setCaretKey('M-n', function (ev) {
 
 // user defined plugin settings
 
+// HoK
 key.setViewKey('e', function (aEvent, aArg) {
     ext.exec("hok-start-foreground-mode", aArg);
 }, 'Hok - Foreground hint mode', true);
@@ -529,3 +542,14 @@ key.setViewKey('c', function (aEvent, aArg) {
 }, 'Hok - Foreground yank hint mode', true);
 
 plugins.options["hok.hint_keys"] = "asdfgqwert";
+
+// Tanything
+key.setViewKey("a", function (ev, arg) {
+                   ext.exec("tanything", arg);
+               }, "view all tabs", true);
+
+// bmany
+
+key.setViewKey("m", function (ev, arg) {
+    ext.exec("bmany-list-bookmarks-with-tag", arg, ev);
+}, "bmany - List bookmarks with tag");
