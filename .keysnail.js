@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 28, Wed | 10:54:31 | 2015
+// Last Update: Oct 28, Wed | 11:15:15 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -549,7 +549,17 @@ key.setViewKey("a", function (ev, arg) {
                }, "view all tabs", true);
 
 // bmany
-
 key.setViewKey("m", function (ev, arg) {
     ext.exec("bmany-list-bookmarks-with-tag", arg, ev);
 }, "bmany - List bookmarks with tag");
+
+// crate mode
+// https://github.com/mooz/keysnail/issues/35
+// http://blog.binchen.org/posts/use-firefox-in-emacs-way-3.html
+key.setViewKey('i', function (ev, arg) {
+    util.setBoolPref("accessibility.browsewithcaret", true);
+}, 'Enter to caret mode', true);
+
+key.setCaretKey('i', function (ev, arg) {
+    util.setBoolPref("accessibility.browsewithcaret", false);
+}, 'Leave from caret mode', true);
