@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 29, Thu | 16:36:27 | 2015
+// Last Update: Oct 29, Thu | 17:15:24 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -114,7 +114,11 @@ key.setGlobalKey(["C-x", "s"], function (ev) {
                 command.focusElement(command.elementsRetrieverButton, 0);
             }, 'Focus to the first button', true);
 
-key.setGlobalKey('M-w', function (ev) {
+// user defined
+key.setCaretKey('y', function (ev) {
+                command.copyRegion(ev);
+            }, 'Copy selected text', true);
+key.setViewKey('y', function (ev) {
                 command.copyRegion(ev);
             }, 'Copy selected text', true);
 
