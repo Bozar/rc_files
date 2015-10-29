@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 29, Thu | 10:57:27 | 2015
+// Last Update: Oct 29, Thu | 11:18:20 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -383,7 +383,8 @@ key.setViewKey(':', function (ev, arg) {
                 shell.input(null, arg);
             }, 'List and execute commands', true);
 
-key.setViewKey('R', function (ev) {
+// user defined: change 'R' to 'r'
+key.setViewKey('r', function (ev) {
                 BrowserReload();
             }, 'Reload the page', true);
 
