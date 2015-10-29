@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 28, Wed | 23:37:57 | 2015
+// Last Update: Oct 29, Thu | 10:57:27 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -533,7 +533,7 @@ key.setViewKey(';', function (aEvent, aArg) {
     ext.exec("hok-start-extended-mode", aArg);
 }, 'HoK - Extented hint mode', true);
 
-key.setViewKey(['C-c', 'C-e'], function (aEvent, aArg) {
+key.setViewKey(['C'], function (aEvent, aArg) {
     ext.exec("hok-start-continuous-mode", aArg);
 }, 'Start continuous HaH', true);
 
