@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 29, Thu | 18:11:44 | 2015
+// Last Update: Oct 29, Thu | 18:14:10 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -405,9 +405,10 @@ key.setViewKey(["C-x", "h"], function (ev) {
                 goDoCommand("cmd_selectAll");
             }, 'Select all', true);
 
-key.setViewKey('f', function (ev) {
-                command.focusElement(command.elementsRetrieverTextarea, 0);
-            }, 'Focus to the first textarea', true);
+// comment origin key bind
+//key.setViewKey('f', function (ev) {
+//                command.focusElement(command.elementsRetrieverTextarea, 0);
+//            }, 'Focus to the first textarea', true);
 
 key.setViewKey('M-p', function (ev) {
                 command.walkInputElement(command.elementsRetrieverButton, true, true);
