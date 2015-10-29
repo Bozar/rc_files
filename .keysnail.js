@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 29, Thu | 13:45:16 | 2015
+// Last Update: Oct 29, Thu | 14:09:12 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -127,7 +127,7 @@ key.setGlobalKey('C-r', function (ev) {
             }, 'Emacs like incremental search backward', true);
 
 // user defined
-key.setGlobalKey(["d"], function (ev) {
+key.setViewKey('d', function (ev) {
                 BrowserCloseTabOrWindow();
             }, 'Close tab / window', false);
 
