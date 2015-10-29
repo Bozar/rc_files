@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 29, Thu | 14:09:12 | 2015
+// Last Update: Oct 29, Thu | 16:36:27 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -565,3 +565,12 @@ key.setViewKey('i', function (ev, arg) {
 key.setCaretKey('i', function (ev, arg) {
     util.setBoolPref("accessibility.browsewithcaret", false);
 }, 'Leave from caret mode', true);
+
+// move tabs
+key.setViewKey(["C-c", "h"], function (ev) {
+    ext.exec("move-selected-tab-left", ev);
+}, "move tab left", false);
+
+key.setViewKey(["C-c", "l"], function (ev) {
+    ext.exec("move-selected-tab-right", ev);
+}, "move tab right", false);
