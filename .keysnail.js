@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 29, Thu | 18:02:50 | 2015
+// Last Update: Oct 29, Thu | 18:11:44 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -590,7 +590,7 @@ key.setViewKey(["C-c", "L"], function (ev) {
 
 // open in current/new tab
 key.setViewKey('o', function (ev) {
-    ext.exec("focus-to-the-location-bar",-ev);
+    ext.exec("focus-to-the-location-bar", ev);
 }, "open in current tab", false);
 
 key.setViewKey('t', function (ev) {
