@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 29, Thu | 18:20:47 | 2015
+// Last Update: Oct 29, Thu | 18:28:28 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -139,7 +139,8 @@ key.setGlobalKey(["C-x", "K"], function (ev) {
                 closeWindow(true);
             }, 'Close the window', false);
 
-key.setGlobalKey(["C-c", "u"], function (ev) {
+// user defined
+key.setViewKey('u', function (ev) {
                 undoCloseTab();
             }, 'Undo closed tab', false);
 
