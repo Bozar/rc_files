@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 29, Thu | 18:28:28 | 2015
+// Last Update: Oct 30, Fri | 12:08:41 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -406,7 +406,7 @@ key.setViewKey(["C-x", "h"], function (ev) {
                 goDoCommand("cmd_selectAll");
             }, 'Select all', true);
 
-// comment origin key bind
+// user defined: comment origin key bind
 //key.setViewKey('f', function (ev) {
 //                command.focusElement(command.elementsRetrieverTextarea, 0);
 //            }, 'Focus to the first textarea', true);
@@ -549,7 +549,7 @@ key.setViewKey('C', function (aEvent, aArg) {
     ext.exec("hok-yank-foreground-mode", aArg);
 }, 'Hok - Foreground yank hint mode', true);
 
-plugins.options["hok.hint_keys"] = "asdfwrxcv";
+// plugins.options["hok.hint_keys"] = "asdfwrxcv";
 
 // Tanything
 key.setViewKey("a", function (ev, arg) {
