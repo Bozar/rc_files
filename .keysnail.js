@@ -121,6 +121,9 @@ key.setCaretKey('y', function (ev) {
 key.setViewKey('y', function (ev) {
                 command.copyRegion(ev);
             }, 'Copy selected text', true);
+key.setEditKey('M-w', function (ev) {
+                command.copyRegion(ev);
+            }, 'Copy selected text', true);
 
 key.setGlobalKey('C-s', function (ev) {
                 command.iSearchForwardKs(ev);
