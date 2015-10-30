@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 30, Fri | 12:08:41 | 2015
+// Last Update: Oct 30, Fri | 14:56:29 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -397,11 +397,11 @@ key.setViewKey('r', function (ev) {
                 BrowserReload();
             }, 'Reload the page', true);
 
-key.setViewKey('B', function (ev) {
+// user defined: set new key bind
+key.setViewKey('C-k', function (ev) {
                 BrowserBack();
             }, 'Back', false);
-
-key.setViewKey('F', function (ev) {
+key.setViewKey('C-j', function (ev) {
                 BrowserForward();
             }, 'Forward', false);
 
@@ -504,13 +504,14 @@ key.setCaretKey('R', function (ev) {
                 BrowserReload();
             }, 'Reload the page', true);
 
-key.setCaretKey('B', function (ev) {
-                BrowserBack();
-            }, 'Back', false);
-
-key.setCaretKey('F', function (ev) {
-                BrowserForward();
-            }, 'Forward', false);
+// user defined: comment key binds
+//key.setCaretKey('B', function (ev) {
+//                BrowserBack();
+//            }, 'Back', false);
+//
+//key.setCaretKey('F', function (ev) {
+//                BrowserForward();
+//            }, 'Forward', false);
 
 key.setCaretKey(["C-x", "h"], function (ev) {
                 goDoCommand("cmd_selectAll");
