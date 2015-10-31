@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 30, Fri | 14:56:29 | 2015
+// Last Update: Oct 31, Sat | 22:15:39 | 2015
 //
 // Insatalled plugins:
 // MetaPlus
@@ -398,10 +398,10 @@ key.setViewKey('r', function (ev) {
             }, 'Reload the page', true);
 
 // user defined: set new key bind
-key.setViewKey('C-k', function (ev) {
+key.setViewKey('H', function (ev) {
                 BrowserBack();
             }, 'Back', false);
-key.setViewKey('C-j', function (ev) {
+key.setViewKey('L', function (ev) {
                 BrowserForward();
             }, 'Forward', false);
 
