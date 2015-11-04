@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Oct 28, Wed | 00:12:16 | 2015
+" Last Update: Nov 04, Wed | 21:36:40 | 2015
 
 " Plugins "{{{2
 
@@ -527,13 +527,11 @@ function s:Window()
 endfunction
 
 if <sid>CheckOS()=='windows' "{{{
+    autocmd GUIEnter * simalt ~x
     if substitute(system('hostname'),'\n','','')
     \ ==# 'section9'
-        set lines=999
-        set columns=999
         set background=dark
     else
-        autocmd GUIEnter * simalt ~x
         set background=light
     endif
 elseif <sid>CheckOS()=='linux'
