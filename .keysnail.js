@@ -1,6 +1,6 @@
 // ========================== KeySnail Init File =========================== //
 //
-// Last Update: Oct 31, Sat | 22:15:39 | 2015
+// Last Update: Jan 19, Tue | 09:52:06 | 2016
 //
 // Insatalled plugins:
 // MetaPlus
@@ -553,7 +553,7 @@ key.setViewKey('C', function (aEvent, aArg) {
     ext.exec("hok-yank-foreground-mode", aArg);
 }, 'Hok - Foreground yank hint mode', true);
 
-// plugins.options["hok.hint_keys"] = "asdfwrxcv";
+plugins.options["hok.hint_keys"] = "asdfgqwert";
 
 // Tanything
 key.setViewKey("a", function (ev, arg) {
