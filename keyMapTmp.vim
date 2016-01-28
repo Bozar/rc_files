@@ -1,8 +1,8 @@
 " keyMapTmp.vim
+" Last Update: Jan 28, Thu | 10:48:58 | 2016
 
-" Last Update: Jul 05, Sun | 14:05:46 | 2015
+" global functions
 
-" global
 function s:KeyFuncLoop(begin,end)
     let l:i = a:begin
     while l:i <= a:end
@@ -189,9 +189,7 @@ function s:JoinLines()
     s;^;\t;
 endfunction
 
-" files
-
-" commom key mappings
+" key mappings
 
 function s:KeyCommon()
     set foldlevel=20
@@ -203,29 +201,11 @@ endfunction
 au Bufread,BufNew *.read,*.write,*.note
 \ call <sid>KeyCommon()
 
-" fisherman.write
-
-function s:Format_Fisherman()
-    call moveCursor#KeepPos(0)
-    call <sid>AddNum4Note('片段 ',4)
-    call <sid>AddNum4Note('摘要 ',4)
-    call moveCursor#KeepPos(1)
-    Bullet w
-    call moveCursor#KeepPos(1)
+function s:KeyChekhov()
+    nno <buffer> <silent> <f1> :s;$;\t#;<cr>
+    vno <buffer> <silent> <f1> :s;$;\t#;<cr>
 endfunction
 
-function s:Key_Fisherman()
-    call <sid>KeyCR()
-    call <sid>KeyFuncLoop(2,5)
-    nno <buffer> <silent> <f6>
-    \ :call <sid>AddNote('片段 ',5)<cr>
-    nno <buffer> <silent> <f12>
-    \ :call <sid>Format_Fisherman()<cr>
-endfunction
-
-" command
-
-au Bufread fisherman.write
-\ call <sid>Key_Fisherman()
+au Bufread chekhov.read call <sid>KeyChekhov()
 
 " vim: set fdm=indent :
