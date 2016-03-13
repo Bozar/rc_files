@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Nov 04, Wed | 21:36:40 | 2015
+" Last Update: Mar 13, Sun | 17:55:20 | 2016
 
 " Plugins "{{{2
 
@@ -863,10 +863,10 @@ fun! s:EdFile()
     if <sid>CheckOS()=='windows' &&
     \ substitute(system('hostname'),'\n','','')
     \ ==# 'section9'
-        e ~/Documents/documents/achieve.daily
+        e ~/Documents/documents/achieve
         cd ~/Documents/documents
     elseif <sid>CheckOS()=='linux'
-        e ~/documents/achieve.daily
+        e ~/documents/achieve
         cd ~/documents
     endif
 endfun
@@ -1017,5 +1017,34 @@ vnoremap <silent> <a--> :FoldMarker d<cr>
 let g:MoveFold_FoldMarker = 0
 
 "}}}3
+"}}}2
+" schedule.note "{{{2
+
+fun! s:SwitchStatus_Schedule(mode)
+    if a:mode == 'n'
+        let l:range = line('.')
+    elseif a:mode == 'v'
+        let l:range = line("'<") . ',' . line("'>")
+    endif
+    " * > ~
+    if substitute(getline('.'),'*','','')
+    \ != getline('.')
+        exe l:range . 's/\v^(\s+)\*/\1\~/'
+    " ~ > *
+    elseif substitute(getline('.'),'\~','','')
+    \ != getline('.')
+        exe l:range . 's/\v^(\s+)\~/\1*/'
+    endif
+endfun
+
+fun! s:KeyMap_Schedule()
+    nno <buffer> <silent> <cr> :call <sid>SwitchStatus_Schedule('n')<cr>
+    vno <buffer> <silent> <cr> <esc>:call <sid>SwitchStatus_Schedule('v')<cr>
+endfun
+
+call <sid>KeyMap_Schedule()
+
+autocmd BufRead achieve call <sid>KeyMap_Schedule()
+
 "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
