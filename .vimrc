@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 13, Sun | 17:55:20 | 2016
+" Last Update: Mar 14, Mon | 10:18:47 | 2016
 
 " Plugins "{{{2
 
@@ -1044,7 +1044,7 @@ endfun
 
 call <sid>KeyMap_Schedule()
 
-autocmd BufRead achieve call <sid>KeyMap_Schedule()
+autocmd BufRead,BufEnter achieve call <sid>KeyMap_Schedule()
 
 "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
