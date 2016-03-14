@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 14, Mon | 10:35:25 | 2016
+" Last Update: Mar 14, Mon | 15:56:56 | 2016
 
 " Plugins "{{{2
 
@@ -1037,9 +1037,16 @@ fun! s:SwitchStatus_Schedule(mode)
     endif
 endfun
 
+fun! s:Refresh_Schedule()
+    call moveCursor#SetLineJKFold()
+    exe moveCursor#TakeLineNr('J','K') .
+    \ 's/\v^(\s+)\~/\1*/e'
+endfun
+
 fun! s:KeyMap_Schedule()
     nno <buffer> <silent> <cr> :call <sid>SwitchStatus_Schedule('n')<cr>
     vno <buffer> <silent> <cr> <esc>:call <sid>SwitchStatus_Schedule('v')<cr>
+    nno <buffer> <silent> <c-cr> :call <sid>Refresh_Schedule()<cr>
 endfun
 
 call <sid>KeyMap_Schedule()
