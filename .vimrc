@@ -1,5 +1,5 @@
 " Bozar's .vimrc file "{{{1
-" Last Update: Mar 14, Mon | 10:18:47 | 2016
+" Last Update: Mar 14, Mon | 10:35:25 | 2016
 
 " Plugins "{{{2
 
@@ -629,7 +629,7 @@ if <sid>CheckOS()=='windows' "{{{
     \ ==# 'section9'
         cd ~/Documents/documents/
     else
-        cd d:\Documents\
+        cd d:\GitHub\Documents\
     endif
 elseif <sid>CheckOS()=='linux'
     "if substitute(system('hostname'),'\n','','')
@@ -1045,6 +1045,21 @@ endfun
 call <sid>KeyMap_Schedule()
 
 autocmd BufRead,BufEnter achieve call <sid>KeyMap_Schedule()
+
+"}}}2
+" switch path "{{{2
+
+fun! s:SwitchPath()
+    if getcwd() =~ '.*github.*'
+        cd d:\Documents\
+        echom "Working Directory: Work."
+    else
+        cd d:\GitHub\Documents\
+        echom "Working Directory: Note."
+    endif
+endfun
+
+com! SwPath call <sid>SwitchPath()
 
 "}}}2
 " vim: set fdm=marker fdl=20: "}}}1
