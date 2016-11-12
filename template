@@ -1,0 +1,4 @@
+fun
+fun! s:^()$>^$endfun
+iff
+if ^$>^$endif
